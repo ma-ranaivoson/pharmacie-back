@@ -35,6 +35,7 @@ public class PharmacieController {
 	
 	@Autowired
 	PharmacieService servicePharmacie;
+	
 //GetAll_Pharmacie
 	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllPharmacie() {
