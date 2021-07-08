@@ -64,9 +64,9 @@ public class ProduitImplementation implements ProduitService{
 	}
 
 	@Override
-	public Produit recherchePharmacie(String designation) {
+	public Produit rechercheProduit(String designation) {
 		// TODO Auto-generated method stub
-		return repository.recherchePharmacie(designation);
+		return repository.rechercheProduit(designation);
 	}
 
 }

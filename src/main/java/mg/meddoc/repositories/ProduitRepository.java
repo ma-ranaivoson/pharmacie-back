@@ -7,5 +7,5 @@ import mg.meddoc.models.Produit;
 
 public interface ProduitRepository extends JpaRepository<Produit, Long>{
 	@Query(nativeQuery=true,value="SELECT produit.* FROM produit WHERE designation=?1")
-	Produit recherchePharmacie(String designation);
+	Produit rechercheProduit(String designation);
 }
