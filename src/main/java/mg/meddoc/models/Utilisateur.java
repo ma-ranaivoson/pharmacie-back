@@ -4,33 +4,42 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "utilisateur")
-public class Utilisateur implements Serializable{
+@Table(name = "utiliisateur")
+public class Utilisateur implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Id
+
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id_utilisateur")
 	private long idUtilisateur;
+
 	@Column(name = "nom")
 	private java.lang.String nom;
-	@Column(name = "prenom")
-	private java.lang.String prenom;
+
+	@Column(name = "prenoms")
+	private java.lang.String prenoms;
+
 	@Column(name = "mot_de_passe")
 	private java.lang.String mot_de_passe;
+
 	@Column(name = "adresse")
 	private java.lang.String adresse;
+
 	@Column(name = "statut")
 	private int statut;
-	
+
 	public Utilisateur() {
-		
+
 	}
 
 	/**
@@ -41,11 +50,12 @@ public class Utilisateur implements Serializable{
 	 * @param adresse
 	 * @param statut
 	 */
-	public Utilisateur(long idUtilisateur, String nom, String prenom, String mot_de_passe, String adresse, int statut) {
+	public Utilisateur(long idUtilisateur, String nom, String prenoms, String mot_de_passe, String adresse,
+			int statut) {
 		super();
 		this.idUtilisateur = idUtilisateur;
 		this.nom = nom;
-		this.prenom = prenom;
+		this.prenoms = prenoms;
 		this.mot_de_passe = mot_de_passe;
 		this.adresse = adresse;
 		this.statut = statut;
@@ -82,15 +92,15 @@ public class Utilisateur implements Serializable{
 	/**
 	 * @return the prenom
 	 */
-	public java.lang.String getPrenom() {
-		return prenom;
+	public java.lang.String getPrenoms() {
+		return prenoms;
 	}
 
 	/**
 	 * @param prenom the prenom to set
 	 */
-	public void setPrenom(java.lang.String prenom) {
-		this.prenom = prenom;
+	public void setPrenoms(java.lang.String prenoms) {
+		this.prenoms = prenoms;
 	}
 
 	/**
@@ -141,6 +151,6 @@ public class Utilisateur implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
+
 }

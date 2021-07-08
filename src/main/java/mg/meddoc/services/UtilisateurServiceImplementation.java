@@ -13,7 +13,7 @@ import mg.meddoc.models.Utilisateur;
 import mg.meddoc.repositories.UtilisateurRepository;
 
 @Service
-public class UtilisateurImplementation implements UtilisateurService{
+public class UtilisateurServiceImplementation implements UtilisateurService {
 	
 	@Autowired
 	private UtilisateurRepository repository;
@@ -33,7 +33,14 @@ public class UtilisateurImplementation implements UtilisateurService{
 	@Override
 	public Utilisateur getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((Long) id).get();
+		try {
+			return repository.findById((Long) id).orElseThrow(() -> new Exception("Not found"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 
 	@Override

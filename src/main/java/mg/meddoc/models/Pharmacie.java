@@ -99,7 +99,12 @@ public class Pharmacie implements Serializable{
 	/**
 	 * @param raison_social the raison_social to set
 	 */
-	public void setRaison_social(java.lang.String raison_social) {
+	public void setRaison_social(java.lang.String raison_social) throws Exception {
+//		if(raison_social==null)
+//			throw new Exception("Raison sociale ne peut pas être vide");
+//		else if(raison_social=="")
+//			throw new Exception("Raison sociale ne peut pas être vide");
+		
 		this.raison_social = raison_social;
 	}
 
