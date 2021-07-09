@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.UtilisateurService;
 
