@@ -1,14 +1,27 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "utilisateur")
+@Table(name = "utilisateur", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "nom"
+            })
+	})
 public class Utilisateur implements Serializable{
 
 	/**
@@ -16,6 +29,7 @@ public class Utilisateur implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_utilisateur")
 	private long idUtilisateur;
 	@Column(name = "nom")
@@ -28,6 +42,7 @@ public class Utilisateur implements Serializable{
 	private java.lang.String adresse;
 	@Column(name = "statut")
 	private int statut;
+	
 	
 	public Utilisateur() {
 		
