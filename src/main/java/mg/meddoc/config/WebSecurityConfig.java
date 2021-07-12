@@ -20,6 +20,8 @@ import mg.meddoc.security.JwtAuthEntryPoint;
 import mg.meddoc.security.JwtAuthTokenFilter;
 import mg.meddoc.services.UserDetailsServiceImpl;
 
+
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
