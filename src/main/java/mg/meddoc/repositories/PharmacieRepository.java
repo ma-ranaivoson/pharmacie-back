@@ -11,6 +11,6 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	//	void modifierStatutByStatut(Long id, Long idStatut);
 	
 	//Recherche par Nom du Pharmacie
-	@Query(nativeQuery=true,value="SELECT pharmacie.* FROM pharmacie WHERE raison_social=?1")
+	@Query(nativeQuery=true,value="SELECT pharmacie.* FROM pharmacie WHERE raison_social = ?")
 	Pharmacie recherchePharmacie(String raisonSocial);
 }
