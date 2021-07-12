@@ -32,7 +32,7 @@ public class Pharmacie implements Serializable{
 	@Column(name = "id_pharmacie")
 	private long idPharmacie;
 	@Column(name = "raison_social")
-	private java.lang.String raison_social;
+	private java.lang.String raisonSocial;
 	@Column(name = "presentation")
 	private java.lang.String presentation;
 	@Column(name = "adresse")
@@ -79,7 +79,7 @@ public class Pharmacie implements Serializable{
 			Double longitude, Double latitude) {
 		super();
 	//	this.idPharmacie = idPharmacie;
-		this.raison_social = raison_social;
+		this.raisonSocial = raison_social;
 		this.presentation = presentation;
 		this.adresse = adresse;
 		this.statut = statut;
@@ -91,21 +91,21 @@ public class Pharmacie implements Serializable{
 	/**
 	 * @return the raison_social
 	 */
-	public java.lang.String getRaison_social() {
-		return raison_social;
+	public java.lang.String getRaisonSocial() {
+		return raisonSocial;
 	}
 
 
 	/**
 	 * @param raison_social the raison_social to set
 	 */
-	public void setRaison_social(java.lang.String raison_social) throws Exception {
+	public void setRaisonSocial(java.lang.String raison_social) throws Exception {
 //		if(raison_social==null)
 //			throw new Exception("Raison sociale ne peut pas être vide");
 //		else if(raison_social=="")
 //			throw new Exception("Raison sociale ne peut pas être vide");
 		
-		this.raison_social = raison_social;
+		this.raisonSocial = raison_social;
 	}
 
 

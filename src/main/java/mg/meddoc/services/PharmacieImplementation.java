@@ -68,6 +68,15 @@ public class PharmacieImplementation implements PharmacieService {
 	public Pharmacie recherchePharmacie(String raisonSocial) {
 		return repository.recherchePharmacie(raisonSocial);
 	}
+
+	@Override
+	public Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, int page, int size, String sort,
+			String direction) {
+		if(direction.compareToIgnoreCase("asc")==0||direction.compareToIgnoreCase("ascending")==0)
+			return repository.findByRaisonSocialContainingIgnoreCase(raisonSocial, PageRequest.of((page-1), size, Direction.ASC, sort));
+		else
+			return repository.findByRaisonSocialContainingIgnoreCase(raisonSocial, PageRequest.of((page-1), size, Direction.DESC, sort));
+	}
 	
 	//@Override
 	//public void stateDeleteById(Serializable id, Serializable idStatut) {

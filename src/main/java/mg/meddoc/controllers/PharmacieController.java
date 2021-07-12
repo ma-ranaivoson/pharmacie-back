@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -75,9 +76,9 @@ public class PharmacieController {
 	public @ResponseBody ResponseEntity<?> savePharmacie(@RequestBody Pharmacie pharmacie) {
 		
 		try {
-			if(pharmacie.getRaison_social()==null)
+			if(pharmacie.getRaisonSocial()==null)
 				throw new Exception("Raison sociale ne peut pas être vide");
-			if(pharmacie.getRaison_social()=="")
+			if(pharmacie.getRaisonSocial()=="")
 				throw new Exception("Raison sociale ne peut pas être vide");
 			if(pharmacie.getLatitude()>100 || pharmacie.getLatitude()<0)
 				throw new Exception("Latitude incorrect");
@@ -135,7 +136,8 @@ public class PharmacieController {
 		try {
 			@SuppressWarnings("unchecked")
 			List <Pharmacie> pharmacies = (List<Pharmacie>) servicePharmacie.recherchePharmacie(raisonSociale);
-			
+			Page<Pharmacie> pharmacieResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1, 10, "raisonSocial", "ASC");
+			System.out.println(om.writeValueAsString(pharmacieResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();
 			success.put("success", true);
 			success.put("data", pharmacies);

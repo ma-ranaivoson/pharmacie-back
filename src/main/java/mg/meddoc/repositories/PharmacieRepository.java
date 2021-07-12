@@ -1,5 +1,7 @@
 package mg.meddoc.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +15,6 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	//Recherche par Nom du Pharmacie
 	@Query(nativeQuery=true,value="SELECT pharmacie.* FROM pharmacie WHERE raison_social = ?")
 	Pharmacie recherchePharmacie(String raisonSocial);
+	
+	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, Pageable page);
 }
