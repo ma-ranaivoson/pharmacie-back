@@ -1,11 +1,23 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "utilisateur", uniqueConstraints = {
@@ -13,15 +25,20 @@ import javax.persistence.UniqueConstraint;
                 "nom"
             })
 	})
-public class Utilisateur implements Serializable{
+public class Utilisateur implements Serializable, UserDetails{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_utilisateur")
 	private long idUtilisateur;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_type_utilisateur")
+	private TypeUtilisateur typeUtilisateur;
 
 	@Column(name = "nom")
 	private java.lang.String nom;
@@ -30,7 +47,8 @@ public class Utilisateur implements Serializable{
 	private java.lang.String prenoms;
 
 	@Column(name = "mot_de_passe")
-	private java.lang.String mot_de_passe;
+	@JsonIgnoreProperties
+	private java.lang.String password;
 
 	@Column(name = "adresse")
 	private java.lang.String adresse;
@@ -56,7 +74,7 @@ public class Utilisateur implements Serializable{
 		this.idUtilisateur = idUtilisateur;
 		this.nom = nom;
 		this.prenoms = prenoms;
-		this.mot_de_passe = mot_de_passe;
+		this.password = mot_de_passe;
 		this.adresse = adresse;
 		this.statut = statut;
 	}
@@ -106,15 +124,15 @@ public class Utilisateur implements Serializable{
 	/**
 	 * @return the mot_de_passe
 	 */
-	public java.lang.String getMot_de_passe() {
-		return mot_de_passe;
+	public java.lang.String getPassword() {
+		return password;
 	}
 
 	/**
 	 * @param mot_de_passe the mot_de_passe to set
 	 */
-	public void setMot_de_passe(java.lang.String mot_de_passe) {
-		this.mot_de_passe = mot_de_passe;
+	public void setPassword(java.lang.String mot_de_passe) {
+		this.password = mot_de_passe;
 	}
 
 	/**
@@ -150,6 +168,52 @@ public class Utilisateur implements Serializable{
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		String pseudo = this.nom;
+		pseudo+=this.prenoms!=null?" "+this.prenoms:"";
+		return pseudo;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return this.statut!=0;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return this.statut!=0;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return this.statut!=0;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return this.statut!=0;
+	}
+
+	public TypeUtilisateur getTypeUtilisateur() {
+		return typeUtilisateur;
+	}
+
+	public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {
+		this.typeUtilisateur = typeUtilisateur;
 	}
 
 

@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import mg.meddoc.models.Type_Utilisateur;
+import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.repositories.Type_UtilisateurRepository;
 
 @Service
@@ -19,31 +19,31 @@ public class Type_UtilisateurImplementation implements Type_UtilisateurService{
 	private Type_UtilisateurRepository repository;
 	
 	@Override
-	public Type_Utilisateur save(Type_Utilisateur entity) {
+	public TypeUtilisateur save(TypeUtilisateur entity) {
 		// TODO Auto-generated method stub
 		return repository.save(entity);
 	}
 
 	@Override
-	public List<Type_Utilisateur> saveAll(List<Type_Utilisateur> entities) {
+	public List<TypeUtilisateur> saveAll(List<TypeUtilisateur> entities) {
 		// TODO Auto-generated method stub
 		return repository.saveAll(entities);
 	}
 
 	@Override
-	public Type_Utilisateur getById(Serializable id) {
+	public TypeUtilisateur getById(Serializable id) {
 		// TODO Auto-generated method stub
 		return repository.findById((Long) id).get();
 	}
 
 	@Override
-	public List<Type_Utilisateur> getAll() {
+	public List<TypeUtilisateur> getAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
 	}
 
 	@Override
-	public Page<Type_Utilisateur> getAllPageable(int page, int max, String col, String direction) {
+	public Page<TypeUtilisateur> getAllPageable(int page, int max, String col, String direction) {
 		// TODO Auto-generated method stub
 		PageRequest pageRequest = PageRequest.of(page, max, Direction.ASC, col);
 		if(direction.trim().compareToIgnoreCase("desc") == 0 || direction.trim().compareToIgnoreCase("descending") == 0)
@@ -64,7 +64,7 @@ public class Type_UtilisateurImplementation implements Type_UtilisateurService{
 	}
 
 	@Override
-	public Type_Utilisateur rechercheType_Utilisateur(String libelle) {
+	public TypeUtilisateur rechercheType_Utilisateur(String libelle) {
 		// TODO Auto-generated method stub
 		return repository.rechercheType_Utilisateur(libelle);
 	}

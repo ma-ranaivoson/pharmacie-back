@@ -1,7 +1,7 @@
 package mg.meddoc.services;
 
-import mg.meddoc.models.Type_Utilisateur;
+import mg.meddoc.models.TypeUtilisateur;
 
-public interface Type_UtilisateurService extends CRUDService<Type_Utilisateur>{
-	Type_Utilisateur rechercheType_Utilisateur(String libelle);
+public interface Type_UtilisateurService extends CRUDService<TypeUtilisateur>{
+	TypeUtilisateur rechercheType_Utilisateur(String libelle);
 }

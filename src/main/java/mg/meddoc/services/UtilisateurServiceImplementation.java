@@ -7,8 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mg.meddoc.models.User;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.repositories.UtilisateurRepository;
 
@@ -17,6 +23,8 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 	
 	@Autowired
 	private UtilisateurRepository repository;
+
+	ObjectMapper om = new ObjectMapper();
 	
 	@Override
 	public Utilisateur save(Utilisateur entity) {
@@ -74,6 +82,33 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 	public Utilisateur rechercheUtilisateur(String nom) {
 		// TODO Auto-generated method stub
 		return repository.rechercheUtilisateur(nom);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String adresse) throws UsernameNotFoundException {
+		Utilisateur user = repository.findByAdresse(adresse);
+		try {
+			System.out.println(om.writeValueAsString(user));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(user==null)
+			throw new UsernameNotFoundException("User Not Found with -> username or email : " + adresse);
+
+		return user;
+	}
+
+	@Override
+	public Boolean existsByAdresse(String adresse) {
+		boolean res = repository.existsByAdresse(adresse);
+		System.out.println(res);
+		return res;
+	}
+
+	@Override
+	public Utilisateur findByAdresse(String adresse) {
+		return repository.findByAdresse(adresse);
 	}
 
 }

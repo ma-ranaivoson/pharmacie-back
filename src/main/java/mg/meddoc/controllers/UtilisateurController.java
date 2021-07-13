@@ -4,9 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,27 +26,57 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mg.meddoc.message.JwtResponse;
+import mg.meddoc.message.LoginForm;
+import mg.meddoc.message.ResponseMessage;
+import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.models.Utilisateur;
+import mg.meddoc.security.JwtProvider;
 import mg.meddoc.services.UtilisateurService;
 
 @RestController
 @RequestMapping(value = "/user")
+@CrossOrigin(origins = { "*" })
+@Component
 public class UtilisateurController {
 	@Autowired
 	UtilisateurService userService;
+	ObjectMapper om = new ObjectMapper();
 	
-	HashMap<String, Object> resp = new HashMap<String, Object>();
+	@Autowired
+	AuthenticationManager authenticationManager;
+
+	@Autowired
+	PasswordEncoder encoder;
+
+	@Autowired
+	JwtProvider jwtProvider;
 
 	// Create user
 	// public
-	@PostMapping(value = "")
-	public @ResponseBody ResponseEntity<?> createUser(@RequestBody Utilisateur user) {
+	@PostMapping(value = "/signup")
+	public @ResponseBody ResponseEntity<?> createUser(@RequestBody HashMap<String,String> user) {
 
 		HashMap<String, Object> res = new HashMap<String, Object>();
 
 		try {
-			Utilisateur userSaved = userService.save(user);
-			return new ResponseEntity<>(userSaved, HttpStatus.OK);
+			System.out.println(om.writeValueAsString(user));
+			if (userService.existsByAdresse(user.get("email"))) {
+				return new ResponseEntity<>(new ResponseMessage("Fail -> Adresse email is already taken!"),
+						HttpStatus.BAD_REQUEST);
+			}
+			Utilisateur newUser = new Utilisateur();
+			newUser.setNom(user.get("firstname"));
+			newUser.setPrenoms(user.get("lastname"));
+			newUser.setPassword(encoder.encode(user.get("password")));
+			newUser.setAdresse(user.get("email"));
+			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
+			newUser = userService.save(newUser);
+			res.put("status", "success");
+			res.put("message", "Inscription réussie");
+			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			res.put("success", false);
 			res.put("error", e.getStackTrace());
@@ -44,6 +84,26 @@ public class UtilisateurController {
 			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 
+	}
+	
+	@PostMapping("/signin")
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String,String> user) {
+		
+		try {
+			System.out.println(om.writeValueAsString(user));
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		String jwt = jwtProvider.generateJwtToken(authentication);
+		Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
+
+		return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getUsername(), null));
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	// Get All user
@@ -100,6 +160,7 @@ public class UtilisateurController {
 	// Delete user by id
 	@DeleteMapping(value = "/{id}")
 	public @ResponseBody ResponseEntity<?> deleteUserById (@PathVariable Long id) {
+		HashMap<String, Object> resp = new HashMap<String, Object>();
 		try {
 			userService.deleteById(id);
 			resp.put("success", true);

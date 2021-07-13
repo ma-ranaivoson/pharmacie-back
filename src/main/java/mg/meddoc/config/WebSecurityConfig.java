@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import mg.meddoc.security.JwtAuthEntryPoint;
 import mg.meddoc.security.JwtAuthTokenFilter;
 import mg.meddoc.services.UserDetailsServiceImpl;
+import mg.meddoc.services.UtilisateurServiceImplementation;
 
 
 
@@ -31,7 +32,7 @@ import mg.meddoc.services.UserDetailsServiceImpl;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-    UserDetailsServiceImpl userDetailsService;
+    UtilisateurServiceImplementation userDetailsService;
 
     @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
@@ -61,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/pharmacie/save");
 		web.ignoring().antMatchers("/pharmacie/delete/{id}");
 		web.ignoring().antMatchers("/pharmacie/byRaisonSociale/{raisonSociale}");
+		web.ignoring().antMatchers("/user/signin");
 	}
 	
 	@Override

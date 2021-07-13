@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import mg.meddoc.services.*;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import mg.meddoc.models.Utilisateur;
 
 @Component
 public class JwtProvider {
@@ -30,7 +29,7 @@ public class JwtProvider {
 
     public String generateJwtToken(Authentication authentication) {
 
-        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+        Utilisateur userPrincipal = (Utilisateur) authentication.getPrincipal();
 
         return Jwts.builder()
 		                .setSubject((userPrincipal.getUsername()))

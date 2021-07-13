@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "type_utilisateur")
-public class Type_Utilisateur implements Serializable{
+public class TypeUtilisateur implements Serializable{
 
 	/**
 	 * 
@@ -21,7 +21,7 @@ public class Type_Utilisateur implements Serializable{
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
-	public Type_Utilisateur() {
+	public TypeUtilisateur() {
 		
 	}
 
@@ -29,7 +29,7 @@ public class Type_Utilisateur implements Serializable{
 	 * @param idTypeUtilisateur
 	 * @param libelle
 	 */
-	public Type_Utilisateur(long idTypeUtilisateur, String libelle) {
+	public TypeUtilisateur(long idTypeUtilisateur, String libelle) {
 		super();
 		this.idTypeUtilisateur = idTypeUtilisateur;
 		this.libelle = libelle;
@@ -68,6 +68,11 @@ public class Type_Utilisateur implements Serializable{
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public TypeUtilisateur(long idTypeUtilisateur) {
+		super();
+		this.idTypeUtilisateur = idTypeUtilisateur;
 	}
 	
 	
