@@ -69,4 +69,15 @@ public class ProduitImplementation implements ProduitService{
 		return repository.rechercheProduit(designation);
 	}
 
+	@Override
+	public Page<Produit> findByDesignationContainingIgnoreCase(String designation, int page, int size,
+			String columnSort, String direction) {
+		if(direction==null||columnSort==null)
+			return repository.findByDesignationContainingIgnoreCase(designation, PageRequest.of((page-1), size)); 
+		if(direction.compareToIgnoreCase("asc")==0||direction.compareToIgnoreCase("ascending")==0)
+			return repository.findByDesignationContainingIgnoreCase(designation, PageRequest.of((page-1), size, Direction.ASC, columnSort));
+		else
+			return repository.findByDesignationContainingIgnoreCase(designation, PageRequest.of((page-1), size, Direction.DESC, columnSort));
+	}
+
 }
