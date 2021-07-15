@@ -1,13 +1,12 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -42,8 +41,16 @@ public class Pharmacie implements Serializable{
 	@Column(name = "longitude")
 	private Double longitude;
 	@Column(name = "latitude")
-   private Double latitude;
+    private Double latitude;
 	
+	
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-service")
+	private Set<Service> service;
+	//@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	//private Collection<Contact> contact;
+	//@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	//private Collection<Galerie> galerie;
 	
 	public Pharmacie() {
 		
@@ -56,7 +63,6 @@ public class Pharmacie implements Serializable{
 	public long getIdPharmacie() {
 		return idPharmacie;
 	}
-
 
 	/**
 	 * @param idPharmacie the idPharmacie to set

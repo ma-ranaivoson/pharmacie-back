@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +29,10 @@ public class Produit implements Serializable{
 	private java.lang.String description;
 	@Column(name = "format")
 	private java.lang.String format;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_marque")
+	private Marque marque;
 	
 	public Produit() {
 		

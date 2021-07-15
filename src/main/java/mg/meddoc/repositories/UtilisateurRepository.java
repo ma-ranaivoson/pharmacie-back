@@ -14,4 +14,5 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long>{
     Boolean existsByAdresse(String adresse);
 	
 	Utilisateur findByAdresse(String adresse);
+	
 }

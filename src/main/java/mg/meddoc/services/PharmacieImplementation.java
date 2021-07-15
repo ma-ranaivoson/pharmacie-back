@@ -83,4 +83,6 @@ public class PharmacieImplementation implements PharmacieService {
 		// TODO Auto-generated method stub
 	//repository.modifierStatutByStatut((Long)id, (Long)idStatut);
 	//}
+	
+	
 }

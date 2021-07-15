@@ -4,8 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "service")
@@ -16,12 +24,28 @@ public class Service implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(
+		strategy = GenerationType.SEQUENCE,
+		generator = "service-sequence"
+		)
+		@SequenceGenerator(
+		name = "service-sequence",
+		sequenceName = "seq_service",
+		allocationSize = 1,
+		initialValue = 2
+		)
 	@Column(name = "id_service")
-	private long idService;
+	private int idService;
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	@Column(name = "information")
 	private java.lang.String information;
+	
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-service")
+	private Pharmacie pharmacie;
 	
 	public Service() {
 		
@@ -32,7 +56,7 @@ public class Service implements Serializable{
 	 * @param libelle
 	 * @param information
 	 */
-	public Service(long idService, String libelle, String information) {
+	public Service(int idService, String libelle, String information) {
 		super();
 		this.idService = idService;
 		this.libelle = libelle;
@@ -49,7 +73,7 @@ public class Service implements Serializable{
 	/**
 	 * @param idService the idService to set
 	 */
-	public void setIdService(long idService) {
+	public void setIdService(int idService) {
 		this.idService = idService;
 	}
 

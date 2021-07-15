@@ -31,7 +31,7 @@ import mg.meddoc.services.PharmacieService;
 @CrossOrigin(origins = { "*" })
 @Component
 public class PharmacieController {
-
+	
 	ObjectMapper om = new ObjectMapper();
 	public static final Logger log = LoggerFactory.getLogger(PharmacieController.class);
 
@@ -51,7 +51,7 @@ public class PharmacieController {
 			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	//GetById_Pharmacie
 	@GetMapping(value = "/{id}")
 	public @ResponseBody ResponseEntity<?> getPharmacieById(@PathVariable Long id) {
@@ -70,7 +70,7 @@ public class PharmacieController {
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	//Save_Pharmacie
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> savePharmacie(@RequestBody Pharmacie pharmacie) {
@@ -80,9 +80,9 @@ public class PharmacieController {
 				throw new Exception("Raison sociale ne peut pas être vide");
 			if(pharmacie.getRaisonSocial()=="")
 				throw new Exception("Raison sociale ne peut pas être vide");
-			if(pharmacie.getLatitude()>100 || pharmacie.getLatitude()<0)
+			if(pharmacie.getLatitude()!= null&&(pharmacie.getLatitude()>100 || pharmacie.getLatitude()<0))
 				throw new Exception("Latitude incorrect");
-			if(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0)
+			if(pharmacie.getLongitude()!= null&&(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0))
 				throw new Exception("Longitude incorrect");
 			
 			servicePharmacie.save(pharmacie);
@@ -94,7 +94,7 @@ public class PharmacieController {
 			
 			return new ResponseEntity<>(success, HttpStatus.OK);			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());

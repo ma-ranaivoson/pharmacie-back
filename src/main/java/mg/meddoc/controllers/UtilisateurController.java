@@ -176,9 +176,4 @@ public class UtilisateurController {
 		}
 	}
 	
-	
-	
-	
-	
-	
 }

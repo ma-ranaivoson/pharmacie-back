@@ -17,4 +17,8 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	Pharmacie recherchePharmacie(String raisonSocial);
 	
 	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, Pageable page);
+	
+	//Liste Pharma eto Tana
+	
+	
 }

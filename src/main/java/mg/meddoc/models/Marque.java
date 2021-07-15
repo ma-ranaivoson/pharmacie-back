@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +23,9 @@ public class Marque implements Serializable{
 	private long idMarque;
 	@Column(name = "nomination")
 	private java.lang.String nomination;
+	
+	@OneToOne(mappedBy= "marque")
+	private Produit produit;
 	
 	public Marque() {
 		
