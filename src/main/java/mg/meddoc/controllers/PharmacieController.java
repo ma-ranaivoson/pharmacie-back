@@ -131,18 +131,19 @@ public class PharmacieController {
 	//GetByRaisonSociale_Pharmacie
 	@GetMapping(value = "/byRaisonSociale/{raisonSociale}")
 	public @ResponseBody ResponseEntity<?> getPharmacieByRaisonSociale(@PathVariable String raisonSociale) {
-		Pharmacie pharmacie = null;
+		//Pharmacie pharmacie = null;
 		
 		try {
+			
+			//List <Pharmacie> pharmacies = (List<Pharmacie>) servicePharmacie.recherchePharmacie(raisonSociale);
 			@SuppressWarnings("unchecked")
-			List <Pharmacie> pharmacies = (List<Pharmacie>) servicePharmacie.recherchePharmacie(raisonSociale);
 			Page<Pharmacie> pharmacieResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1, 10, "raisonSocial", "ASC");
 			System.out.println(om.writeValueAsString(pharmacieResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();
 			success.put("success", true);
-			success.put("data", pharmacies);
+			success.put("data", pharmacieResult);
 			
-			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
+			return new ResponseEntity<>(success, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);

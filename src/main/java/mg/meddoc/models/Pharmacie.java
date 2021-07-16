@@ -1,7 +1,6 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.*;
