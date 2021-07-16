@@ -149,5 +149,5 @@ public class PharmacieController {
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 }

@@ -2,6 +2,7 @@ package mg.meddoc.controllers;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,7 +108,26 @@ public class UtilisateurController {
 			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping(value = "/me")
+	public @ResponseBody ResponseEntity<?> getMe(@RequestHeader (name = "token") String token) {
+			
+		JwtAccessTokenConverter convertedToken;
 
+
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			 
+			System.out.println();
+			return new ResponseEntity<>("test", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
+		}
+
+	}
+	
+	
 	// Get All user
 	@GetMapping(value = "")
 	public @ResponseBody ResponseEntity<?> getAllUser() {

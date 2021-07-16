@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -20,91 +21,112 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import mg.meddoc.models.Produit;
 import mg.meddoc.services.ProduitService;
 
 @RestController
 @RequestMapping(value = "/produit")
-@CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = { "*" })
 @Component
 public class ProduitController {
-	
-	ObjectMapper om=new ObjectMapper();
+
+	ObjectMapper om = new ObjectMapper();
 	public static final Logger log = LoggerFactory.getLogger(ProduitController.class);
-	
+
 	@Autowired
 	ProduitService serviceProduit;
-	
-	//GetAll_Produit
-		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllProduit() {
-			List<Produit> produit = new ArrayList<Produit>();
-			try {
-				
-				produit = serviceProduit.getAll();
-				log.info(om.writeValueAsString(produit));
-				return new ResponseEntity<>(produit,HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur de réseaux",HttpStatus.BAD_REQUEST);
-			}
+
+	// GetAll_Produit
+	@GetMapping(value = "/all")
+	public @ResponseBody ResponseEntity<?> getAllProduit() {
+		List<Produit> produit = new ArrayList<Produit>();
+		try {
+
+			produit = serviceProduit.getAll();
+			log.info(om.writeValueAsString(produit));
+			return new ResponseEntity<>(produit, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 		}
-	//GetById_Produit
-			@GetMapping(value = "/{id}")
-			public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id) {
-				Produit produit = null;
-				try {
-					
-					produit = serviceProduit.getById(id);
-					log.info(om.writeValueAsString(produit));
-					return new ResponseEntity<>(produit,HttpStatus.OK);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
-				}
-			}
-	//Save_Produit
-		@PostMapping(value = "/save")
-		public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody Produit produit) {
-			try {
-//				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
-				serviceProduit.save(produit);
-				log.info(om.writeValueAsString(produit));
-				return new ResponseEntity<>("Produit inscrite avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-				
-			}
+	}
+
+	// GetById_Produit
+	@GetMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id) {
+		Produit produit = null;
+		try {
+
+			produit = serviceProduit.getById(id);
+			log.info(om.writeValueAsString(produit));
+			return new ResponseEntity<>(produit, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD", HttpStatus.BAD_REQUEST);
 		}
-	//Delete_Produit	
-		@DeleteMapping(value = "/delete/{id}")
-		public @ResponseBody ResponseEntity<?> deleteProduitById(@PathVariable Long id) {
-			try {
+	}
+
+	// Save_Produit
+	@PostMapping(value = "/save")
+	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody Produit produit) {
+		try {
+			serviceProduit.save(produit);
+			log.info(om.writeValueAsString(produit));
+			return new ResponseEntity<>("Produit inscrite avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
+
+		}
+	}
+
+	// Delete_Produit
+	@DeleteMapping(value = "/delete/{id}")
+	public @ResponseBody ResponseEntity<?> deleteProduitById(@PathVariable Long id) {
+		try {
 //				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
-				serviceProduit.deleteById(id);
+			serviceProduit.deleteById(id);
 //				servicePharmacie.save(pharmacie);
 //				log.info(om.writeValueAsString(pharmacie));
-				return new ResponseEntity<>("Produit supprimée avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-			}
+			return new ResponseEntity<>("Produit supprimée avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
 		}
-	//GetByDesignation/Produit
-				@GetMapping(value = "/byDesignation/{designation}")
-				public @ResponseBody ResponseEntity<?> getProduitByDesignation(@PathVariable String designation) {
-					Produit produit = null;
-					try {
-						
-						produit = serviceProduit.rechercheProduit(designation);
-						log.info(om.writeValueAsString(produit));
-						return new ResponseEntity<>(produit,HttpStatus.OK);
-						//return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
-					} catch (Exception e) {
-						e.printStackTrace();
-						return new ResponseEntity<>("Designation introuvable",HttpStatus.BAD_REQUEST);
-					}
-				}
-				
+	}
+
+	// GetByDesignation/Produit
+	@GetMapping(value = "/byDesignation/{designation}")
+	public @ResponseBody ResponseEntity<?> getProduitByDesignation(@PathVariable String designation) {
+		Produit produit = null;
+		try {
+
+			produit = serviceProduit.rechercheProduit(designation);
+			log.info(om.writeValueAsString(produit));
+			return new ResponseEntity<>(produit, HttpStatus.OK);
+			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
+		}
+	}
+	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
+	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation,@PathVariable String page,@PathVariable String size,@PathVariable String direction,@PathVariable String columnSort) {
+//		Produit produit = null;
+		try {
+			if(direction==null||direction.compareTo("----")==0)
+				direction = null;
+			if(columnSort==null||columnSort.compareTo("----")==0)
+				columnSort = null;
+			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation, Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
+			log.info(om.writeValueAsString(produits));
+			return new ResponseEntity<>(produits, HttpStatus.OK);
+			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }
