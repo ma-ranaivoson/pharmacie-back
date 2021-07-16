@@ -137,11 +137,11 @@ public class PharmacieController {
 			
 			//List <Pharmacie> pharmacies = (List<Pharmacie>) servicePharmacie.recherchePharmacie(raisonSociale);
 			@SuppressWarnings("unchecked")
-			Page<Pharmacie> pharmacieResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1, 10, "raisonSocial", "ASC");
-			System.out.println(om.writeValueAsString(pharmacieResult));
+			Page<Pharmacie> produitResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1, 10, "raisonSocial", "ASC");
+			System.out.println(om.writeValueAsString(produitResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();
 			success.put("success", true);
-			success.put("data", pharmacieResult);
+			success.put("data", produitResult);
 			
 			return new ResponseEntity<>(success, HttpStatus.OK);
 		} catch (Exception e) {
