@@ -24,7 +24,7 @@ public class SousCategorie implements Serializable{
 	public SousCategorie() {
 		
 	}
-
+	
 	/**
 	 * @param idSouCategorie
 	 * @param libelle

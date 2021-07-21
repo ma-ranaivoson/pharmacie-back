@@ -46,10 +46,22 @@ public class Pharmacie implements Serializable{
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonManagedReference(value="pharmacie-service")
 	private Set<Service> service;
-	//@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	//private Collection<Contact> contact;
-	//@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	//private Collection<Galerie> galerie;
+	
+//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="pharmacie-contact")
+//	private Set<Contact> contact;
+//	
+//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="pharmacie-staff")
+//	private Set<Staff> staff;
+//	
+//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="pharmacie-galerie")
+//	private Set<Galerie> galerie;
+//	
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_prix")
+//	private Prix prix;
 	
 	public Pharmacie() {
 		

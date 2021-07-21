@@ -4,8 +4,17 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "contact")
@@ -16,6 +25,16 @@ public class Contact implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "contact-sequence"
+			)
+			@SequenceGenerator(
+			name = "contact-sequence",
+			sequenceName = "seq_contact",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_contact")
 	private long idContact;
 	@Column(name = "valeur")
@@ -23,10 +42,17 @@ public class Contact implements Serializable{
 	@Column(name = "statut")
 	private int statut;
 	
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="id_pharmacie")
+//	@JsonBackReference(value="pharmacie-contact")
+//	private Pharmacie pharmacie;
+//	
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_type_contact")
+//	private Type_Contact typeContact;
+	
 	public Contact() {	}
 
-	
-	
 	/**
 	 * @param idContact
 	 * @param valeur

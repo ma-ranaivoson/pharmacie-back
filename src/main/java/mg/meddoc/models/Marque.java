@@ -24,8 +24,8 @@ public class Marque implements Serializable{
 	@Column(name = "nomination")
 	private java.lang.String nomination;
 	
-	@OneToOne(mappedBy= "marque")
-	private Produit produit;
+//	@OneToOne(mappedBy= "marque")
+//	private Produit produit;
 	
 	public Marque() {
 		

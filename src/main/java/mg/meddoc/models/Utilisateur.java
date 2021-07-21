@@ -36,8 +36,7 @@ public class Utilisateur implements Serializable, UserDetails{
 	@Column(name = "id_utilisateur")
 	private long idUtilisateur;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_type_utilisateur")
+	@Column(name = "id_type_utilisateur")
 	private TypeUtilisateur typeUtilisateur;
 
 	@Column(name = "nom")
@@ -55,9 +54,9 @@ public class Utilisateur implements Serializable, UserDetails{
 
 	@Column(name = "statut")
 	private int statut;
-
+	
 	public Utilisateur() {
-
+		
 	}
 
 	/**

@@ -100,5 +100,5 @@ public class CategorieController {
 						return new ResponseEntity<>("Nom Categorie introuvable",HttpStatus.BAD_REQUEST);
 					}
 				}
-				
+	
 }

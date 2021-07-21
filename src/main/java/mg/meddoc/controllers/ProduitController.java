@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Produit;
 import mg.meddoc.services.ProduitService;
 
@@ -127,7 +125,7 @@ public class ProduitController {
 			
 			//produit = serviceProduit.rechercheProduit(designation);
 			//Page<Produit> produitResult = serviceProduit.findByRaisonSocialContainingIgnoreCase(designation, 1, 10, "raisonSocial", "ASC");
-			@SuppressWarnings("unchecked")
+			//@SuppressWarnings("unchecked")
 			Page<Produit> produitResult = serviceProduit.findByDesignationContainingIgnoreCase(designation, 1, 10, "raisonSocial", "ASC");	
 			System.out.println(om.writeValueAsString(produitResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();

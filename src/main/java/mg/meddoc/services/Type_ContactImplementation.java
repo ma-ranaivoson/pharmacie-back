@@ -55,7 +55,7 @@ public class Type_ContactImplementation implements Type_ContactService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		
+		repository.deleteById((Long)id);
 	}
 
 	@Override

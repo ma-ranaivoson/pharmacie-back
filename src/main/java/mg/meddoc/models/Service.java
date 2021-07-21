@@ -41,7 +41,6 @@ public class Service implements Serializable{
 	@Column(name = "information")
 	private java.lang.String information;
 	
-	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_pharmacie")
 	@JsonBackReference(value="pharmacie-service")

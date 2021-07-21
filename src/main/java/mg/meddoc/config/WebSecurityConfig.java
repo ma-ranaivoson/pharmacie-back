@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import mg.meddoc.security.JwtAuthEntryPoint;
 import mg.meddoc.security.JwtAuthTokenFilter;
-import mg.meddoc.services.UserDetailsServiceImpl;
+//import mg.meddoc.services.UserDetailsServiceImpl;
 import mg.meddoc.services.UtilisateurServiceImplementation;
 
 
@@ -83,5 +83,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
     
-	
+    
 }

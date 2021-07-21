@@ -23,6 +23,7 @@ public class Prix implements Serializable{
 	@Column(name = "unite")
 	private java.lang.String unite;
 	
+	
 	public Prix() {
 		
 	}

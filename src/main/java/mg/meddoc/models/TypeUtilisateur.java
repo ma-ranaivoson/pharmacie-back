@@ -24,7 +24,7 @@ public class TypeUtilisateur implements Serializable{
 	public TypeUtilisateur() {
 		
 	}
-
+	
 	/**
 	 * @param idTypeUtilisateur
 	 * @param libelle

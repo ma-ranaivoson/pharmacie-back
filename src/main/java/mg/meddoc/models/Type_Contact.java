@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -16,6 +19,16 @@ public class Type_Contact implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "typecontact-sequence"
+			)
+			@SequenceGenerator(
+			name = "typecontact-sequence",
+			sequenceName = "seq_typecontact",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_type_contact")
 	private long idTypeContact;
 	@Column(name = "libelle")
