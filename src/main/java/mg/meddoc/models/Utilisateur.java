@@ -36,7 +36,8 @@ public class Utilisateur implements Serializable, UserDetails{
 	@Column(name = "id_utilisateur")
 	private long idUtilisateur;
 	
-	@Column(name = "id_type_utilisateur")
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "id_type_utilisateur")
 	private TypeUtilisateur typeUtilisateur;
 
 	@Column(name = "nom")

@@ -43,18 +43,6 @@ public class Produit implements Serializable{
 	@Column(name = "format")
 	private java.lang.String format;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_marque")
-//	private Marque marque;
-//	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_categorie")
-//	private Categorie categorie;
-//	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_prix")
-//	private Prix prix;
-	
 	public Produit() {
 		
 	}
