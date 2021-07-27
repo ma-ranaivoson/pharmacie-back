@@ -42,10 +42,13 @@ public class Pharmacie implements Serializable{
 	@Column(name = "latitude")
     private Double latitude;
 	
-	
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonManagedReference(value="pharmacie-service")
 	private Set<Service> service;
+	
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-produit")
+	private Set<Produit> produit;
 	
 //	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="pharmacie-contact")
@@ -165,7 +168,7 @@ public class Pharmacie implements Serializable{
 		return statut;
 	}
 
-
+	
 	/**
 	 * @param statut the statut to set
 	 */
@@ -180,7 +183,7 @@ public class Pharmacie implements Serializable{
 	public Double getLongitude() {
 		return longitude;
 	}
-
+	
 
 	/**
 	 * @param longitude the longitude to set

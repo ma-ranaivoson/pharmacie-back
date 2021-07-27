@@ -7,11 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "produit")
@@ -43,6 +46,26 @@ public class Produit implements Serializable{
 	@Column(name = "format")
 	private java.lang.String format;
 	
+<<<<<<< HEAD
+=======
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_marque")
+//	private Marque marque;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-produit")
+	private Pharmacie pharmacie;
+	
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_categorie")
+//	private Categorie categorie;
+//	
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_prix")
+//	private Prix prix;
+	
+>>>>>>> 55b63998c8338922eaed47664a5f2dd63e705dba
 	public Produit() {
 		
 	}

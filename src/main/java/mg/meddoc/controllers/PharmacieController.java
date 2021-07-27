@@ -76,10 +76,10 @@ public class PharmacieController {
 	public @ResponseBody ResponseEntity<?> savePharmacie(@RequestBody Pharmacie pharmacie) {
 		
 		try {
-			if(pharmacie.getRaisonSocial()==null)
+			if(pharmacie.getRaisonSocial()== null)
 				throw new Exception("Raison sociale ne peut pas être vide");
 			if(pharmacie.getRaisonSocial()=="")
-				throw new Exception("Raison sociale ne peut pas être vide");
+				throw new Exception("Raison sociale tena vide");
 			if(pharmacie.getLatitude()!= null&&(pharmacie.getLatitude()>100 || pharmacie.getLatitude()<0))
 				throw new Exception("Latitude incorrect");
 			if(pharmacie.getLongitude()!= null&&(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0))
@@ -147,7 +147,6 @@ public class PharmacieController {
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
 	
 	
 }
