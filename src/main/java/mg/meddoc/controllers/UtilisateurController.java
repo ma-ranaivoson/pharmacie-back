@@ -77,7 +77,6 @@ public class UtilisateurController {
 			newUser.setAdresse(user.get("email"));
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
 			newUser = userService.save(newUser);
-			res.put("status", "success");
 			res.put("message", "Inscription réussie");
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
@@ -129,11 +128,12 @@ public class UtilisateurController {
 	
 	
 	// Get All user
-	@GetMapping(value = "")
+	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllUser() {
 		List<Utilisateur> users;
 		try {
 			users = userService.getAll();
+			System.out.println(om.writeValueAsString(users));
 			return new ResponseEntity<>(users, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -71,10 +71,10 @@ public class Produit implements Serializable{
     	joinColumns = @JoinColumn(name = "produit_id"), 
     	inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users = new HashSet<>();
-//	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_prix")
-//	private Prix prix;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_prix")
+	private Prix prix;
 	
 	public Produit() {
 		

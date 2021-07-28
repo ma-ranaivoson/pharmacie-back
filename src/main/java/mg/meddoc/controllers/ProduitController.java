@@ -79,7 +79,6 @@ public class ProduitController {
 			log.info(om.writeValueAsString(produit));
 			
 			HashMap<String, Object> success = new HashMap<String, Object>();
-			success.put("success", true);
 			success.put("data", produit);
 			
 			return new ResponseEntity<>("Produit inscrite avec succès", HttpStatus.OK);
