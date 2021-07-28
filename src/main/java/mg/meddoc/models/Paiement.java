@@ -29,7 +29,7 @@ public class Paiement implements Serializable{
 	
 //Relation
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="idUsers")
+	@JoinColumn(name="id_users")
 	private User users;
 	
 	public Paiement() {

@@ -11,8 +11,15 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long>{
 	
 	//Optional<Utilisateur> findByUsername(String username);
     //Boolean existsByUsername(String username);
-    Boolean existsByAdresse(String adresse);
+    Boolean existsByEmail(String email);
 	
-	Utilisateur findByAdresse(String adresse);
+	Utilisateur findByEmail(String email);
+	
+	Boolean existsByPhone(String phone);
+	
+	Utilisateur findByPhone(String phone);
+	
+	@Query(nativeQuery=true,value="SELECT distinct utilisateur.* FROM utilisateur WHERE phone=?1 or email=?1 or id_utilisateur = CAST(?1 AS BIGINT)")
+	Utilisateur findByIdentifiant(String value);
 	
 }

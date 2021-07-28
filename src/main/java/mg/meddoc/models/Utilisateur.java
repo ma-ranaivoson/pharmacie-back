@@ -11,8 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,21 +20,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "utilisateur", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "nom"
-            })
-	})
+@Table(name = "utilisateur")
 public class Utilisateur implements Serializable, UserDetails{
+	
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -1373533667783304594L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "users-sequence"
+			)
+			@SequenceGenerator(
+			name = "users-sequence",
+			sequenceName = "seq_users",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_utilisateur")
-	private long idUtilisateur;
+	private Long idUtilisateur;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "id_type_utilisateur")
@@ -50,8 +57,11 @@ public class Utilisateur implements Serializable, UserDetails{
 	@JsonIgnoreProperties
 	private java.lang.String password;
 
-	@Column(name = "adresse")
-	private java.lang.String adresse;
+	@Column(name = "email")
+	private java.lang.String email;
+	
+	@Column(name = "phone")
+	private java.lang.String phone;
 
 	@Column(name = "statut")
 	private int statut;
@@ -68,28 +78,29 @@ public class Utilisateur implements Serializable, UserDetails{
 	 * @param adresse
 	 * @param statut
 	 */
-	public Utilisateur(long idUtilisateur, String nom, String prenoms, String mot_de_passe, String adresse,
+	public Utilisateur(long idUtilisateur, String nom, String prenoms, String mot_de_passe, String email, String phone,
 			int statut) {
 		super();
 		this.idUtilisateur = idUtilisateur;
 		this.nom = nom;
 		this.prenoms = prenoms;
 		this.password = mot_de_passe;
-		this.adresse = adresse;
+		this.email = email;
+		this.phone = phone;
 		this.statut = statut;
 	}
 
 	/**
 	 * @return the idUtilisateur
 	 */
-	public long getIdUtilisateur() {
+	public Long getIdUtilisateur() {
 		return idUtilisateur;
 	}
 
 	/**
 	 * @param idUtilisateur the idUtilisateur to set
 	 */
-	public void setIdUtilisateur(long idUtilisateur) {
+	public void setIdUtilisateur(Long idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
 
@@ -136,17 +147,31 @@ public class Utilisateur implements Serializable, UserDetails{
 	}
 
 	/**
-	 * @return the adresse
+	 * @return the email
 	 */
-	public java.lang.String getAdresse() {
-		return adresse;
+	public java.lang.String getEmail() {
+		return email;
 	}
 
 	/**
-	 * @param adresse the adresse to set
+	 * @param email the email to set
 	 */
-	public void setAdresse(java.lang.String adresse) {
-		this.adresse = adresse;
+	public void setEmail(java.lang.String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the phone
+	 */
+	public java.lang.String getPhone() {
+		return phone;
+	}
+
+	/**
+	 * @param phone the phone to set
+	 */
+	public void setPhone(java.lang.String phone) {
+		this.phone = phone;
 	}
 
 	/**
@@ -161,13 +186,6 @@ public class Utilisateur implements Serializable, UserDetails{
 	 */
 	public void setStatut(int statut) {
 		this.statut = statut;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	@Override

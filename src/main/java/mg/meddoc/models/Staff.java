@@ -46,9 +46,9 @@ public class Staff implements Serializable{
 	@JsonBackReference(value="pharmacie-staff")
 	private Pharmacie pharmacie;
 //	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_specialite")
-//	private Specialite specialite;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_specialite")
+	private Specialite specialite;
 	
 	public Staff() {
 		

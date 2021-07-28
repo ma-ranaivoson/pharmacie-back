@@ -59,22 +59,28 @@ public class UtilisateurController {
 
 	// Create user
 	// public
-	@PostMapping(value = "/signup")
-	public @ResponseBody ResponseEntity<?> createUser(@RequestBody HashMap<String,String> user) {
+	
+	@PostMapping(value = "/register")
+	public @ResponseBody ResponseEntity<?> register(@RequestBody Utilisateur user) {
 
 		HashMap<String, Object> res = new HashMap<String, Object>();
 
 		try {
 			System.out.println(om.writeValueAsString(user));
-			if (userService.existsByAdresse(user.get("email"))) {
-				return new ResponseEntity<>(new ResponseMessage("Fail -> Adresse email is already taken!"),
+			if (userService.existsByEmail(user.getEmail())) {
+				return new ResponseEntity<>(new ResponseMessage("Fail -> Adresse email déjà prise"),
+						HttpStatus.BAD_REQUEST);
+			}
+			if (userService.existsByPhone(user.getPhone())) {
+				return new ResponseEntity<>(new ResponseMessage("Fail -> Numéro téléphone déjà pris!"),
 						HttpStatus.BAD_REQUEST);
 			}
 			Utilisateur newUser = new Utilisateur();
-			newUser.setNom(user.get("firstname"));
-			newUser.setPrenoms(user.get("lastname"));
-			newUser.setPassword(encoder.encode(user.get("password")));
-			newUser.setAdresse(user.get("email"));
+			newUser.setNom(user.getNom());
+			newUser.setPrenoms(user.getPrenoms());
+			newUser.setPassword(encoder.encode(user.getPassword()));
+			newUser.setEmail(user.getEmail());
+			newUser.setPhone(user.getPhone());
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
 			newUser = userService.save(newUser);
 			res.put("message", "Inscription réussie");
@@ -82,7 +88,7 @@ public class UtilisateurController {
 		} catch (Exception e) {
 			res.put("success", false);
 			res.put("error", e.getStackTrace());
-
+			e.printStackTrace();
 			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 
@@ -101,7 +107,7 @@ public class UtilisateurController {
 		String jwt = jwtProvider.generateJwtToken(authentication);
 		Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getUsername(), null));
+		return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
@@ -109,16 +115,14 @@ public class UtilisateurController {
 	}
 	
 	@GetMapping(value = "/me")
-	public @ResponseBody ResponseEntity<?> getMe(@RequestHeader (name = "token") String token) {
+	public @ResponseBody ResponseEntity<?> getMe() {
 			
-		JwtAccessTokenConverter convertedToken;
+		Utilisateur user = (Utilisateur)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 
 		try {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			 
 			System.out.println();
-			return new ResponseEntity<>("test", HttpStatus.OK);
+			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);

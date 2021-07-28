@@ -7,8 +7,13 @@ import mg.meddoc.models.Utilisateur;
 public interface UtilisateurService extends CRUDService<Utilisateur>, UserDetailsService{
 	Utilisateur rechercheUtilisateur(String nom);
 
-	Boolean existsByAdresse(String adresse);
+	Boolean existsByEmail(String email);
 	
-	Utilisateur findByAdresse(String adresse);
+	Utilisateur findByEmail(String email);
 	
+	Boolean existsByPhone(String phone);
+	
+	Utilisateur findByPhone(String phone);
+
+	Utilisateur findByIdentifiant(String value);
 }

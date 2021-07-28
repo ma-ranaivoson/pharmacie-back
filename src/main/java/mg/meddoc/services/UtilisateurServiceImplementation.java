@@ -42,7 +42,10 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 	public Utilisateur getById(Serializable id) {
 		// TODO Auto-generated method stub
 		try {
-			return repository.findById((Long) id).orElseThrow(() -> new Exception("Not found"));
+//			return repository.findById((Long) id).orElseThrow(() -> new Exception("Not found"));
+			Utilisateur user = repository.findById((Long)id).get();
+			System.out.println("Eto==> "+om.writeValueAsString(user));
+			return user;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,30 +88,66 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String adresse) throws UsernameNotFoundException {
-		Utilisateur user = repository.findByAdresse(adresse);
+	public UserDetails loadUserByUsername(String identification) throws UsernameNotFoundException {
+//		Utilisateur user = repository.findByEmail(identification);
+//		if(user==null)
+//			user = repository.findByPhone(identification);
+		Utilisateur user = null;
+		if(isNumber(identification)) {
+			user = repository.findById(Long.parseLong(identification)).get();
+		}else {
+			user = repository.findByEmail(identification);
+			if(user==null)
+				user = repository.findByPhone(identification);
+		}
 		try {
-			System.out.println(om.writeValueAsString(user));
-		} catch (JsonProcessingException e) {
+//			System.out.println(om.writeValueAsString(user));
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(user==null)
-			throw new UsernameNotFoundException("User Not Found with -> username or email : " + adresse);
+			throw new UsernameNotFoundException("User Not Found with -> username or email : " + identification);
 
 		return user;
 	}
 
 	@Override
-	public Boolean existsByAdresse(String adresse) {
-		boolean res = repository.existsByAdresse(adresse);
-		System.out.println(res);
-		return res;
+	public Boolean existsByEmail(String email) {
+		// TODO Auto-generated method stub
+		return repository.existsByEmail(email);
 	}
 
 	@Override
-	public Utilisateur findByAdresse(String adresse) {
-		return repository.findByAdresse(adresse);
+	public Utilisateur findByEmail(String email) {
+		// TODO Auto-generated method stub
+		return repository.findByEmail(email);
 	}
 
+	@Override
+	public Boolean existsByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return repository.existsByPhone(phone);
+	}
+
+	@Override
+	public Utilisateur findByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return repository.findByPhone(phone);
+	}
+
+	@Override
+	public Utilisateur findByIdentifiant(String value) {
+		// TODO Auto-generated method stub
+		return repository.findByIdentifiant(value);
+	}
+
+	boolean isNumber(String value) {
+		try {
+			Long id = Long.parseLong(value);
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
+	}
 }

@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import mg.meddoc.services.*;
+import mg.meddoc.models.Utilisateur;
+import mg.meddoc.services.UtilisateurServiceImplementation;
 
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
@@ -37,7 +37,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 			if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
 				String username = tokenProvider.getUserNameFromJwtToken(jwt);
 				System.out.println(username);
-				UserDetails _userDetails = userDetailsService.loadUserByUsername(username);
+				Utilisateur _userDetails = (Utilisateur) userDetailsService.loadUserByUsername(username);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						_userDetails, null, _userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -55,6 +55,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 		String authHeader = request.getHeader("Authorization");
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			authHeader = authHeader.replace("Bearer ", "");
+			System.out.println(authHeader);
 			return authHeader.replace("Bearer ", "");
 		}
 

@@ -73,7 +73,7 @@ public class Pharmacie implements Serializable{
 	private Set<Prix> prix;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="idPanier")
+	@JoinColumn(name="id_panier")
 	@JsonBackReference(value="panier-pharmacie")
 	private Panier panier;
 	

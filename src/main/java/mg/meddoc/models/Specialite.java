@@ -35,8 +35,6 @@ public class Specialite implements Serializable{
 	private Pharmacie pharmacie;
 	
 	
-	
-	
 	public Specialite() {
 		
 	}

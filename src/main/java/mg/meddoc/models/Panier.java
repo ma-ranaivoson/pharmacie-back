@@ -40,7 +40,7 @@ public class Panier implements Serializable{
 	
 //Relation
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="idUsers")
+	@JoinColumn(name="id_users")
 	private User user;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -48,11 +48,11 @@ public class Panier implements Serializable{
 	private Set<Pharmacie> pharmacie;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="idPaiement")
+	@JoinColumn(name="id_paiement")
 	private Paiement paiement;
 	
 //Produit ??	
-	
+		
 	public Panier() {
 		
 	}

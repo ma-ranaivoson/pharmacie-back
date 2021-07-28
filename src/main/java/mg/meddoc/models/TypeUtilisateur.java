@@ -11,13 +11,14 @@ import javax.persistence.Table;
 @Table(name = "type_utilisateur")
 public class TypeUtilisateur implements Serializable{
 
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7267464673120182306L;
 	@Id
 	@Column(name = "id_type_utilisateur")
-	private long idTypeUtilisateur;
+	private Integer idTypeUtilisateur;
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
@@ -29,7 +30,7 @@ public class TypeUtilisateur implements Serializable{
 	 * @param idTypeUtilisateur
 	 * @param libelle
 	 */
-	public TypeUtilisateur(long idTypeUtilisateur, String libelle) {
+	public TypeUtilisateur(Integer idTypeUtilisateur, String libelle) {
 		super();
 		this.idTypeUtilisateur = idTypeUtilisateur;
 		this.libelle = libelle;
@@ -45,7 +46,7 @@ public class TypeUtilisateur implements Serializable{
 	/**
 	 * @param idTypeUtilisateur the idTypeUtilisateur to set
 	 */
-	public void setIdTypeUtilisateur(long idTypeUtilisateur) {
+	public void setIdTypeUtilisateur(Integer idTypeUtilisateur) {
 		this.idTypeUtilisateur = idTypeUtilisateur;
 	}
 
@@ -63,14 +64,7 @@ public class TypeUtilisateur implements Serializable{
 		this.libelle = libelle;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public TypeUtilisateur(long idTypeUtilisateur) {
+	public TypeUtilisateur(Integer idTypeUtilisateur) {
 		super();
 		this.idTypeUtilisateur = idTypeUtilisateur;
 	}
