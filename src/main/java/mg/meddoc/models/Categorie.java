@@ -1,7 +1,9 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,9 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "categorie")
@@ -37,10 +44,14 @@ public class Categorie implements Serializable{
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_sous_categorie")
-//	private SousCategorie souscategorie;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_produit")
+	@JsonBackReference(value="produit-categorie")
+	private Produit produit;
 	
+	@OneToMany(mappedBy = "categorie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="categorie-souscategorie")
+	private Set<SousCategorie> souscategorie;
 	
 	public Categorie() {
 		

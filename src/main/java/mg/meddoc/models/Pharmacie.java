@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
@@ -29,6 +30,7 @@ public class Pharmacie implements Serializable{
 		)
 	@Column(name = "id_pharmacie")
 	private long idPharmacie;
+	
 	@Column(name = "raison_social")
 	private java.lang.String raisonSocial;
 	@Column(name = "presentation")
@@ -50,26 +52,34 @@ public class Pharmacie implements Serializable{
 	@JsonManagedReference(value="pharmacie-produit")
 	private Set<Produit> produit;
 	
-//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	@JsonManagedReference(value="pharmacie-contact")
-//	private Set<Contact> contact;
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-contact")
+	private Set<Contact> contact;
 //	
-//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	@JsonManagedReference(value="pharmacie-staff")
-//	private Set<Staff> staff;
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-staff")
+	private Set<Staff> staff;
+	
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-specialite")
+	private Set<Specialite> specialite;
 //	
-//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	@JsonManagedReference(value="pharmacie-galerie")
-//	private Set<Galerie> galerie;
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-galerie")
+	private Set<Galerie> galerie;
 //	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_prix")
-//	private Prix prix;
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="pharmacie-prix")
+	private Set<Prix> prix;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="idPanier")
+	@JsonBackReference(value="panier-pharmacie")
+	private Panier panier;
 	
 	public Pharmacie() {
 		
 	}
-	
 
 	/**
 	 * @return the idPharmacie

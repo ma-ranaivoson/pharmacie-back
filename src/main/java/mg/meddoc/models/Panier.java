@@ -2,11 +2,19 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "panier")
@@ -29,6 +37,21 @@ public class Panier implements Serializable{
 	private Double montant;
 	@Column(name = "statut")
 	private int statut;
+	
+//Relation
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="idUsers")
+	private User user;
+	
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="panier-pharmacie")
+	private Set<Pharmacie> pharmacie;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="idPaiement")
+	private Paiement paiement;
+	
+//Produit ??	
 	
 	public Panier() {
 		

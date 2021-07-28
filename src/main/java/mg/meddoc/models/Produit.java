@@ -1,13 +1,19 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "produit")
@@ -46,18 +53,24 @@ public class Produit implements Serializable{
 	@Column(name = "format")
 	private java.lang.String format;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_marque")
-//	private Marque marque;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_marque")
+	private Marque marque;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_pharmacie")
 	@JsonBackReference(value="pharmacie-produit")
 	private Pharmacie pharmacie;
 	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_categorie")
-//	private Categorie categorie;
+	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="produit-categorie")
+	private Set<Categorie> categorie;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "favoris", 
+    	joinColumns = @JoinColumn(name = "produit_id"), 
+    	inverseJoinColumns = @JoinColumn(name = "users_id"))
+    private Set<User> users = new HashSet<>();
 //	
 //	@OneToOne(fetch=FetchType.EAGER)
 //	@JoinColumn(name="id_prix")

@@ -4,8 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "prix")
@@ -22,8 +27,13 @@ public class Prix implements Serializable{
 	private int prix;
 	@Column(name = "unite")
 	private java.lang.String unite;
-	
-	
+
+//	Relation
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-prix")
+	private Pharmacie pharmacie;
+		
 	public Prix() {
 		
 	}

@@ -41,10 +41,10 @@ public class Galerie implements Serializable{
 	@Column(name = "nom_photo")
 	private java.lang.String nom;
 	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="id_pharmacie")
-//	@JsonBackReference(value="pharmacie-galerie")
-//	private Pharmacie pharmacie;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-galerie")
+	private Pharmacie pharmacie;
 	
 	public Galerie() {
 		

@@ -4,8 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "sous_categorie")
@@ -20,6 +25,11 @@ public class SousCategorie implements Serializable{
 	private long idSouCategorie;
 	@Column(name = "libelle")
 	private java.lang.String libelle;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_categorie")
+	@JsonBackReference(value="categorie-souscategorie")
+	private Categorie categorie;
 	
 	public SousCategorie() {
 		

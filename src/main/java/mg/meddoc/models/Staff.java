@@ -40,10 +40,11 @@ public class Staff implements Serializable{
 	@Column(name = "nom_staf")
 	private java.lang.String nom;
 	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="id_pharmacie")
-//	@JsonBackReference(value="pharmacie-staff")
-//	private Pharmacie pharmacie;
+// Relation....	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-staff")
+	private Pharmacie pharmacie;
 //	
 //	@OneToOne(fetch=FetchType.EAGER)
 //	@JoinColumn(name="id_specialite")

@@ -42,14 +42,14 @@ public class Contact implements Serializable{
 	@Column(name = "statut")
 	private int statut;
 	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="id_pharmacie")
-//	@JsonBackReference(value="pharmacie-contact")
-//	private Pharmacie pharmacie;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-contact")
+	private Pharmacie pharmacie;
 //	
-//	@OneToOne(fetch=FetchType.EAGER)
-//	@JoinColumn(name="id_type_contact")
-//	private Type_Contact typeContact;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_type_contact")
+	private Type_Contact typeContact;
 	
 	public Contact() {	}
 

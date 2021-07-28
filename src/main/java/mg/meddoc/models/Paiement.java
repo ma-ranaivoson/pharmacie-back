@@ -5,7 +5,10 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +26,11 @@ public class Paiement implements Serializable{
 	private java.sql.Date date_paiement;
 	@Column(name = "montant_total")
 	private Double montant_total;
+	
+//Relation
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="idUsers")
+	private User users;
 	
 	public Paiement() {
 		

@@ -34,6 +34,7 @@ public class Type_Contact implements Serializable{
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
+	
 	public Type_Contact() {
 		
 	}

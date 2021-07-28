@@ -5,7 +5,10 @@ import java.sql.Time;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +28,11 @@ public class Horaire implements Serializable{
 	private java.sql.Time heure_ouverture;
 	@Column(name = "heure_fermeture")
 	private java.sql.Time heure_fermeture;
+	
+//Relation
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_pharmacie")
+	private Pharmacie pharmacie;
 	
 	public Horaire() {
 		

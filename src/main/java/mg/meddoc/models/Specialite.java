@@ -4,8 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "specialite")
@@ -22,6 +27,15 @@ public class Specialite implements Serializable{
 	private java.lang.String libelle;
 	@Column(name = "information")
 	private java.lang.String information;
+	
+	//Relation
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pharmacie")
+	@JsonBackReference(value="pharmacie-specialite")
+	private Pharmacie pharmacie;
+	
+	
+	
 	
 	public Specialite() {
 		
