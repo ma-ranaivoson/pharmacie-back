@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "prix")
+@IdClass(PrixPK.class)
 public class Prix implements Serializable{
 
 	/**
@@ -21,8 +23,11 @@ public class Prix implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "id_prix")
-	private long idPrix;
+	@Column(name = "id_pharmacie")
+	private Long idPharmacie;
+	@Id
+	@Column(name = "id_produit")
+	private Long idProduit;
 	@Column(name = "prix")
 	private int prix;
 	@Column(name = "unite")
@@ -30,9 +35,14 @@ public class Prix implements Serializable{
 
 //	Relation
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie")
+	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
 	@JsonBackReference(value="pharmacie-prix")
 	private Pharmacie pharmacie;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_produit",insertable = false, updatable = false)
+	@JsonBackReference(value="produit-prix")
+	private Produit produit;
 		
 	public Prix() {
 		
@@ -43,25 +53,12 @@ public class Prix implements Serializable{
 	 * @param prix
 	 * @param unite
 	 */
-	public Prix(long idPrix, int prix, String unite) {
+	public Prix(Long idPharmacie, Long idProduit, int prix, String unite) {
 		super();
-		this.idPrix = idPrix;
+		this.idPharmacie = idPharmacie;
+		this.idProduit = idProduit;
 		this.prix = prix;
 		this.unite = unite;
-	}
-
-	/**
-	 * @return the idPrix
-	 */
-	public long getIdPrix() {
-		return idPrix;
-	}
-
-	/**
-	 * @param idPrix the idPrix to set
-	 */
-	public void setIdPrix(long idPrix) {
-		this.idPrix = idPrix;
 	}
 
 	/**
@@ -92,12 +89,35 @@ public class Prix implements Serializable{
 		this.unite = unite;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Long getIdPharmacie() {
+		return idPharmacie;
 	}
-	
-	
+
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
+
+	public Long getIdProduit() {
+		return idProduit;
+	}
+
+	public void setIdProduit(Long idProduit) {
+		this.idProduit = idProduit;
+	}
+
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}
+
+	public Produit getProduit() {
+		return produit;
+	}
+
+	public void setProduit(Produit produit) {
+		this.produit = produit;
+	}
 }

@@ -44,10 +44,10 @@ public class Categorie implements Serializable{
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_produit")
-	@JsonBackReference(value="produit-categorie")
-	private Produit produit;
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="id_produit")
+//	@JsonBackReference(value="produit-categorie")
+//	private Produit produit;
 	
 	@OneToMany(mappedBy = "categorie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonManagedReference(value="categorie-souscategorie")

@@ -62,19 +62,24 @@ public class Produit implements Serializable{
 	@JsonBackReference(value="pharmacie-produit")
 	private Pharmacie pharmacie;
 	
-	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="produit-categorie")
+//	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="produit-categorie")
+//	private Set<Categorie> categorie;
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "rel_sous_categorie_produit", 
+    	joinColumns = @JoinColumn(name = "id_produit"), 
+    	inverseJoinColumns = @JoinColumn(name = "id_sous_categorie"))
 	private Set<Categorie> categorie;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "favoris", 
-    	joinColumns = @JoinColumn(name = "produit_id"), 
-    	inverseJoinColumns = @JoinColumn(name = "users_id"))
-    private Set<User> users = new HashSet<>();
+//	@ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "favoris", 
+//    	joinColumns = @JoinColumn(name = "produit_id"), 
+//    	inverseJoinColumns = @JoinColumn(name = "users_id"))
+//    private Set<User> users = new HashSet<>();
 	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_prix")
-	private Prix prix;
+	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference(value="produit-prix")
+	private Set<Prix> prix;
 	
 	public Produit() {
 		
@@ -166,13 +171,35 @@ public class Produit implements Serializable{
 		this.format = format;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Marque getMarque() {
+		return marque;
 	}
-	
-	
-	
+
+	public void setMarque(Marque marque) {
+		this.marque = marque;
+	}
+
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}
+
+	public Set<Categorie> getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Set<Categorie> categorie) {
+		this.categorie = categorie;
+	}
+
+	public Set<Prix> getPrix() {
+		return prix;
+	}
+
+	public void setPrix(Set<Prix> prix) {
+		this.prix = prix;
+	}
 }
