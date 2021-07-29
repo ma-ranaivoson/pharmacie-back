@@ -2,7 +2,6 @@ package mg.meddoc.controllers;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
@@ -14,9 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,14 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.message.JwtResponse;
-import mg.meddoc.message.LoginForm;
 import mg.meddoc.message.ResponseMessage;
 import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.security.JwtProvider;
+import mg.meddoc.services.AmazonSesService;
 import mg.meddoc.services.UtilisateurService;
 import mg.meddoc.utils.Util;
-import mg.meddoc.services.*;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -60,7 +55,7 @@ public class UtilisateurController {
 	JwtProvider jwtProvider;
 	
 	@Autowired
-	EmailSenderService emailservice;
+	AmazonSesService emailservice;
 
 	// Create user
 	// public
@@ -90,7 +85,27 @@ public class UtilisateurController {
 			newUser.setValidationCode(user.getValidationCode());
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
 			//send mail
-			emailservice.send(user.getEmail(),Util.generateCode());
+			String code = Util.generateCode();
+			class MailAndSms implements Runnable {
+				String mailSend;
+				String phoneSend;
+		        String codeSend;
+		        MailAndSms(String mail, String phone, String code) { 
+		        	mailSend = mail;
+		        	phoneSend = phone;
+		        	codeSend = code;
+	        	}
+		        public void run() {
+		        	if(mailSend!=null) {
+						try {
+							emailservice.sendMail(Util.sendEmailValidation(mailSend, String.valueOf(codeSend)));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+		        }
+		    }
+		    Thread t = new Thread(new MailAndSms(user.getEmail(), user.getPhone(), code));
 			newUser = userService.save(newUser);
 			res.put("message", "Inscription réussie");
 			return new ResponseEntity<>(res, HttpStatus.OK);
