@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import mg.meddoc.models.Galerie;
+import mg.meddoc.models.GaleriePK;
 import mg.meddoc.repositories.GalerieRepository;
 
 @Service
@@ -33,7 +34,7 @@ public class GalerieImplementation implements GalerieService{
 	@Override
 	public Galerie getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((Long) id).get();
+		return repository.findById((GaleriePK) id).get();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class GalerieImplementation implements GalerieService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		repository.deleteById((Long)id);
+		repository.deleteById((GaleriePK)id);
 	}
 
 	@Override

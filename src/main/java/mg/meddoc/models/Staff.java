@@ -41,14 +41,10 @@ public class Staff implements Serializable{
 	private java.lang.String nom;
 	
 // Relation....	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_pharmacie")
 	@JsonBackReference(value="pharmacie-staff")
 	private Pharmacie pharmacie;
-//	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_specialite")
-	private Specialite specialite;
 	
 	public Staff() {
 		
@@ -92,12 +88,11 @@ public class Staff implements Serializable{
 		this.nom = nom;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Pharmacie getPharmacie() {
+		return pharmacie;
 	}
-	
-	
+
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}	
 }
