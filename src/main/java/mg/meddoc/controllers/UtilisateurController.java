@@ -38,6 +38,8 @@ import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.security.JwtProvider;
 import mg.meddoc.services.UtilisateurService;
+import mg.meddoc.utils.Util;
+import mg.meddoc.services.*;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -56,6 +58,9 @@ public class UtilisateurController {
 
 	@Autowired
 	JwtProvider jwtProvider;
+	
+	@Autowired
+	EmailSenderService emailservice;
 
 	// Create user
 	// public
@@ -81,7 +86,11 @@ public class UtilisateurController {
 			newUser.setPassword(encoder.encode(user.getPassword()));
 			newUser.setEmail(user.getEmail());
 			newUser.setPhone(user.getPhone());
+			//Validation Code
+			newUser.setValidationCode(user.getValidationCode());
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
+			//send mail
+			emailservice.send(user.getEmail(),Util.generateCode());
 			newUser = userService.save(newUser);
 			res.put("message", "Inscription réussie");
 			return new ResponseEntity<>(res, HttpStatus.OK);
@@ -118,7 +127,7 @@ public class UtilisateurController {
 	public @ResponseBody ResponseEntity<?> getMe() {
 			
 		Utilisateur user = (Utilisateur)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+		//List<Panier> paniers = servicePanier.findByIdUtilisateur(user.getIdUtilisateur());
 
 		try {
 			System.out.println();

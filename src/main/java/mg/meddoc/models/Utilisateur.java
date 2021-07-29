@@ -52,6 +52,23 @@ public class Utilisateur implements Serializable, UserDetails{
 
 	@Column(name = "prenoms")
 	private java.lang.String prenoms;
+	
+	@Column(name = "validation_code")
+	private java.lang.String validationCode;
+
+	/**
+	 * @return the validationCode
+	 */
+	public java.lang.String getValidationCode() {
+		return validationCode;
+	}
+
+	/**
+	 * @param validationCode the validationCode to set
+	 */
+	public void setValidationCode(java.lang.String validationCode) {
+		this.validationCode = validationCode;
+	}
 
 	@Column(name = "mot_de_passe")
 	@JsonIgnoreProperties
