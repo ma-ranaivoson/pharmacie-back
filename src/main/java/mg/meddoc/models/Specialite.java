@@ -28,11 +28,11 @@ public class Specialite implements Serializable{
 	@Column(name = "information")
 	private java.lang.String information;
 	
-	//Relation
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie")
-	@JsonBackReference(value="pharmacie-specialite")
-	private Pharmacie pharmacie;
+//	//Relation
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="id_pharmacie")
+//	@JsonBackReference(value="pharmacie-specialite")
+//	private Pharmacie pharmacie;
 	
 	
 	public Specialite() {

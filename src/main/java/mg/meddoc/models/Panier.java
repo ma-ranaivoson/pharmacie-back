@@ -2,22 +2,19 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 @Table(name = "panier")
+@IdClass(Panier.class)
 public class Panier implements Serializable{
 
 	/**
@@ -25,8 +22,14 @@ public class Panier implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "id_panier")
-	private long idPanier;
+	@Column(name = "id_produit")
+	private Long idProduit;
+	@Id
+	@Column(name = "id_pharmacie")
+	private Long idPharmacie;
+	@Id
+	@Column(name = "id_utilisateur")
+	private Long idUtilisateur;
 	@Column(name = "quantite")
 	private Double quantite;
 	@Column(name = "unite")
@@ -40,12 +43,16 @@ public class Panier implements Serializable{
 	
 //Relation
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_users")
-	private User user;
+	@JoinColumn(name="id_utilisateur",insertable = false, updatable = false)
+	private Utilisateur user;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="panier-pharmacie")
-	private Set<Pharmacie> pharmacie;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
+	private Pharmacie pharmacie;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_produit",insertable = false, updatable = false)
+	private Produit produit;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_paiement")
@@ -65,9 +72,11 @@ public class Panier implements Serializable{
 	 * @param montant
 	 * @param statut
 	 */
-	public Panier(long idPanier, Double quantite, String unite, Date date_ajout, Double montant, int statut) {
+	public Panier(Long idProduit, Long idUtilisateur, Long idPharmacie, Double quantite, String unite, Date date_ajout, Double montant, int statut) {
 		super();
-		this.idPanier = idPanier;
+		this.idPharmacie = idPharmacie;
+		this.idProduit = idProduit;
+		this.idUtilisateur = idUtilisateur;
 		this.quantite = quantite;
 		this.unite = unite;
 		this.date_ajout = date_ajout;
@@ -75,97 +84,99 @@ public class Panier implements Serializable{
 		this.statut = statut;
 	}
 
-	/**
-	 * @return the idPanier
-	 */
-	public long getIdPanier() {
-		return idPanier;
+	public Long getIdProduit() {
+		return idProduit;
 	}
 
-	/**
-	 * @param idPanier the idPanier to set
-	 */
-	public void setIdPanier(long idPanier) {
-		this.idPanier = idPanier;
+	public void setIdProduit(Long idProduit) {
+		this.idProduit = idProduit;
 	}
 
-	/**
-	 * @return the quantite
-	 */
+	public Long getIdPharmacie() {
+		return idPharmacie;
+	}
+
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
+
+	public Long getIdUtilisateur() {
+		return idUtilisateur;
+	}
+
+	public void setIdUtilisateur(Long idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
+
 	public Double getQuantite() {
 		return quantite;
 	}
 
-	/**
-	 * @param quantite the quantite to set
-	 */
 	public void setQuantite(Double quantite) {
 		this.quantite = quantite;
 	}
 
-	/**
-	 * @return the unite
-	 */
 	public java.lang.String getUnite() {
 		return unite;
 	}
 
-	/**
-	 * @param unite the unite to set
-	 */
 	public void setUnite(java.lang.String unite) {
 		this.unite = unite;
 	}
 
-	/**
-	 * @return the date_ajout
-	 */
 	public java.sql.Date getDate_ajout() {
 		return date_ajout;
 	}
 
-	/**
-	 * @param date_ajout the date_ajout to set
-	 */
 	public void setDate_ajout(java.sql.Date date_ajout) {
 		this.date_ajout = date_ajout;
 	}
 
-	/**
-	 * @return the montant
-	 */
 	public Double getMontant() {
 		return montant;
 	}
 
-	/**
-	 * @param montant the montant to set
-	 */
 	public void setMontant(Double montant) {
 		this.montant = montant;
 	}
 
-	/**
-	 * @return the statut
-	 */
 	public int getStatut() {
 		return statut;
 	}
 
-	/**
-	 * @param statut the statut to set
-	 */
 	public void setStatut(int statut) {
 		this.statut = statut;
 	}
-	
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+
+	public Utilisateur getUser() {
+		return user;
 	}
-	
-	
-	
+
+	public void setUser(Utilisateur user) {
+		this.user = user;
+	}
+
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}
+
+	public Produit getProduit() {
+		return produit;
+	}
+
+	public void setProduit(Produit produit) {
+		this.produit = produit;
+	}
+
+	public Paiement getPaiement() {
+		return paiement;
+	}
+
+	public void setPaiement(Paiement paiement) {
+		this.paiement = paiement;
+	}
 }

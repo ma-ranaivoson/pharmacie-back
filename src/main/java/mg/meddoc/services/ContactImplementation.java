@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import mg.meddoc.models.Contact;
+import mg.meddoc.models.ContactPK;
 import mg.meddoc.repositories.ContactRepository;
 
 @Service
@@ -33,7 +34,7 @@ public class ContactImplementation implements ContactService{
 	@Override
 	public Contact getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((Long) id).get();
+		return repository.findById((ContactPK) id).get();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ContactImplementation implements ContactService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		repository.deleteById((Long)id);
+		repository.deleteById((ContactPK)id);
 	}
 
 	@Override

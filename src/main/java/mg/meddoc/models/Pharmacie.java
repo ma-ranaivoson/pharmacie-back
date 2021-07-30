@@ -44,8 +44,10 @@ public class Pharmacie implements Serializable{
 	@Column(name = "latitude")
     private Double latitude;
 	
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="pharmacie-service")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "rel_service_pharmacie", 
+	joinColumns = @JoinColumn(name = "id_pharmacie"), 
+	inverseJoinColumns = @JoinColumn(name = "id_service"))
 	private Set<Service> service;
 	
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -60,42 +62,23 @@ public class Pharmacie implements Serializable{
 	@JsonManagedReference(value="pharmacie-staff")
 	private Set<Staff> staff;
 	
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="pharmacie-specialite")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "rel_specialite_pharmacie", 
+	joinColumns = @JoinColumn(name = "id_pharmacie"), 
+	inverseJoinColumns = @JoinColumn(name = "id_specialite"))
 	private Set<Specialite> specialite;
 //	
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonManagedReference(value="pharmacie-galerie")
 	private Set<Galerie> galerie;
 //	
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="pharmacie-prix")
-	private Set<Prix> prix;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_panier")
-	@JsonBackReference(value="panier-pharmacie")
-	private Panier panier;
+//	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="pharmacie-prix")
+//	private Set<Prix> prix;
 	
 	public Pharmacie() {
 		
 	}
-
-	/**
-	 * @return the idPharmacie
-	 */
-	public long getIdPharmacie() {
-		return idPharmacie;
-	}
-
-	/**
-	 * @param idPharmacie the idPharmacie to set
-	 */
-	public void setIdPharmacie(long idPharmacie) {
-		this.idPharmacie = idPharmacie;
-	}
-
-
 	/**
 	 * @param idPharmacie
 	 * @param raison_social
@@ -116,107 +99,82 @@ public class Pharmacie implements Serializable{
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
-
-
-	/**
-	 * @return the raison_social
-	 */
+	public long getIdPharmacie() {
+		return idPharmacie;
+	}
+	public void setIdPharmacie(long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
 	public java.lang.String getRaisonSocial() {
 		return raisonSocial;
 	}
-
-
-	/**
-	 * @param raison_social the raison_social to set
-	 */
-	public void setRaisonSocial(java.lang.String raison_social) throws Exception {
-//		if(raison_social==null)
-//			throw new Exception("Raison sociale ne peut pas être vide");
-//		else if(raison_social=="")
-//			throw new Exception("Raison sociale ne peut pas être vide");
-		
-		this.raisonSocial = raison_social;
+	public void setRaisonSocial(java.lang.String raisonSocial) {
+		this.raisonSocial = raisonSocial;
 	}
-
-
-	/**
-	 * @return the presentation
-	 */
 	public java.lang.String getPresentation() {
 		return presentation;
 	}
-
-
-	/**
-	 * @param presentation the presentation to set
-	 */
 	public void setPresentation(java.lang.String presentation) {
 		this.presentation = presentation;
 	}
-
-
-	/**
-	 * @return the adresse
-	 */
 	public java.lang.String getAdresse() {
 		return adresse;
 	}
-
-
-	/**
-	 * @param adresse the adresse to set
-	 */
 	public void setAdresse(java.lang.String adresse) {
 		this.adresse = adresse;
 	}
-
-
-	/**
-	 * @return the statut
-	 */
 	public Integer getStatut() {
 		return statut;
 	}
-
-	
-	/**
-	 * @param statut the statut to set
-	 */
 	public void setStatut(Integer statut) {
 		this.statut = statut;
 	}
-
-
-	/**
-	 * @return the longitude
-	 */
 	public Double getLongitude() {
 		return longitude;
 	}
-	
-
-	/**
-	 * @param longitude the longitude to set
-	 */
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-
-
-	/**
-	 * @return the latitude
-	 */
 	public Double getLatitude() {
 		return latitude;
 	}
-
-
-	/**
-	 * @param latitude the latitude to set
-	 */
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
-	
-	
+	public Set<Service> getService() {
+		return service;
+	}
+	public void setService(Set<Service> service) {
+		this.service = service;
+	}
+	public Set<Produit> getProduit() {
+		return produit;
+	}
+	public void setProduit(Set<Produit> produit) {
+		this.produit = produit;
+	}
+	public Set<Contact> getContact() {
+		return contact;
+	}
+	public void setContact(Set<Contact> contact) {
+		this.contact = contact;
+	}
+	public Set<Staff> getStaff() {
+		return staff;
+	}
+	public void setStaff(Set<Staff> staff) {
+		this.staff = staff;
+	}
+	public Set<Specialite> getSpecialite() {
+		return specialite;
+	}
+	public void setSpecialite(Set<Specialite> specialite) {
+		this.specialite = specialite;
+	}
+	public Set<Galerie> getGalerie() {
+		return galerie;
+	}
+	public void setGalerie(Set<Galerie> galerie) {
+		this.galerie = galerie;
+	}
 }

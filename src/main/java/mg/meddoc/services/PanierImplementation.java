@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import mg.meddoc.models.Panier;
+import mg.meddoc.models.PanierPK;
 import mg.meddoc.repositories.PanierRepository;
 
 @Service
@@ -33,7 +34,7 @@ public class PanierImplementation implements PanierService{
 	@Override
 	public Panier getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((Long) id).get();
+		return repository.findById((PanierPK) id).get();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class PanierImplementation implements PanierService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		repository.deleteById((Long)id);
+		repository.deleteById((PanierPK)id);
 	}
 
 	@Override

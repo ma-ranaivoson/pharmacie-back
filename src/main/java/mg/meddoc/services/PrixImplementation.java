@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import mg.meddoc.models.Prix;
+import mg.meddoc.models.PrixPK;
 import mg.meddoc.repositories.PrixRepository;
 
 @Service
@@ -33,7 +34,7 @@ public class PrixImplementation implements PrixService{
 	@Override
 	public Prix getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((Long) id).get();
+		return repository.findById((PrixPK) id).get();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class PrixImplementation implements PrixService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		repository.deleteById((Long)id);
+		repository.deleteById((PrixPK)id);
 	}
 
 	@Override

@@ -5,19 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "contact")
+@IdClass(ContactPK.class)
 public class Contact implements Serializable{
 
 	/**
@@ -25,25 +24,16 @@ public class Contact implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(
-			strategy = GenerationType.SEQUENCE,
-			generator = "contact-sequence"
-			)
-			@SequenceGenerator(
-			name = "contact-sequence",
-			sequenceName = "seq_contact",
-			allocationSize = 1,
-			initialValue = 2
-			)
-	@Column(name = "id_contact")
-	private long idContact;
+	@Column(name = "id_entite")
+	private Long idEntite;
+	@Id
 	@Column(name = "valeur")
 	private java.lang.String valeur;
 	@Column(name = "statut")
 	private int statut;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie")
+	@JoinColumn(name="id_entite", insertable = false, updatable = false)
 	@JsonBackReference(value="pharmacie-contact")
 	private Pharmacie pharmacie;
 //	
@@ -58,26 +48,11 @@ public class Contact implements Serializable{
 	 * @param valeur
 	 * @param statut
 	 */
-	public Contact(long idContact, String valeur, int statut) {
+	public Contact(Long idEntite, String valeur, int statut) {
 		super();
-		this.idContact = idContact;
+		this.idEntite= idEntite;
 		this.valeur = valeur;
 		this.statut = statut;
-	}
-
-	
-	/**
-	 * @return the idContact
-	 */
-	public long getIdContact() {
-		return idContact;
-	}
-
-	/**
-	 * @param idContact the idContact to set
-	 */
-	public void setIdContact(long idContact) {
-		this.idContact = idContact;
 	}
 
 	/**
@@ -108,12 +83,27 @@ public class Contact implements Serializable{
 		this.statut = statut;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Long getIdEntite() {
+		return idEntite;
 	}
-	
-	
+
+	public void setIdEntite(Long idEntite) {
+		this.idEntite = idEntite;
+	}
+
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}
+
+	public Type_Contact getTypeContact() {
+		return typeContact;
+	}
+
+	public void setTypeContact(Type_Contact typeContact) {
+		this.typeContact = typeContact;
+	}
 }
