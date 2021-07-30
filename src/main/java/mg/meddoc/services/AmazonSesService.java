@@ -60,5 +60,6 @@ public class AmazonSesService {
 	   MimeBodyPart messageBodyPart = new MimeBodyPart();
 	   messageBodyPart.setContent(msg, "text/plain");
 	   Transport.send(msg);
+	   
 	}
 }

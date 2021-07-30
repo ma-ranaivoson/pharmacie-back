@@ -82,10 +82,10 @@ public class UtilisateurController {
 			newUser.setEmail(user.getEmail());
 			newUser.setPhone(user.getPhone());
 			//Validation Code
-			newUser.setValidationCode(user.getValidationCode());
+			String code = Util.generateCode();
+			newUser.setValidationCode(code);
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
 			//send mail
-			String code = Util.generateCode();
 			class MailAndSms implements Runnable {
 				String mailSend;
 				String phoneSend;
@@ -101,11 +101,14 @@ public class UtilisateurController {
 							emailservice.sendMail(Util.sendEmailValidation(mailSend, String.valueOf(codeSend)));
 						} catch (Exception e) {
 							e.printStackTrace();
+							System.out.println("e-mail tsy envoyée "+e.getMessage());
 						}
 					}
 		        }
 		    }
-		    Thread t = new Thread(new MailAndSms(user.getEmail(), user.getPhone(), code));
+			System.out.println(om.writeValueAsString(newUser));
+		    Thread t = new Thread(new MailAndSms(newUser.getEmail(), user.getPhone(), code));
+		    t.start();
 			newUser = userService.save(newUser);
 			res.put("message", "Inscription réussie");
 			return new ResponseEntity<>(res, HttpStatus.OK);
