@@ -43,7 +43,7 @@ public class Produit implements Serializable{
 		initialValue = 2
 		)
 	@Column(name = "id_produit")
-	private long idProduit;
+	private Long idProduit;
 	@Column(name = "designation")
 	private java.lang.String designation;
 	@Column(name = "image")
@@ -92,7 +92,7 @@ public class Produit implements Serializable{
 	 * @param description
 	 * @param format
 	 */
-	public Produit(long idProduit, String designation, String image, String description, String format) {
+	public Produit(Long idProduit, String designation, String image, String description, String format) {
 		super();
 		this.idProduit = idProduit;
 		this.designation = designation;
@@ -104,14 +104,14 @@ public class Produit implements Serializable{
 	/**
 	 * @return the idProduit
 	 */
-	public long getIdProduit() {
+	public Long getIdProduit() {
 		return idProduit;
 	}
 
 	/**
 	 * @param idProduit the idProduit to set
 	 */
-	public void setIdProduit(long idProduit) {
+	public void setIdProduit(Long idProduit) {
 		this.idProduit = idProduit;
 	}
 

@@ -30,7 +30,7 @@ public class Type_Contact implements Serializable{
 			initialValue = 2
 			)
 	@Column(name = "id_type_contact")
-	private long idTypeContact;
+	private Integer idTypeContact;
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
@@ -43,7 +43,7 @@ public class Type_Contact implements Serializable{
 	 * @param idTypeContact
 	 * @param libelle
 	 */
-	public Type_Contact(long idTypeContact, String libelle) {
+	public Type_Contact(Integer idTypeContact, String libelle) {
 		super();
 		this.idTypeContact = idTypeContact;
 		this.libelle = libelle;
@@ -59,7 +59,7 @@ public class Type_Contact implements Serializable{
 	/**
 	 * @param idTypeContact the idTypeContact to set
 	 */
-	public void setIdTypeContact(long idTypeContact) {
+	public void setIdTypeContact(Integer idTypeContact) {
 		this.idTypeContact = idTypeContact;
 	}
 

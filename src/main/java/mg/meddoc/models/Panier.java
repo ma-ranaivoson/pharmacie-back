@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "panier")
-@IdClass(Panier.class)
+@IdClass(PanierPK.class)
 public class Panier implements Serializable{
 
 	/**

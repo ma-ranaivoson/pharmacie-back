@@ -22,14 +22,15 @@ public class Galerie implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Id
-	@Column(name = "id_pharmacie")
-	private Long idPharmacie;
+	
 	@Column(name = "album")
 	private java.lang.String album;
 	@Id
 	@Column(name = "nom_photo")
 	private java.lang.String nom;
+	@Id
+	@Column(name = "id_pharmacie")
+	private Long idPharmacie;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
@@ -84,6 +85,34 @@ public class Galerie implements Serializable{
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the idPharmacie
+	 */
+	public Long getIdPharmacie() {
+		return idPharmacie;
+	}
+
+	/**
+	 * @param idPharmacie the idPharmacie to set
+	 */
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
+
+	/**
+	 * @return the pharmacie
+	 */
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	/**
+	 * @param pharmacie the pharmacie to set
+	 */
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
 	}
 	
 }

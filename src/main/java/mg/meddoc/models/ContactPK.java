@@ -11,6 +11,7 @@ public class ContactPK implements Serializable {
 
 	Long idEntite;
 	String valeur;
+	
 	public Long getIdEntite() {
 		return idEntite;
 	}

@@ -7,12 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "promotion")
+@IdClass(PromotionPK.class)
 public class Promotion implements Serializable{
 
 	/**
@@ -20,10 +22,17 @@ public class Promotion implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "id_promotion")
-	private long idPromotion;
+	@Column(name = "id_pharmacie")
+	private Long idPharmacie;
+	
+	@Id
+	@Column(name = "id_produit")
+	private Long idProduit;
+	
+	@Id
 	@Column(name = "date_debut")
 	private java.sql.Date date_debut;
+	
 	@Column(name = "date_fin")
 	private java.sql.Date date_fin;
 	@Column(name = "remise_prix")
@@ -35,11 +44,11 @@ public class Promotion implements Serializable{
 	
 //Relation
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_produit")
+	@JoinColumn(name="id_produit",insertable=false, updatable=false)
 	private Produit produit;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_pharmacie")
+	@JoinColumn(name="id_pharmacie",insertable=false, updatable=false)
 	private Pharmacie pharmacie;
 	
 	public Promotion() {
@@ -54,31 +63,17 @@ public class Promotion implements Serializable{
 	 * @param remise_pourcentage
 	 * @param quantite
 	 */
-	public Promotion(long idPromotion, Date date_debut, Date date_fin, Double remise_prix, Double remise_pourcentage,
+	public Promotion( Date date_debut, Date date_fin, Double remise_prix, Double remise_pourcentage,
 			int quantite) {
 		super();
-		this.idPromotion = idPromotion;
+		//this.idPromotion = idPromotion;
 		this.date_debut = date_debut;
 		this.date_fin = date_fin;
 		this.remise_prix = remise_prix;
 		this.remise_pourcentage = remise_pourcentage;
 		this.quantite = quantite;
 	}
-
-	/**
-	 * @return the idPromotion
-	 */
-	public long getIdPromotion() {
-		return idPromotion;
-	}
-
-	/**
-	 * @param idPromotion the idPromotion to set
-	 */
-	public void setIdPromotion(long idPromotion) {
-		this.idPromotion = idPromotion;
-	}
-
+	
 	/**
 	 * @return the date_debut
 	 */

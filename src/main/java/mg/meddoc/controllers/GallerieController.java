@@ -74,10 +74,10 @@ public class GallerieController {
 				return new ResponseEntity<>("Galerie inscrite avec succès",HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Une erreur s'est produite "+e.getMessage(),HttpStatus.BAD_REQUEST);
 			}
 		}
-	//Delete_Galerie	
+	//Delete_Galerie
 		@DeleteMapping(value = "/delete/{id}")
 		public @ResponseBody ResponseEntity<?> deleteGalerieById(@PathVariable Long id) {
 			try {

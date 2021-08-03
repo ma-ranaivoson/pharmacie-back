@@ -73,6 +73,7 @@ public class ContactController {
 				log.info(om.writeValueAsString(contact));
 				return new ResponseEntity<>("Contact inscrite avec succès",HttpStatus.OK);
 			} catch (Exception e) {
+				System.out.println("Erreur : "+e.getMessage());
 				e.printStackTrace();
 				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
 			}

@@ -83,6 +83,7 @@ public class StaffController {
 //				if(pharmacie.getLongitude()!= null&&(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0))
 //					throw new Exception("Longitude incorrect");
 				
+				log.info(om.writeValueAsString(staff));
 				serviceStaff.save(staff);
 				log.info(om.writeValueAsString(staff));
 				
@@ -90,7 +91,7 @@ public class StaffController {
 				success.put("success", true);
 				success.put("data", staff);
 				
-				return new ResponseEntity<>(success, HttpStatus.OK);			
+				return new ResponseEntity<>(success, HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
 				HashMap<String, Object> error = new HashMap<String, Object>();

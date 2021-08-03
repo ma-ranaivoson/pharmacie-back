@@ -36,16 +36,18 @@ public class Staff implements Serializable{
 			initialValue = 2
 			)
 	@Column(name = "id_staff")
-	private long idStaff;
+	private Long idStaff;
 	@Column(name = "nom_staf")
 	private java.lang.String nom;
+	@Column(name="id_pharmacie")
+	private Long idPharmacie;
 	
-// Relation....	
+// Relation....
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_pharmacie")
+	@JoinColumn(name="id_pharmacie", insertable=false, updatable=false)
 	@JsonBackReference(value="pharmacie-staff")
 	private Pharmacie pharmacie;
-	
+
 	public Staff() {
 		
 	}
@@ -54,7 +56,7 @@ public class Staff implements Serializable{
 	 * @param idStaff
 	 * @param nom
 	 */
-	public Staff(long idStaff, String nom) {
+	public Staff(Long idStaff, String nom) {
 		super();
 		this.idStaff = idStaff;
 		this.nom = nom;
@@ -63,14 +65,14 @@ public class Staff implements Serializable{
 	/**
 	 * @return the idStaff
 	 */
-	public long getIdStaff() {
+	public Long getIdStaff() {
 		return idStaff;
 	}
 
 	/**
 	 * @param idStaff the idStaff to set
 	 */
-	public void setIdStaff(long idStaff) {
+	public void setIdStaff(Long idStaff) {
 		this.idStaff = idStaff;
 	}
 
@@ -94,5 +96,19 @@ public class Staff implements Serializable{
 
 	public void setPharmacie(Pharmacie pharmacie) {
 		this.pharmacie = pharmacie;
+	}
+
+	/**
+	 * @return the idPharmacie
+	 */
+	public Long getIdPharmacie() {
+		return idPharmacie;
+	}
+
+	/**
+	 * @param idPharmacie the idPharmacie to set
+	 */
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
 	}	
 }

@@ -30,6 +30,7 @@ public class PanierPK implements Serializable {
 	public void setIdUtilisateur(Long idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
+	
 	public PanierPK() {
 		super();
 		// TODO Auto-generated constructor stub

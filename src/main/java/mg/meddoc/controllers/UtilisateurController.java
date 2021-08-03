@@ -148,7 +148,7 @@ public class UtilisateurController {
 		//List<Panier> paniers = servicePanier.findByIdUtilisateur(user.getIdUtilisateur());
 
 		try {
-			System.out.println();
+			System.out.println("");
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

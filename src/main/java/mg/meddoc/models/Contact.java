@@ -23,6 +23,7 @@ public class Contact implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@Column(name = "id_entite")
 	private Long idEntite;
@@ -31,7 +32,7 @@ public class Contact implements Serializable{
 	private java.lang.String valeur;
 	@Column(name = "statut")
 	private int statut;
-	
+
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_entite", insertable = false, updatable = false)
 	@JsonBackReference(value="pharmacie-contact")
@@ -42,7 +43,7 @@ public class Contact implements Serializable{
 	private Type_Contact typeContact;
 	
 	public Contact() {	}
-
+	
 	/**
 	 * @param idContact
 	 * @param valeur
