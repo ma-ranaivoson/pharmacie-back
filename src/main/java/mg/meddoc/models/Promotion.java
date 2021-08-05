@@ -21,10 +21,65 @@ public class Promotion implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * @return the idPharmacie
+	 */
+	public Long getIdPharmacie() {
+		return idPharmacie;
+	}
+
+	/**
+	 * @param idPharmacie the idPharmacie to set
+	 */
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
+
+	/**
+	 * @return the idProduit
+	 */
+	public Long getIdProduit() {
+		return idProduit;
+	}
+
+	/**
+	 * @param idProduit the idProduit to set
+	 */
+	public void setIdProduit(Long idProduit) {
+		this.idProduit = idProduit;
+	}
+
+	/**
+	 * @return the produit
+	 */
+	public Produit getProduit() {
+		return produit;
+	}
+
+	/**
+	 * @param produit the produit to set
+	 */
+	public void setProduit(Produit produit) {
+		this.produit = produit;
+	}
+
+	/**
+	 * @return the pharmacie
+	 */
+	public Pharmacie getPharmacie() {
+		return pharmacie;
+	}
+
+	/**
+	 * @param pharmacie the pharmacie to set
+	 */
+	public void setPharmacie(Pharmacie pharmacie) {
+		this.pharmacie = pharmacie;
+	}
+
 	@Id
 	@Column(name = "id_pharmacie")
 	private Long idPharmacie;
-	
 	@Id
 	@Column(name = "id_produit")
 	private Long idProduit;

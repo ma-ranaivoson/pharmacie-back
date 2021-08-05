@@ -67,7 +67,7 @@ public class Produit implements Serializable{
 //	private Set<Categorie> categorie;
 	@OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "rel_sous_categorie_produit", 
-    	joinColumns = @JoinColumn(name = "id_produit"), 
+    	joinColumns = @JoinColumn(name = "id_produit"),
     	inverseJoinColumns = @JoinColumn(name = "id_sous_categorie"))
 	private Set<Categorie> categorie;
 	

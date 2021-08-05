@@ -24,12 +24,17 @@ public class Panier implements Serializable{
 	@Id
 	@Column(name = "id_produit")
 	private Long idProduit;
+//	@Id
+//	@Column(name = "id_paiement")
+//	private Long idPaiement;
 	@Id
 	@Column(name = "id_pharmacie")
 	private Long idPharmacie;
 	@Id
 	@Column(name = "id_utilisateur")
 	private Long idUtilisateur;
+	@Column(name = "id_paiement")
+	private Long idPaiement;
 	@Column(name = "quantite")
 	private Double quantite;
 	@Column(name = "unite")
@@ -55,7 +60,7 @@ public class Panier implements Serializable{
 	private Produit produit;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_paiement")
+	@JoinColumn(name="id_paiement",insertable = false, updatable = false)
 	private Paiement paiement;
 	
 //Produit ??	
@@ -178,5 +183,19 @@ public class Panier implements Serializable{
 
 	public void setPaiement(Paiement paiement) {
 		this.paiement = paiement;
+	}
+
+	/**
+	 * @return the idPaiement
+	 */
+	public Long getIdPaiement() {
+		return idPaiement;
+	}
+
+	/**
+	 * @param idPaiement the idPaiement to set
+	 */
+	public void setIdPaiement(Long idPaiement) {
+		this.idPaiement = idPaiement;
 	}
 }

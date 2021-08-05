@@ -21,45 +21,46 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mg.meddoc.models.Panier;
-import mg.meddoc.services.PanierService;
+
+import mg.meddoc.models.SousCategorie;
+import mg.meddoc.services.SousCategorieService;
 
 @RestController
-@RequestMapping(value = "/panier")
+@RequestMapping(value = "/sous_categorie")
 @CrossOrigin(origins = { "*" })
 @Component
-public class PanierController {
-
+public class SousCategorieController {
+	
 	ObjectMapper om = new ObjectMapper();
-	public static final Logger log = LoggerFactory.getLogger(PanierController.class);
+	public static final Logger log = LoggerFactory.getLogger(SousCategorieController.class);
 
 	@Autowired
-	PanierService servicePanier;
+	SousCategorieService serviceSousCategorie;
 	
-	//GetAll_Panier
+	//GetAll_SousCategorie
 		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllPanier() {
-			List<Panier> panier = new ArrayList<Panier>();
+		public @ResponseBody ResponseEntity<?> getAllSousCategorie() {
+			List<SousCategorie> souscategorie = new ArrayList<SousCategorie>();
 			try {
-				panier = servicePanier.getAll();
-				System.out.println(om.writeValueAsString(panier));
-				return new ResponseEntity<>(panier, HttpStatus.OK);
+				souscategorie = serviceSousCategorie.getAll();
+				System.out.println(om.writeValueAsString(souscategorie));
+				return new ResponseEntity<>(souscategorie, HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 			}
 		}
 		
-		//GetById_Panier
+		//GetById_SousCategorie
 		@GetMapping(value = "/{id}")
-		public @ResponseBody ResponseEntity<?> getPanierById(@PathVariable Long id) {
-			Panier panier = null;
+		public @ResponseBody ResponseEntity<?> getSouCategorieById(@PathVariable Long id) {
+			SousCategorie souscategorie = null;
 			
 			try {
 				
-				panier = servicePanier.getById(id);
-				log.info(om.writeValueAsString(panier));
-				return new ResponseEntity<>(panier, HttpStatus.OK);
+				souscategorie = serviceSousCategorie.getById(id);
+				log.info(om.writeValueAsString(souscategorie));
+				return new ResponseEntity<>(souscategorie, HttpStatus.OK);
 				
 			} catch (Exception e) {
 				HashMap<String, Object> error = new HashMap<String, Object>();
@@ -69,26 +70,26 @@ public class PanierController {
 			}
 		}
 		
-		//Save_Panier
+		//Save_SousCategorie
 		@PostMapping(value = "/save")
-		public @ResponseBody ResponseEntity<?> savePanier(@RequestBody Panier panier) {
+		public @ResponseBody ResponseEntity<?> saveSousCatgorie(@RequestBody SousCategorie souscategorie) {
 			
 			try {
-//				if(pharmacie.getRaisonSocial()==null)
+//				if(pharmacie.getRaisonSocial()== null)
 //					throw new Exception("Raison sociale ne peut pas être vide");
 //				if(pharmacie.getRaisonSocial()=="")
-//					throw new Exception("Raison sociale ne peut pas être vide");
+//					throw new Exception("Raison sociale tena vide");
 //				if(pharmacie.getLatitude()!= null&&(pharmacie.getLatitude()>100 || pharmacie.getLatitude()<0))
 //					throw new Exception("Latitude incorrect");
 //				if(pharmacie.getLongitude()!= null&&(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0))
 //					throw new Exception("Longitude incorrect");
 				
-				panier = servicePanier.save(panier);
-				log.info(om.writeValueAsString(panier));
+				serviceSousCategorie.save(souscategorie);
+				log.info(om.writeValueAsString(souscategorie));
 				
 				HashMap<String, Object> success = new HashMap<String, Object>();
 				success.put("success", true);
-				success.put("data", panier);
+				success.put("data", souscategorie);
 				
 				return new ResponseEntity<>(success, HttpStatus.OK);			
 			} catch (Exception e) {
@@ -101,17 +102,17 @@ public class PanierController {
 			}
 		}
 
-		//Delete_Panier	
+		//Delete_SousCategorie	
 		@DeleteMapping(value = "/delete/{id}")
-		public @ResponseBody ResponseEntity<?> deletePanierById(@PathVariable Long id) {
+		public @ResponseBody ResponseEntity<?> deleteSousCategorieById(@PathVariable Long id) {
 			
 			try {		
 				
-				servicePanier.deleteById(id);
+				serviceSousCategorie.deleteById(id);
 				
 				HashMap<String, Object> success = new HashMap<String, Object>();
 				success.put("success", true);
-				success.put("data", "Panier id: " + id + " supprimée avec success");
+				success.put("data", "SousCategorie id: " + id + " supprimée avec success");
 				
 				return new ResponseEntity<>(success, HttpStatus.OK);
 			} catch (Exception e) {
@@ -119,11 +120,11 @@ public class PanierController {
 				
 				HashMap<String, Object> error = new HashMap<String, Object>();
 				error.put("success", false);
-				error.put("errors", "Panier id " + id + " not found");
+				error.put("errors", "SousCategorie id " + id + " not found");
 				
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
 		}
-		
-		
+	
+	
 }

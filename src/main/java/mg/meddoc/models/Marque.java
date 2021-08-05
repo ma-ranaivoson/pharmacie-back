@@ -5,9 +5,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +22,16 @@ public class Marque implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "marque-sequence"
+			)
+			@SequenceGenerator(
+			name = "marque-sequence",
+			sequenceName = "seq_marque",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_marque")
 	private long idMarque;
 	@Column(name = "nomination")

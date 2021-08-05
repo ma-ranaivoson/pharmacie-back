@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "utilisateur")
 public class Utilisateur implements Serializable, UserDetails{
 	
-	
 	/**
 	 * 
 	 */
@@ -43,45 +42,26 @@ public class Utilisateur implements Serializable, UserDetails{
 	@Column(name = "id_utilisateur")
 	private Long idUtilisateur;
 	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name = "id_type_utilisateur")
-	private TypeUtilisateur typeUtilisateur;
-
 	@Column(name = "nom")
 	private java.lang.String nom;
-
 	@Column(name = "prenoms")
 	private java.lang.String prenoms;
-	
 	@Column(name = "validation_code")
 	private java.lang.String validationCode;
-
-	/**
-	 * @return the validationCode
-	 */
-	public java.lang.String getValidationCode() {
-		return validationCode;
-	}
-
-	/**
-	 * @param validationCode the validationCode to set
-	 */
-	public void setValidationCode(java.lang.String validationCode) {
-		this.validationCode = validationCode;
-	}
-
 	@Column(name = "mot_de_passe")
 	@JsonIgnoreProperties
 	private java.lang.String password;
-
 	@Column(name = "email")
 	private java.lang.String email;
-	
 	@Column(name = "phone")
 	private java.lang.String phone;
-
 	@Column(name = "statut")
 	private int statut;
+	
+	//Relation...
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "id_type_utilisateur")
+	private TypeUtilisateur typeUtilisateur;
 	
 	public Utilisateur() {
 		
@@ -95,7 +75,7 @@ public class Utilisateur implements Serializable, UserDetails{
 	 * @param adresse
 	 * @param statut
 	 */
-	public Utilisateur(long idUtilisateur, String nom, String prenoms, String mot_de_passe, String email, String phone,
+	public Utilisateur(Long idUtilisateur, String nom, String prenoms, String mot_de_passe, String email, String phone,
 			int statut) {
 		super();
 		this.idUtilisateur = idUtilisateur;
@@ -106,7 +86,21 @@ public class Utilisateur implements Serializable, UserDetails{
 		this.phone = phone;
 		this.statut = statut;
 	}
+	
+	/**
+	 * @return the validationCode
+	 */
+	public java.lang.String getValidationCode() {
+		return validationCode;
+	}
 
+	/**
+	 * @param validationCode the validationCode to set
+	 */
+	public void setValidationCode(java.lang.String validationCode) {
+		this.validationCode = validationCode;
+	}
+	
 	/**
 	 * @return the idUtilisateur
 	 */

@@ -6,9 +6,12 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +23,16 @@ public class Paiement implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "paiement-sequence"
+			)
+			@SequenceGenerator(
+			name = "paiement-sequence",
+			sequenceName = "seq_paiement",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_paiement")
 	private long idPaiement;
 	@Column(name = "date_paiement")
@@ -28,9 +41,9 @@ public class Paiement implements Serializable{
 	private Double montant_total;
 	
 //Relation
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_users")
-	private User users;
+//	@OneToOne(fetch=FetchType.EAGER)
+//	@JoinColumn(name="id_users")
+//	private User users;
 	
 	public Paiement() {
 		

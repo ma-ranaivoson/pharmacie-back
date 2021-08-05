@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +20,16 @@ public class TypeUtilisateur implements Serializable{
 	 */
 	private static final long serialVersionUID = -7267464673120182306L;
 	@Id
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "type_utilisateur-sequence"
+			)
+			@SequenceGenerator(
+			name = "type_utilisateur-sequence",
+			sequenceName = "seq_type_utilisateur",
+			allocationSize = 1,
+			initialValue = 2
+			)
 	@Column(name = "id_type_utilisateur")
 	private Integer idTypeUtilisateur;
 	@Column(name = "libelle")
@@ -39,7 +52,7 @@ public class TypeUtilisateur implements Serializable{
 	/**
 	 * @return the idTypeUtilisateur
 	 */
-	public long getIdTypeUtilisateur() {
+	public Integer getIdTypeUtilisateur() {
 		return idTypeUtilisateur;
 	}
 
