@@ -1,6 +1,7 @@
 package mg.meddoc.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Categorie;
+import mg.meddoc.models.SousCategorie;
 import mg.meddoc.services.CategorieService;
 
 @RestController
@@ -34,6 +36,27 @@ public class CategorieController {
 	
 	@Autowired
 	CategorieService serviceCategorie;
+	
+	@GetMapping(value = "/all/select")
+	public @ResponseBody ResponseEntity<?> getAllCategorieSelect() {
+		List<Categorie> categorie = new ArrayList<Categorie>();
+		try {
+			categorie = serviceCategorie.getAll();
+			List<HashMap<String,Object>> retour = new ArrayList<HashMap<String, Object>>();
+			HashMap<String,Object> maps = null;
+			for(Categorie cat:categorie) {
+				maps = new HashMap<String, Object>();
+				maps.put("value", cat.getIdCategorie());
+				maps.put("label", cat.getLibelle());
+				retour.add(maps);
+			}
+			System.out.println(om.writeValueAsString(retour));
+			return new ResponseEntity<>(retour, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	//GetAll_Categorie
 		@GetMapping(value = "/all")

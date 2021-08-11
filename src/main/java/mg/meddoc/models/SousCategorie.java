@@ -2,6 +2,7 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ public class SousCategorie implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(
 			strategy = GenerationType.SEQUENCE,
@@ -39,9 +40,9 @@ public class SousCategorie implements Serializable{
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	@Column(name = "id_categorie")
-	private long idCategorie; 
+	private Long idCategorie; 
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.DETACH)
 	@JoinColumn(name="id_categorie", insertable=false, updatable=false)
 	@JsonBackReference(value="categorie-souscategorie")
 	private Categorie categorie;
@@ -91,21 +92,21 @@ public class SousCategorie implements Serializable{
 	/**
 	 * @return the serialversionuid
 	 */
-	public static long getSerialversionuid() {
+	public static Long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
 	/**
 	 * @return the idCategorie
 	 */
-	public long getIdCategorie() {
+	public Long getIdCategorie() {
 		return idCategorie;
 	}
 
 	/**
 	 * @param idCategorie the idCategorie to set
 	 */
-	public void setIdCategorie(long idCategorie) {
+	public void setIdCategorie(Long idCategorie) {
 		this.idCategorie = idCategorie;
 	}
 

@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mg.meddoc.models.Prix;
 import mg.meddoc.models.Produit;
+import mg.meddoc.models.ProduitData;
+import mg.meddoc.services.PrixService;
 import mg.meddoc.services.ProduitService;
 
 @RestController
@@ -36,6 +40,8 @@ public class ProduitController {
 
 	@Autowired
 	ProduitService serviceProduit;
+	@Autowired
+	PrixService servicePrix;
 
 	// GetAll_Produit
 	@GetMapping(value = "/all")
@@ -73,22 +79,25 @@ public class ProduitController {
 
 	// Save_Produit
 	@PostMapping(value = "/save")
-	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody Produit produit) {
+	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
-			serviceProduit.save(produit);
 			log.info(om.writeValueAsString(produit));
-			
-			HashMap<String, Object> success = new HashMap<String, Object>();
-			success.put("data", produit);
-			
-			return new ResponseEntity<>("Produit inscrite avec succès", HttpStatus.OK);
+			Produit saved = serviceProduit.save(produit.toProduit());
+			Prix prix = null;
+			if(produit.getPrix()!=null||produit.getPrix().size()>0) {
+				prix = produit.getPrix().iterator().next();
+				prix.setIdPharmacie(saved.getIdPharmacie());
+				prix.setIdProduit(saved.getIdProduit());
+				servicePrix.save(prix);
+			}
+			produit = new ProduitData(saved,prix);
+			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
 			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
-
 		}
 	}
 	

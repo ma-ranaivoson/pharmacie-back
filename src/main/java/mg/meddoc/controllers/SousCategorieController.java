@@ -38,18 +38,38 @@ public class SousCategorieController {
 	SousCategorieService serviceSousCategorie;
 	
 	//GetAll_SousCategorie
-		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllSousCategorie() {
-			List<SousCategorie> souscategorie = new ArrayList<SousCategorie>();
-			try {
-				souscategorie = serviceSousCategorie.getAll();
-				System.out.println(om.writeValueAsString(souscategorie));
-				return new ResponseEntity<>(souscategorie, HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
-			}
+	@GetMapping(value = "/all")
+	public @ResponseBody ResponseEntity<?> getAllSousCategorie() {
+		List<SousCategorie> souscategorie = new ArrayList<SousCategorie>();
+		try {
+			souscategorie = serviceSousCategorie.getAll();
+			System.out.println(om.writeValueAsString(souscategorie));
+			return new ResponseEntity<>(souscategorie, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 		}
+	}
+	@GetMapping(value = "/all/select/{id}")
+	public @ResponseBody ResponseEntity<?> getAllSousCategorieSelect(@PathVariable Long id) {
+		List<SousCategorie> souscategorie = new ArrayList<SousCategorie>();
+		try {
+			souscategorie = serviceSousCategorie.findByIdCategorie(id);
+			List<HashMap<String,Object>> retour = new ArrayList<HashMap<String, Object>>();
+			HashMap<String,Object> maps = null;
+			for(SousCategorie sousCat:souscategorie) {
+				maps = new HashMap<String, Object>();
+				maps.put("value", sousCat.getIdSouCategorie());
+				maps.put("label", sousCat.getLibelle());
+				retour.add(maps);
+			}
+			System.out.println(om.writeValueAsString(retour));
+			return new ResponseEntity<>(retour, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
+		}
+	}
 		
 		//GetById_SousCategorie
 		@GetMapping(value = "/{id}")

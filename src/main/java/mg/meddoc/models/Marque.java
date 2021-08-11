@@ -20,7 +20,7 @@ public class Marque implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(
 			strategy = GenerationType.SEQUENCE,
@@ -33,7 +33,7 @@ public class Marque implements Serializable{
 			initialValue = 2
 			)
 	@Column(name = "id_marque")
-	private long idMarque;
+	private Long idMarque;
 	@Column(name = "nomination")
 	private java.lang.String nomination;
 	
@@ -48,7 +48,7 @@ public class Marque implements Serializable{
 	 * @param idMarque
 	 * @param nomination
 	 */
-	public Marque(long idMarque, String nomination) {
+	public Marque(Long idMarque, String nomination) {
 		super();
 		this.idMarque = idMarque;
 		this.nomination = nomination;
@@ -57,14 +57,14 @@ public class Marque implements Serializable{
 	/**
 	 * @return the idMarque
 	 */
-	public long getIdMarque() {
+	public Long getIdMarque() {
 		return idMarque;
 	}
 
 	/**
 	 * @param idMarque the idMarque to set
 	 */
-	public void setIdMarque(long idMarque) {
+	public void setIdMarque(Long idMarque) {
 		this.idMarque = idMarque;
 	}
 
@@ -85,7 +85,7 @@ public class Marque implements Serializable{
 	/**
 	 * @return the serialversionuid
 	 */
-	public static long getSerialversionuid() {
+	public static Long getSerialversionuid() {
 		return serialVersionUID;
 	}
 	

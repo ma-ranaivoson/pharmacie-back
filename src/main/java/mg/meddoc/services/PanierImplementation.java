@@ -64,4 +64,18 @@ public class PanierImplementation implements PanierService{
 		
 	}
 
+	@Override
+	public List<Panier> getPanierNotPaid(Long id) {
+		return repository.findByIdUtilisateurAndIdPaiementIsNull(id);
+	}
+
+	@Override
+	public List<Panier> getUserCart(Long id) {
+		return repository.findByIdUtilisateur(id);
+	}
+
+	@Override
+	public Panier getCartByIdProduct(Long idProduct, Long idPharmacie ,Long idUser) {
+		return repository.findByIdProduitAndIdPharmacieAndIdUtilisateur(idProduct, idPharmacie ,idUser);
+	}
 }

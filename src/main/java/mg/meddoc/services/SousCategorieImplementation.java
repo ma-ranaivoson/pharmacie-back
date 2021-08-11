@@ -69,4 +69,9 @@ public class SousCategorieImplementation implements SousCategorieService{
 		return repository.rechercheSousCategorie(libelle);
 	}
 
+	@Override
+	public List<SousCategorie> findByIdCategorie(Long idCategorie) {
+		return repository.findByIdCategorie(idCategorie);
+	}
+
 }

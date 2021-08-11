@@ -1,7 +1,7 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,14 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "panier")
 @IdClass(PanierPK.class)
-public class Panier implements Serializable{
-
-	/**
-	 * 
-	 */
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+public class Panier implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "id_produit")
@@ -39,34 +40,28 @@ public class Panier implements Serializable{
 	private Double quantite;
 	@Column(name = "unite")
 	private java.lang.String unite;
+	@CreationTimestamp
 	@Column(name = "date_ajout")
-	private java.sql.Date date_ajout;
+	private java.sql.Timestamp date_ajout;
 	@Column(name = "montant")
 	private Double montant;
 	@Column(name = "statut")
 	private int statut;
-	
-//Relation
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_utilisateur",insertable = false, updatable = false)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	private Utilisateur user;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_pharmacie", insertable = false, updatable = false)
 	private Pharmacie pharmacie;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_produit",insertable = false, updatable = false)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_produit", insertable = false, updatable = false)
 	private Produit produit;
-	
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_paiement",insertable = false, updatable = false)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_paiement", insertable = false, updatable = false)
 	private Paiement paiement;
-	
-//Produit ??	
-		
+
 	public Panier() {
-		
+
 	}
 
 	/**
@@ -77,7 +72,8 @@ public class Panier implements Serializable{
 	 * @param montant
 	 * @param statut
 	 */
-	public Panier(Long idProduit, Long idUtilisateur, Long idPharmacie, Double quantite, String unite, Date date_ajout, Double montant, int statut) {
+	public Panier(Long idProduit, Long idUtilisateur, Long idPharmacie, Double quantite, String unite,
+			Timestamp date_ajout, Double montant, int statut) {
 		super();
 		this.idPharmacie = idPharmacie;
 		this.idProduit = idProduit;
@@ -129,11 +125,11 @@ public class Panier implements Serializable{
 		this.unite = unite;
 	}
 
-	public java.sql.Date getDate_ajout() {
+	public java.sql.Timestamp getDate_ajout() {
 		return date_ajout;
 	}
 
-	public void setDate_ajout(java.sql.Date date_ajout) {
+	public void setDate_ajout(java.sql.Timestamp date_ajout) {
 		this.date_ajout = date_ajout;
 	}
 

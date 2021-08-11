@@ -2,6 +2,7 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -29,19 +31,19 @@ public class Prix implements Serializable{
 	@Column(name = "id_produit")
 	private Long idProduit;
 	@Column(name = "prix")
-	private int prix;
+	private Double prix;
 	@Column(name = "unite")
 	private java.lang.String unite;
 
 //	Relation
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.DETACH)
 	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
 	@JsonBackReference(value="pharmacie-prix")
 	private Pharmacie pharmacie;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY,cascade=CascadeType.DETACH)
 	@JoinColumn(name="id_produit",insertable = false, updatable = false)
-	@JsonBackReference(value="produit-prix")
+//	@JsonBackReference(value="produit-prix")
 	private Produit produit;
 		
 	public Prix() {
@@ -53,7 +55,7 @@ public class Prix implements Serializable{
 	 * @param prix
 	 * @param unite
 	 */
-	public Prix(Long idPharmacie, Long idProduit, int prix, String unite) {
+	public Prix(Long idPharmacie, Long idProduit, Double prix, String unite) {
 		super();
 		this.idPharmacie = idPharmacie;
 		this.idProduit = idProduit;
@@ -64,14 +66,14 @@ public class Prix implements Serializable{
 	/**
 	 * @return the prix
 	 */
-	public int getPrix() {
+	public Double getPrix() {
 		return prix;
 	}
 
 	/**
 	 * @param prix the prix to set
 	 */
-	public void setPrix(int prix) {
+	public void setPrix(Double prix) {
 		this.prix = prix;
 	}
 

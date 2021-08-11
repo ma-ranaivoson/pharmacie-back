@@ -44,7 +44,7 @@ public class UtilisateurController {
 	@Autowired
 	UtilisateurService userService;
 	ObjectMapper om = new ObjectMapper();
-	
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -53,13 +53,13 @@ public class UtilisateurController {
 
 	@Autowired
 	JwtProvider jwtProvider;
-	
+
 	@Autowired
 	AmazonSesService emailservice;
 
 	// Create user
 	// public
-	
+
 	@PostMapping(value = "/register")
 	public @ResponseBody ResponseEntity<?> register(@RequestBody Utilisateur user) {
 
@@ -81,34 +81,36 @@ public class UtilisateurController {
 			newUser.setPassword(encoder.encode(user.getPassword()));
 			newUser.setEmail(user.getEmail());
 			newUser.setPhone(user.getPhone());
-			//Validation Code
+			// Validation Code
 			String code = Util.generateCode();
 			newUser.setValidationCode(code);
 			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
-			//send mail
+			// send mail
 			class MailAndSms implements Runnable {
 				String mailSend;
 				String phoneSend;
-		        String codeSend;
-		        MailAndSms(String mail, String phone, String code) { 
-		        	mailSend = mail;
-		        	phoneSend = phone;
-		        	codeSend = code;
-	        	}
-		        public void run() {
-		        	if(mailSend!=null) {
+				String codeSend;
+
+				MailAndSms(String mail, String phone, String code) {
+					mailSend = mail;
+					phoneSend = phone;
+					codeSend = code;
+				}
+
+				public void run() {
+					if (mailSend != null) {
 						try {
 							emailservice.sendMail(Util.sendEmailValidation(mailSend, String.valueOf(codeSend)));
 						} catch (Exception e) {
 							e.printStackTrace();
-							System.out.println("e-mail tsy envoyée "+e.getMessage());
+							System.out.println("e-mail tsy envoyée " + e.getMessage());
 						}
 					}
-		        }
-		    }
+				}
+			}
 			System.out.println(om.writeValueAsString(newUser));
-		    Thread t = new Thread(new MailAndSms(newUser.getEmail(), user.getPhone(), code));
-		    t.start();
+			Thread t = new Thread(new MailAndSms(newUser.getEmail(), user.getPhone(), code));
+			t.start();
 			newUser = userService.save(newUser);
 			res.put("message", "Inscription réussie");
 			return new ResponseEntity<>(res, HttpStatus.OK);
@@ -120,32 +122,33 @@ public class UtilisateurController {
 		}
 
 	}
-	
+
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String,String> user) {
-		
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) {
+
 		try {
 			System.out.println(om.writeValueAsString(user));
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		String jwt = jwtProvider.generateJwtToken(authentication);
-		Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
+			String jwt = jwtProvider.generateJwtToken(authentication);
+			Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
-		}catch(Exception e) {
+			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/me")
 	public @ResponseBody ResponseEntity<?> getMe() {
-			
-		Utilisateur user = (Utilisateur)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		//List<Panier> paniers = servicePanier.findByIdUtilisateur(user.getIdUtilisateur());
+
+		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		// List<Panier> paniers =
+		// servicePanier.findByIdUtilisateur(user.getIdUtilisateur());
 
 		try {
 			System.out.println("");
@@ -156,8 +159,7 @@ public class UtilisateurController {
 		}
 
 	}
-	
-	
+
 	// Get All user
 	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllUser() {
@@ -182,9 +184,9 @@ public class UtilisateurController {
 
 		try {
 			user = userService.getById(id);
-			
+
 			return new ResponseEntity<>(user, HttpStatus.OK);
-			
+
 		} catch (NoSuchElementException e) {
 
 			res.put("error", e.getMessage());
@@ -192,7 +194,7 @@ public class UtilisateurController {
 			return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	// TODO : Update user by id
 //	@PutMapping(value = "/{id}")
 //	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody Utilisateur user) {
@@ -212,21 +214,21 @@ public class UtilisateurController {
 
 	// Delete user by id
 	@DeleteMapping(value = "/{id}")
-	public @ResponseBody ResponseEntity<?> deleteUserById (@PathVariable Long id) {
+	public @ResponseBody ResponseEntity<?> deleteUserById(@PathVariable Long id) {
 		HashMap<String, Object> resp = new HashMap<String, Object>();
 		try {
 			userService.deleteById(id);
 			resp.put("success", true);
 			resp.put("message", "User with id of " + id + " deleted successfully");
-			
+
 			return new ResponseEntity<>(resp, HttpStatus.OK);
-			
+
 		} catch (Exception e) {
 			resp.put("success", false);
 			resp.put("error", "There is an error");
-			
+
 			return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 }

@@ -1,30 +1,30 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "produit")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Produit implements Serializable{
 
 	/**
@@ -52,24 +52,28 @@ public class Produit implements Serializable{
 	private java.lang.String description;
 	@Column(name = "format")
 	private java.lang.String format;
+	@Column(name="id_marque")
+	private Long idMarque;
+	@Column(name="id_pharmacie")
+	private Long idPharmacie;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_marque")
+	@JoinColumn(name="id_marque",insertable = false, updatable = false)
 	private Marque marque;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie")
+	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
 	@JsonBackReference(value="pharmacie-produit")
 	private Pharmacie pharmacie;
 	
 //	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="produit-categorie")
 //	private Set<Categorie> categorie;
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.REFRESH)
     @JoinTable(name = "rel_sous_categorie_produit", 
     	joinColumns = @JoinColumn(name = "id_produit"),
     	inverseJoinColumns = @JoinColumn(name = "id_sous_categorie"))
-	private Set<Categorie> categorie;
+	private Set<SousCategorie> categorie;
 	
 //	@ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(name = "favoris", 
@@ -77,9 +81,9 @@ public class Produit implements Serializable{
 //    	inverseJoinColumns = @JoinColumn(name = "users_id"))
 //    private Set<User> users = new HashSet<>();
 	
-	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="produit-prix")
-	private Set<Prix> prix;
+//	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JsonManagedReference(value="produit-prix")
+//	private Set<Prix> prix;
 	
 	public Produit() {
 		
@@ -187,19 +191,35 @@ public class Produit implements Serializable{
 		this.pharmacie = pharmacie;
 	}
 
-	public Set<Categorie> getCategorie() {
+	public Set<SousCategorie> getCategorie() {
 		return categorie;
 	}
 
-	public void setCategorie(Set<Categorie> categorie) {
+	public void setCategorie(Set<SousCategorie> categorie) {
 		this.categorie = categorie;
 	}
 
-	public Set<Prix> getPrix() {
-		return prix;
+	public Long getIdMarque() {
+		return idMarque;
 	}
 
-	public void setPrix(Set<Prix> prix) {
-		this.prix = prix;
+	public void setIdMarque(Long idMarque) {
+		this.idMarque = idMarque;
 	}
+
+	public Long getIdPharmacie() {
+		return idPharmacie;
+	}
+
+	public void setIdPharmacie(Long idPharmacie) {
+		this.idPharmacie = idPharmacie;
+	}
+
+//	public Set<Prix> getPrix() {
+//		return prix;
+//	}
+//
+//	public void setPrix(Set<Prix> prix) {
+//		this.prix = prix;
+//	}
 }

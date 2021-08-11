@@ -27,7 +27,7 @@ public class Categorie implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(
 			strategy = GenerationType.SEQUENCE,
@@ -40,7 +40,7 @@ public class Categorie implements Serializable{
 			initialValue = 2
 			)
 	@Column(name = "id_categorie")
-	private long idCategorie;
+	private Long idCategorie;
 	@Column(name = "libelle")
 	private java.lang.String libelle;
 	
@@ -61,7 +61,7 @@ public class Categorie implements Serializable{
 	 * @param idCategorie
 	 * @param libelle
 	 */
-	public Categorie(long idCategorie, String libelle) {
+	public Categorie(Long idCategorie, String libelle) {
 		super();
 		this.idCategorie = idCategorie;
 		this.libelle = libelle;
@@ -70,14 +70,14 @@ public class Categorie implements Serializable{
 	/**
 	 * @return the idCategorie
 	 */
-	public long getIdCategorie() {
+	public Long getIdCategorie() {
 		return idCategorie;
 	}
 	
 	/**
 	 * @param idCategorie the idCategorie to set
 	 */
-	public void setIdCategorie(long idCategorie) {
+	public void setIdCategorie(Long idCategorie) {
 		this.idCategorie = idCategorie;
 	}
 	
@@ -98,7 +98,7 @@ public class Categorie implements Serializable{
 	/**
 	 * @return the serialversionuid
 	 */
-	public static long getSerialversionuid() {
+	public static Long getSerialversionuid() {
 		return serialVersionUID;
 	}
 	
