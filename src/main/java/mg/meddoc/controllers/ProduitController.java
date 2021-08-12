@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mg.meddoc.models.Marque;
 import mg.meddoc.models.Prix;
 import mg.meddoc.models.Produit;
 import mg.meddoc.models.ProduitData;
+import mg.meddoc.services.MarqueService;
 import mg.meddoc.services.PrixService;
 import mg.meddoc.services.ProduitService;
 
@@ -40,6 +42,10 @@ public class ProduitController {
 
 	@Autowired
 	ProduitService serviceProduit;
+	
+	@Autowired
+	MarqueService serviceMarque;
+	
 	@Autowired
 	PrixService servicePrix;
 
@@ -81,7 +87,14 @@ public class ProduitController {
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
-			log.info(om.writeValueAsString(produit));
+//			log.info(om.writeValueAsString(produit));
+			System.out.println(produit.getImage());
+			if(produit.getMarque()!=null) {
+				if(produit.getMarque().getIdMarque()==null) {
+					Marque marque = serviceMarque.save(produit.getMarque());
+					produit.setIdMarque(marque.getIdMarque());
+				}
+			}
 			Produit saved = serviceProduit.save(produit.toProduit());
 			Prix prix = null;
 			if(produit.getPrix()!=null||produit.getPrix().size()>0) {

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mg.meddoc.models.Marque;
+import mg.meddoc.models.SousCategorie;
 import mg.meddoc.services.MarqueService;
 
 @RestController
@@ -49,6 +50,26 @@ public class MarqueController {
 				return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 			}
 		}
+	@GetMapping(value = "/all/select")
+	public @ResponseBody ResponseEntity<?> getAllMarqueSelect() {
+		List<Marque> marques = new ArrayList<Marque>();
+		try {
+			marques = serviceMarque.getAll();
+			List<HashMap<String,Object>> retour = new ArrayList<HashMap<String, Object>>();
+			HashMap<String,Object> maps = null;
+			for(Marque marque:marques) {
+				maps = new HashMap<String, Object>();
+				maps.put("value", marque.getIdMarque());
+				maps.put("label", marque.getNomination());
+				retour.add(maps);
+			}
+			System.out.println(om.writeValueAsString(retour));
+			return new ResponseEntity<>(retour, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
+		}
+	}
 		
 		//GetById_Marque
 		@GetMapping(value = "/{id}")

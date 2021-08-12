@@ -166,6 +166,7 @@ public class ProduitData implements Serializable{
 		produit.setPharmacie(this.getPharmacie());
 		produit.setIdMarque(this.getIdMarque());
 		produit.setIdPharmacie(this.getIdPharmacie());
+		produit.setImage(this.getImage());
 		return produit;
 	}
 	
