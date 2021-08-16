@@ -150,4 +150,9 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 			return false;
 		}
 	}
+
+	@Override
+	public Utilisateur getById(Long id) {
+		return repository.findByIdUtilisateur(id);
+	}
 }

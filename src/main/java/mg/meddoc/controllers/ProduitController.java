@@ -58,7 +58,6 @@ public class ProduitController {
 		try {
 
 			produit = serviceProduit.getAll();
-			log.info(om.writeValueAsString(produit));
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,9 +70,7 @@ public class ProduitController {
 	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id) {
 		Produit produit = null;
 		try {
-
 			produit = serviceProduit.getById(id);
-			log.info(om.writeValueAsString(produit));
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,8 +87,6 @@ public class ProduitController {
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
-//			log.info(om.writeValueAsString(produit));
-			System.out.println(produit.getImage());
 			if (produit.getMarque() != null) {
 				if (produit.getMarque().getIdMarque() == null) {
 					Marque marque = serviceMarque.save(produit.getMarque());

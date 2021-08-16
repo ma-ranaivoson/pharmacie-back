@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.mail.iap.Response;
 
 import mg.meddoc.message.JwtResponse;
 import mg.meddoc.message.ResponseMessage;
@@ -151,6 +156,7 @@ public class UtilisateurController {
 				newUser = userService.save(newUser);
 
 				System.out.println(om.writeValueAsString(newUser));
+
 				Authentication authentication = authenticationManager.authenticate(
 						new UsernamePasswordAuthenticationToken(newUser.getEmail(), newUser.getPassword()));
 
@@ -170,24 +176,53 @@ public class UtilisateurController {
 
 	}
 
-//	@PostMapping("/confirm")
-//	public ResponseEntity<?> confirmAccount(@Valid @RequestBody HashMap<String, String> user){
-//		try {
-//			Utilisateur userConfirm = userService.findByEmail(((User) user).getEmail());
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return null;
-//	}
+	@PostMapping("/confirm/{id}")
+	public ResponseEntity<?> confirmAccount(@Valid @RequestBody HashMap<String, String> user, @PathVariable Long id) {
+		HashMap<String, String> error = new HashMap<String, String>();
+		
+		try {
+			Utilisateur userConfirm = userService.getById(id);
+			System.out.println(userConfirm);
+			
+			if (userConfirm == null)
+				throw new UsernameNotFoundException("User not found");
 
+			if (userConfirm.getValidationCode().equals(user.get("code"))
+					) {
+				userConfirm.setStatut(1);
+				Utilisateur userConnected = userService.save(userConfirm);
 
+				Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
+				
+				String token = jwtProvider.generateJwtToken(authentication);
+				
+				return ResponseEntity.ok(new JwtResponse(token, userConnected.getEmail(), null));
+			} else {
+				throw new IllegalAccessError("Code de validation erreur");
+			}
+
+		} catch (UsernameNotFoundException ex) {
+			ex.printStackTrace();
+			error.put("message", "User not found");
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		} catch (IllegalAccessError ex) {
+			ex.printStackTrace();
+			error.put("message", "Erreur code validation");
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		Utilisateur loginUser = userService.findByEmail(user.get("email"));
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+
 		try {
-			System.out.println(om.writeValueAsString(user));
+			if (loginUser == null || !encoder.matches(user.get("password"), loginUser.getPassword()))
+				throw new BadCredentialsException("Bad credentials");
+
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
 
@@ -197,11 +232,14 @@ public class UtilisateurController {
 			Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
 
 			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
-		} catch (Exception e) {
+		} catch (LockedException e) {
+			response.put("message", "locked");
+			response.put("id", loginUser.getIdUtilisateur());
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		} catch (BadCredentialsException e) {
 			e.printStackTrace();
-			res.put("error", e.getMessage());
-
-			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+			response.put("message", "bad credentials");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 

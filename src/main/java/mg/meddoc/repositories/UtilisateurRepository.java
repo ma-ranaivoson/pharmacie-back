@@ -22,4 +22,6 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long>{
 	@Query(nativeQuery=true,value="SELECT distinct utilisateur.* FROM utilisateur WHERE phone=?1 or email=?1 or id_utilisateur = CAST(?1 AS BIGINT)")
 	Utilisateur findByIdentifiant(String value);
 	
+	Utilisateur findByIdUtilisateur(Long id);
+	
 }
