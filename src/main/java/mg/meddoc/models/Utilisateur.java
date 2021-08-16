@@ -43,9 +43,9 @@ public class Utilisateur implements Serializable, UserDetails{
 	@Column(name = "id_utilisateur")
 	private Long idUtilisateur;
 	
-	@Column(name = "nom")
+	@Column(name = "nom", nullable = false)
 	private java.lang.String nom;
-	@Column(name = "prenoms")
+	@Column(name = "prenoms", nullable = false)
 	private java.lang.String prenoms;
 	@Column(name = "validation_code")
 	private java.lang.String validationCode;

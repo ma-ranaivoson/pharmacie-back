@@ -6,5 +6,5 @@ import mg.meddoc.models.Prix;
 import mg.meddoc.models.PrixPK;
 
 public interface PrixRepository extends JpaRepository<Prix, PrixPK>{
-	
+	Prix findByIdProduit(Long prix);
 }

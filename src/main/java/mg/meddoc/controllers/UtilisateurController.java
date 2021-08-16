@@ -1,5 +1,6 @@
 package mg.meddoc.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,7 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mg.meddoc.message.JwtResponse;
 import mg.meddoc.message.ResponseMessage;
 import mg.meddoc.models.TypeUtilisateur;
+import mg.meddoc.models.User;
 import mg.meddoc.models.Utilisateur;
+import mg.meddoc.repositories.UserRepository;
 import mg.meddoc.security.JwtProvider;
 import mg.meddoc.services.AmazonSesService;
 import mg.meddoc.services.UtilisateurService;
@@ -57,65 +60,109 @@ public class UtilisateurController {
 	@Autowired
 	AmazonSesService emailservice;
 
+	HashMap<String, Object> res = new HashMap<String, Object>();
+
 	// Create user
 	// public
 
 	@PostMapping(value = "/register")
 	public @ResponseBody ResponseEntity<?> register(@RequestBody Utilisateur user) {
-
-		HashMap<String, Object> res = new HashMap<String, Object>();
+		List<String> error = new ArrayList<String>();
 
 		try {
 			System.out.println(om.writeValueAsString(user));
 			if (userService.existsByEmail(user.getEmail())) {
-				return new ResponseEntity<>(new ResponseMessage("Fail -> Adresse email déjà prise"),
-						HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<>(new ResponseMessage("Fail -> Adresse email déjà prise"),
+//						HttpStatus.BAD_REQUEST);
+				error.add("Adresse email déjà prise");
 			}
 			if (userService.existsByPhone(user.getPhone())) {
-				return new ResponseEntity<>(new ResponseMessage("Fail -> Numéro téléphone déjà pris!"),
-						HttpStatus.BAD_REQUEST);
+//				return new ResponseEntity<>(new ResponseMessage("Fail -> Numéro téléphone déjà pris!"),
+//						HttpStatus.BAD_REQUEST);
+				error.add("Numéro téléphone déjà pris!");
 			}
+
 			Utilisateur newUser = new Utilisateur();
-			newUser.setNom(user.getNom());
-			newUser.setPrenoms(user.getPrenoms());
-			newUser.setPassword(encoder.encode(user.getPassword()));
-			newUser.setEmail(user.getEmail());
-			newUser.setPhone(user.getPhone());
-			// Validation Code
-			String code = Util.generateCode();
-			newUser.setValidationCode(code);
-			newUser.setTypeUtilisateur(new TypeUtilisateur(1));
-			// send mail
-			class MailAndSms implements Runnable {
-				String mailSend;
-				String phoneSend;
-				String codeSend;
 
-				MailAndSms(String mail, String phone, String code) {
-					mailSend = mail;
-					phoneSend = phone;
-					codeSend = code;
-				}
+			if (user.getNom() == null) {
+				error.add("Veuillez insérer votre nom");
+			} else {
+				newUser.setNom(user.getNom());
+			}
 
-				public void run() {
-					if (mailSend != null) {
-						try {
-							emailservice.sendMail(Util.sendEmailValidation(mailSend, String.valueOf(codeSend)));
-						} catch (Exception e) {
-							e.printStackTrace();
-							System.out.println("e-mail tsy envoyée " + e.getMessage());
+			if (user.getPrenoms() == null) {
+				error.add("Veuillez insérer votre prénom");
+			} else {
+				newUser.setPrenoms(user.getPrenoms());
+			}
+
+			if (user.getPassword() == null) {
+				error.add("Veuillez insérer votre mot de passe");
+			} else {
+				newUser.setPassword(encoder.encode(user.getPassword()));
+			}
+
+			if (user.getEmail() == null) {
+				error.add("Veuillez insérer votre email");
+			} else {
+				newUser.setEmail(user.getEmail());
+			}
+
+			if (user.getPhone() == null) {
+				error.add("Veuillez insérer votre numéro de téléphone");
+			} else {
+				newUser.setPhone(user.getPhone());
+			}
+
+			// If there is no error
+			if (error.isEmpty()) {
+				// Validation Code
+				String code = Util.generateCode();
+				newUser.setValidationCode(code);
+				newUser.setTypeUtilisateur(new TypeUtilisateur(1));
+
+				// send mail
+				class MailAndSms implements Runnable {
+					String mailSend;
+					String phoneSend;
+					String codeSend;
+
+					MailAndSms(String mail, String phone, String code) {
+						mailSend = mail;
+						phoneSend = phone;
+						codeSend = code;
+					}
+
+					public void run() {
+						if (mailSend != null) {
+							try {
+								emailservice.sendMail(Util.sendEmailValidation(mailSend, String.valueOf(codeSend)));
+							} catch (Exception e) {
+								e.printStackTrace();
+								System.out.println("e-mail tsy envoyée " + e.getMessage());
+							}
 						}
 					}
 				}
+
+				Thread t = new Thread(new MailAndSms(newUser.getEmail(), user.getPhone(), code));
+				t.start();
+
+				newUser = userService.save(newUser);
+
+				System.out.println(om.writeValueAsString(newUser));
+				Authentication authentication = authenticationManager.authenticate(
+						new UsernamePasswordAuthenticationToken(newUser.getEmail(), newUser.getPassword()));
+
+				String jwt = jwtProvider.generateJwtToken(authentication);
+
+				res.put("message", "Inscription réussie");
+				return ResponseEntity.ok(new JwtResponse(jwt, newUser.getEmail(), null));
+			} else {
+				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
-			System.out.println(om.writeValueAsString(newUser));
-			Thread t = new Thread(new MailAndSms(newUser.getEmail(), user.getPhone(), code));
-			t.start();
-			newUser = userService.save(newUser);
-			res.put("message", "Inscription réussie");
-			return new ResponseEntity<>(res, HttpStatus.OK);
+
 		} catch (Exception e) {
-			res.put("success", false);
 			res.put("error", e.getStackTrace());
 			e.printStackTrace();
 			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -123,9 +170,22 @@ public class UtilisateurController {
 
 	}
 
+//	@PostMapping("/confirm")
+//	public ResponseEntity<?> confirmAccount(@Valid @RequestBody HashMap<String, String> user){
+//		try {
+//			Utilisateur userConfirm = userService.findByEmail(((User) user).getEmail());
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return null;
+//	}
+
+
+
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) {
-
 		try {
 			System.out.println(om.writeValueAsString(user));
 			Authentication authentication = authenticationManager
@@ -139,23 +199,20 @@ public class UtilisateurController {
 			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
+			res.put("error", e.getMessage());
+
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@GetMapping(value = "/me")
 	public @ResponseBody ResponseEntity<?> getMe() {
-
-		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		// List<Panier> paniers =
-		// servicePanier.findByIdUtilisateur(user.getIdUtilisateur());
-
 		try {
-			System.out.println("");
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
 		}
 
 	}

@@ -59,9 +59,12 @@ public class PrixImplementation implements PrixService{
 	}
 
 	@Override
-	public void stateDeleteById(Serializable id, Serializable idStatut) {
-		// TODO Auto-generated method stub
-		
+	public void stateDeleteById(Serializable id, Serializable idStatut) {	
+	}
+
+	@Override
+	public Prix getProductPrice(Long id) {
+		return repository.findByIdProduit(id);
 	}
 
 }

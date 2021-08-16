@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Marque;
@@ -42,10 +44,10 @@ public class ProduitController {
 
 	@Autowired
 	ProduitService serviceProduit;
-	
+
 	@Autowired
 	MarqueService serviceMarque;
-	
+
 	@Autowired
 	PrixService servicePrix;
 
@@ -75,7 +77,8 @@ public class ProduitController {
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			//return new ResponseEntity<>("Erreur ou n'est pas dans la BDD", HttpStatus.BAD_REQUEST);
+			// return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",
+			// HttpStatus.BAD_REQUEST);
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
@@ -89,31 +92,68 @@ public class ProduitController {
 		try {
 //			log.info(om.writeValueAsString(produit));
 			System.out.println(produit.getImage());
-			if(produit.getMarque()!=null) {
-				if(produit.getMarque().getIdMarque()==null) {
+			if (produit.getMarque() != null) {
+				if (produit.getMarque().getIdMarque() == null) {
 					Marque marque = serviceMarque.save(produit.getMarque());
 					produit.setIdMarque(marque.getIdMarque());
 				}
 			}
 			Produit saved = serviceProduit.save(produit.toProduit());
 			Prix prix = null;
-			if(produit.getPrix()!=null||produit.getPrix().size()>0) {
+			if (produit.getPrix() != null || produit.getPrix().size() > 0) {
 				prix = produit.getPrix().iterator().next();
 				prix.setIdPharmacie(saved.getIdPharmacie());
 				prix.setIdProduit(saved.getIdProduit());
 				servicePrix.save(prix);
 			}
-			produit = new ProduitData(saved,prix);
+			produit = new ProduitData(saved, prix);
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
-			error.put("success", false);
 			error.put("errors", e.getMessage());
-			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
+	// Update Produit
+	@PutMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProduitData produit)
+			throws JsonProcessingException {
+		Produit productToUpdate = serviceProduit.getById(id);
+		
+		productToUpdate.setCategorie(produit.getCategorie());
+		productToUpdate.setDescription(produit.getDescription());
+		productToUpdate.setDesignation(produit.getDesignation());
+		productToUpdate.setImage(produit.getImage());
+		productToUpdate.setFormat(produit.getFormat());
+		productToUpdate.setIdPharmacie(produit.getIdPharmacie());
+		
+		// Updating marque
+		Marque newMarque;
+		Long newMarqueId = produit.getIdMarque();
+		if (newMarqueId == null) {
+			newMarque = serviceMarque.save(produit.getMarque());
+			productToUpdate.setIdMarque(newMarque.getIdMarque());
+		}		
+		
+		// Updating price
+		Prix prix = servicePrix.getProductPrice(id);
+		Prix newPrix = (Prix) produit.getPrix().iterator().next();		
+		if(prix.getPrix() != newPrix.getPrix()) {
+			newPrix.setIdPharmacie(produit.getIdPharmacie());
+			newPrix.setIdProduit(id);
+			newPrix.setPrix(newPrix.getPrix());
+			prix = servicePrix.save(newPrix);
+		}
+		
+		Produit saved = serviceProduit.save(productToUpdate);
+		
+		produit = new ProduitData(saved, prix);
+		
+		return new ResponseEntity<>(saved, HttpStatus.OK);
+	}
+
 	// Delete_Produit
 	@DeleteMapping(value = "/delete/{id}")
 	public @ResponseBody ResponseEntity<?> deleteProduitById(@PathVariable Long id) {
@@ -125,35 +165,38 @@ public class ProduitController {
 			success.put("data", "Produit id: " + id + " supprimée avec success");
 //				servicePharmacie.save(pharmacie);
 //				log.info(om.writeValueAsString(pharmacie));
-			//return new ResponseEntity<>("Produit supprimée avec succès", HttpStatus.OK);
+			// return new ResponseEntity<>("Produit supprimée avec succès", HttpStatus.OK);
 			return new ResponseEntity<>(success, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", "Produit id " + id + " not found");
-			
+
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	// GetByDesignation/Produit
 	@GetMapping(value = "/byDesignation/{designation}")
 	public @ResponseBody ResponseEntity<?> getProduitByDesignation(@PathVariable String designation) {
-		//Produit produit = null;
+		// Produit produit = null;
 		try {
-			
-			//produit = serviceProduit.rechercheProduit(designation);
-			//Page<Produit> produitResult = serviceProduit.findByRaisonSocialContainingIgnoreCase(designation, 1, 10, "raisonSocial", "ASC");
-			//@SuppressWarnings("unchecked")
-			Page<Produit> produitResult = serviceProduit.findByDesignationContainingIgnoreCase(designation, 1, 10, "raisonSocial", "ASC");	
+
+			// produit = serviceProduit.rechercheProduit(designation);
+			// Page<Produit> produitResult =
+			// serviceProduit.findByRaisonSocialContainingIgnoreCase(designation, 1, 10,
+			// "raisonSocial", "ASC");
+			// @SuppressWarnings("unchecked")
+			Page<Produit> produitResult = serviceProduit.findByDesignationContainingIgnoreCase(designation, 1, 10,
+					"raisonSocial", "ASC");
 			System.out.println(om.writeValueAsString(produitResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();
 			success.put("success", true);
 			success.put("data", produitResult);
-			
-			//log.info(om.writeValueAsString(produitResult));
+
+			// log.info(om.writeValueAsString(produitResult));
 			return new ResponseEntity<>(success, HttpStatus.OK);
 			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
 		} catch (Exception e) {
@@ -161,16 +204,18 @@ public class ProduitController {
 			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
-	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation,@PathVariable String page,@PathVariable String size,@PathVariable String direction,@PathVariable String columnSort) {
+	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
+			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
 //		Produit produit = null;
 		try {
-			if(direction==null||direction.compareTo("----")==0)
+			if (direction == null || direction.compareTo("----") == 0)
 				direction = null;
-			if(columnSort==null||columnSort.compareTo("----")==0)
+			if (columnSort == null || columnSort.compareTo("----") == 0)
 				columnSort = null;
-			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation, Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
+			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
+					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
 			log.info(om.writeValueAsString(produits));
 			return new ResponseEntity<>(produits, HttpStatus.OK);
 			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
