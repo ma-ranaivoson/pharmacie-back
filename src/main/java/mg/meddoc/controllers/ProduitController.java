@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -116,36 +117,36 @@ public class ProduitController {
 	public @ResponseBody ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProduitData produit)
 			throws JsonProcessingException {
 		Produit productToUpdate = serviceProduit.getById(id);
-		
+
 		productToUpdate.setCategorie(produit.getCategorie());
 		productToUpdate.setDescription(produit.getDescription());
 		productToUpdate.setDesignation(produit.getDesignation());
 		productToUpdate.setImage(produit.getImage());
 		productToUpdate.setFormat(produit.getFormat());
 		productToUpdate.setIdPharmacie(produit.getIdPharmacie());
-		
+
 		// Updating marque
 		Marque newMarque;
 		Long newMarqueId = produit.getIdMarque();
 		if (newMarqueId == null) {
 			newMarque = serviceMarque.save(produit.getMarque());
 			productToUpdate.setIdMarque(newMarque.getIdMarque());
-		}		
-		
+		}
+
 		// Updating price
 		Prix prix = servicePrix.getProductPrice(id);
-		Prix newPrix = (Prix) produit.getPrix().iterator().next();		
-		if(prix.getPrix() != newPrix.getPrix()) {
+		Prix newPrix = (Prix) produit.getPrix().iterator().next();
+		if (prix.getPrix() != newPrix.getPrix()) {
 			newPrix.setIdPharmacie(produit.getIdPharmacie());
 			newPrix.setIdProduit(id);
 			newPrix.setPrix(newPrix.getPrix());
 			prix = servicePrix.save(newPrix);
 		}
-		
+
 		Produit saved = serviceProduit.save(productToUpdate);
-		
+
 		produit = new ProduitData(saved, prix);
-		
+
 		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 
@@ -200,24 +201,37 @@ public class ProduitController {
 		}
 	}
 
-	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
-	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
-			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
-//		Produit produit = null;
-		try {
-			if (direction == null || direction.compareTo("----") == 0)
-				direction = null;
-			if (columnSort == null || columnSort.compareTo("----") == 0)
-				columnSort = null;
-			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
-					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
-			log.info(om.writeValueAsString(produits));
-			return new ResponseEntity<>(produits, HttpStatus.OK);
-			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
-		}
+//	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
+//	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
+//			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
+////		Produit produit = null;
+//		try {
+//			if (direction == null || direction.compareTo("----") == 0)
+//				direction = null;
+//			if (columnSort == null || columnSort.compareTo("----") == 0)
+//				columnSort = null;
+//			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
+//					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
+//			log.info(om.writeValueAsString(produits));
+//			return new ResponseEntity<>(produits, HttpStatus.OK);
+//			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
+//		}
+//	}
+
+	@GetMapping(value = "/search")
+	public @ResponseBody ResponseEntity<?> searchWithQuery(@RequestParam(name = "q") String q,
+			@RequestParam(name = "categorie") String categorie,
+			@RequestParam(name = "sousCategorie", required = false) String sc
+			) {
+
+		System.out.println(q);
+		System.out.println(categorie);
+		System.out.println(sc);
+
+		return null;
 	}
 
 }

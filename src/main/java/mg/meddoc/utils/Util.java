@@ -23,13 +23,13 @@ public class Util {
 	}
 	
 	public static String toNormalPhoneNumber(String number) {
-		if(number.matches("^\\+261[0-9]+"))
+		if(number.matches("^\\+261[0-9]{9}"))
 			return (number.replace("+261", "0")).toString();
-		else if(number.matches("^261[0-9]+"))
+		else if(number.matches("^261[0-9]{9}"))
 			return (number.replace("261", "0")).toString();
-		else if(number.matches("^3.[0-9]+"))
+		else if(number.matches("^3.[0-9]{9}"))
 			return ("0"+number).toString();
-		else if(number.matches("^03.[0-9]+"))
+		else if(number.matches("^03.[0-9]{9}"))
 			return number.toString();
 		return null;
 	}

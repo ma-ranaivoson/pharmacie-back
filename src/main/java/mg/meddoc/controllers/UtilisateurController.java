@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
+import javax.ws.rs.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,20 +26,19 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.mail.iap.Response;
 
 import mg.meddoc.message.JwtResponse;
-import mg.meddoc.message.ResponseMessage;
 import mg.meddoc.models.TypeUtilisateur;
-import mg.meddoc.models.User;
 import mg.meddoc.models.Utilisateur;
-import mg.meddoc.repositories.UserRepository;
 import mg.meddoc.security.JwtProvider;
 import mg.meddoc.services.AmazonSesService;
 import mg.meddoc.services.UtilisateurService;
@@ -69,7 +69,6 @@ public class UtilisateurController {
 
 	// Create user
 	// public
-
 	@PostMapping(value = "/register")
 	public @ResponseBody ResponseEntity<?> register(@RequestBody Utilisateur user) {
 		List<String> error = new ArrayList<String>();
@@ -157,13 +156,14 @@ public class UtilisateurController {
 
 				System.out.println(om.writeValueAsString(newUser));
 
-				Authentication authentication = authenticationManager.authenticate(
-						new UsernamePasswordAuthenticationToken(newUser.getEmail(), newUser.getPassword()));
-
-				String jwt = jwtProvider.generateJwtToken(authentication);
+//				Authentication authentication = authenticationManager.authenticate(
+//						new UsernamePasswordAuthenticationToken(newUser.getEmail(), newUser.getPassword()));
+//
+//				String jwt = jwtProvider.generateJwtToken(authentication);
 
 				res.put("message", "Inscription réussie");
-				return ResponseEntity.ok(new JwtResponse(jwt, newUser.getEmail(), null));
+				res.put("id", newUser.getIdUtilisateur());
+				return ResponseEntity.ok(res);
 			} else {
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
@@ -214,24 +214,32 @@ public class UtilisateurController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		Utilisateur loginUser = userService.findByEmail(user.get("email"));
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) throws JsonProcessingException {
+		HashMap<String, Object> response = new HashMap<String, Object>();		
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		Utilisateur loginUser;
+		
+		if(Util.isNumber(user.get("email"))) {
+			System.out.println("Find by phone");
+			loginUser = userService.getByPhone(user.get("email"));
+			System.out.println(om.writeValueAsString(loginUser));
+		} else {
+			loginUser = userService.findByEmail(user.get("email"));
+		}
 
-		try {
+		try {		
 			if (loginUser == null || !encoder.matches(user.get("password"), loginUser.getPassword()))
 				throw new BadCredentialsException("Bad credentials");
 
 			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
+					.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getEmail(), user.get("password")));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			String jwt = jwtProvider.generateJwtToken(authentication);
 			Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
 
-			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getEmail(), null));
+			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getUsername(), null));
 		} catch (LockedException e) {
 			response.put("message", "locked");
 			response.put("id", loginUser.getIdUtilisateur());
@@ -269,6 +277,71 @@ public class UtilisateurController {
 		}
 
 	}
+	
+	// Modify profile 
+	@SuppressWarnings("unlikely-arg-type")
+	@PutMapping(value = "/modify/{id}")
+	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,@RequestBody HashMap<String,Object> data) {	
+		List<String> error = new ArrayList<String>();
+		try {
+			Utilisateur userToUpdate = userService.getById(id);
+			// Get the client user
+			Utilisateur user = om.readValue(om.writeValueAsString(data.get("user")), new TypeReference<Utilisateur>() {});
+			String newPassword = data.get("newPassword")!=null?data.get("newPassword").toString():null;
+			
+			System.out.println(encoder.matches(user.getPassword(), userToUpdate.getPassword()));
+			
+			if(userToUpdate == null)
+				throw new NotFoundException("Utilisateur introuvable");
+			
+			// Verify if it's the connected user
+			Utilisateur idConnectedUser = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(!idConnectedUser.getIdUtilisateur().equals(userToUpdate.getIdUtilisateur()))
+				throw new IllegalAccessException();
+			
+			// Check email
+			if(!userToUpdate.getEmail().equals(user.getEmail()) && userService.existsByEmail(user.getEmail()))  {
+				error.add("Adresse email existe déja");
+			} else {
+				userToUpdate.setEmail(user.getEmail());
+			}
+			// Check confirm password
+			if(!encoder.matches(user.getPassword(), userToUpdate.getPassword())) {
+				error.add("Mot de passe ne correspond pas");
+			} else {
+				if(newPassword != null) {
+					userToUpdate.setPassword(encoder.encode(newPassword));
+				}					
+			}
+
+			// Check email
+			if(!userToUpdate.getPhone().equals(user.getPhone()) && userService.existsByPhone(user.getPhone())) {
+				error.add("Numéro tétéphone existant");
+			} else {
+				userToUpdate.setPhone(user.getPhone());
+			}			
+			userToUpdate.setNom(user.getNom());
+			userToUpdate.setPrenoms(user.getPrenoms());
+			// If no error update the user
+			if(error.isEmpty()) {
+				user = userService.save(userToUpdate);
+				return new ResponseEntity<>(user, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			}
+		} catch (NotFoundException e) {
+			error.add("Utilisateur introuvable");
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		} catch(IllegalAccessException e) {
+			error.add("Modification pas autorisée");
+			return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("err", HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	// Get user by id
 	// TODO : Make an exception handler if there is no user or failed to cast the id
@@ -289,23 +362,6 @@ public class UtilisateurController {
 			return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
 		}
 	}
-
-	// TODO : Update user by id
-//	@PutMapping(value = "/{id}")
-//	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody Utilisateur user) {
-//		
-//		try {
-//			user = userService.getById(id);
-//			
-//			return new ResponseEntity<>(user, HttpStatus.OK);
-//			
-//		} catch (NoSuchElementException e) {
-//
-//			resp.put("error", e.getMessage());
-//
-//			return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
-//		}		
-//	}
 
 	// Delete user by id
 	@DeleteMapping(value = "/{id}")
