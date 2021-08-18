@@ -69,7 +69,7 @@ public class Produit implements Serializable{
 //	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="produit-categorie")
 //	private Set<Categorie> categorie;
-	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.REFRESH)
+	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.REFRESH)
     @JoinTable(name = "rel_sous_categorie_produit", 
     	joinColumns = @JoinColumn(name = "id_produit"),
     	inverseJoinColumns = @JoinColumn(name = "id_sous_categorie"))

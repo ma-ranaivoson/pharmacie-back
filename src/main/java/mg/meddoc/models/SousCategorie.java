@@ -42,7 +42,7 @@ public class SousCategorie implements Serializable{
 	@Column(name = "id_categorie")
 	private Long idCategorie; 
 	
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.DETACH)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.DETACH)
 	@JoinColumn(name="id_categorie", insertable=false, updatable=false)
 	@JsonBackReference(value="categorie-souscategorie")
 	private Categorie categorie;
