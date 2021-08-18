@@ -160,6 +160,7 @@ public class ProduitData implements Serializable{
 
 	public Produit toProduit() {
 		Produit produit = new Produit();
+		produit.setIdProduit(this.getIdProduit());
 		produit.setCategorie(this.getCategorie());
 		produit.setDescription(this.getDescription());
 		produit.setDesignation(this.getDesignation());
@@ -173,6 +174,7 @@ public class ProduitData implements Serializable{
 	}
 	
 	public ProduitData(Produit produit) {
+		this.setIdProduit(produit.getIdProduit());
 		this.setCategorie(produit.getCategorie());
 		this.setDescription(produit.getDescription());
 		this.setDesignation(produit.getDesignation());
@@ -183,6 +185,7 @@ public class ProduitData implements Serializable{
 		this.setIdPharmacie(produit.getIdPharmacie());
 	}
 	public ProduitData(Produit produit,Prix prix) {
+		this.setIdProduit(produit.getIdProduit());
 		this.setCategorie(produit.getCategorie());
 		this.setDescription(produit.getDescription());
 		this.setDesignation(produit.getDesignation());

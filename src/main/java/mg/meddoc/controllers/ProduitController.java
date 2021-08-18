@@ -66,12 +66,15 @@ public class ProduitController {
 	}
 
 	// GetById_Produit
-	@GetMapping(value = "/{id}")
-	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id) {
+	@GetMapping(value = "/{id}/{idPharmacie}")
+	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id, @PathVariable Long idPharmacie) {
 		Produit produit = null;
 		try {
 			produit = serviceProduit.getById(id);
-			return new ResponseEntity<>(produit, HttpStatus.OK);
+			System.out.println(om.writeValueAsString(produit));
+			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id,idPharmacie);
+			ProduitData data = new ProduitData(produit,prix);
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",
@@ -112,7 +115,7 @@ public class ProduitController {
 	}
 
 	// Update Produit
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/update/{id}")
 	public @ResponseBody ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProduitData produit)
 			throws JsonProcessingException {
 		Produit productToUpdate = serviceProduit.getById(id);
@@ -149,7 +152,7 @@ public class ProduitController {
 		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 
-	// Delete_Produit
+	// Delete_Produitupdate
 	@DeleteMapping(value = "/delete/{id}")
 	public @ResponseBody ResponseEntity<?> deleteProduitById(@PathVariable Long id) {
 		try {
