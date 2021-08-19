@@ -73,8 +73,8 @@ public class ProduitController {
 		try {
 			produit = serviceProduit.getById(id);
 			System.out.println(om.writeValueAsString(produit));
-			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id,idPharmacie);
-			ProduitData data = new ProduitData(produit,prix);
+			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id, idPharmacie);
+			ProduitData data = new ProduitData(produit, prix);
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,17 +224,43 @@ public class ProduitController {
 //		}
 //	}
 
+	@SuppressWarnings("unused")
 	@GetMapping(value = "/search")
-	public @ResponseBody ResponseEntity<?> searchWithQuery(@RequestParam(name = "q") String q,
-			@RequestParam(name = "categorie") String categorie,
-			@RequestParam(name = "sousCategorie", required = false) String sc
-			) {
+	public @ResponseBody Page<Produit> searchWithQuery(
+			@RequestParam(name = "designation", required = false) String designation,
+			@RequestParam(name = "categorie", required = false) String categorie,
+			@RequestParam(name = "sousCategorie", required = false) String sc,
+			@RequestParam(name = "marque", required = false) String nomination,
+			@RequestParam(name = "page", required = false, defaultValue = "1") String page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") String size,
+			@RequestParam(name = "sort", required = false, defaultValue = "designation") String sort,
+			@RequestParam(name = "direction", required = false, defaultValue = "asc") String direction) {
+		
+		// Get all product by marque
+		if (nomination != null)
+			return serviceProduit.getAllProductByMarque(nomination, Integer.parseInt(page), Integer.parseInt(size),
+					direction, sort);
 
-		System.out.println(q);
-		System.out.println(categorie);
-		System.out.println(sc);
+		// Get all product
+		if (designation == null && categorie == null && sc == null && nomination == null)
+			return serviceProduit.getAllProductPage(Integer.parseInt(page), Integer.parseInt(size), direction, sort);
 
-		return null;
+		// Get all product by sous categorie
+		if (designation == null && sc != null)
+			return serviceProduit.getAllProductBySousCategorie(Long.parseLong(sc), Integer.parseInt(page),
+					Integer.parseInt(size), direction, sort);
+
+		// Get all product by categorie
+		if (designation == null && categorie != null && sc == null && nomination == null)
+			return serviceProduit.getAllProductByCategorie(Long.parseLong(categorie), Integer.parseInt(page),
+					Integer.parseInt(size), direction, sort);
+
+		// Get all product by designation
+		if (designation != null && categorie == null && sc == null && nomination == null)
+			return serviceProduit.findByDesignationContainingIgnoreCase(designation, Integer.parseInt(page),
+					Integer.parseInt(size), sort, direction);
+
+		return serviceProduit.getAllPageable(Integer.parseInt(page), Integer.parseInt(size), sort, direction);
 	}
 
 }
