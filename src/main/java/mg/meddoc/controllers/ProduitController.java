@@ -66,7 +66,7 @@ public class ProduitController {
 	}
 
 	// GetById_Produit
-	@GetMapping(value = "/{id}/{idPharmacie}")
+	@GetMapping(value = "/get/{id}/{idPharmacie}")
 	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id, @PathVariable Long idPharmacie) {
 		Produit produit = null;
 		try {
