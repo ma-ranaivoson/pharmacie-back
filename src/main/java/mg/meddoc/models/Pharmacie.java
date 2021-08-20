@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -62,8 +63,11 @@ public class Pharmacie implements Serializable{
 	inverseJoinColumns = @JoinColumn(name = "id_service"))
 	private Set<Service> service;
 	
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference(value="pharmacie-produit")
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "rel_pharmacie_produit", 
+			joinColumns = @JoinColumn(name = "id_pharmacie"), 
+			inverseJoinColumns = @JoinColumn(name = "id_produit"))
+//	@JsonManagedReference(value="pharmacie-produit")
 	private Set<Produit> produit;
 	
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

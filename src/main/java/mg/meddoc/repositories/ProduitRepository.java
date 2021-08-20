@@ -16,4 +16,5 @@ public interface ProduitRepository extends JpaRepository<Produit, Long>{
 	Page<Produit> findByMarqueNomination(String nomination, Pageable page);
 	Page<Produit> findByCategorieIdSouCategorie(Long idSouscategorie, Pageable page);
 	Page<Produit> findByCategorieIdCategorie(Long idCategorie, Pageable page);
+	Produit findByIdProduit(Long id);
 }

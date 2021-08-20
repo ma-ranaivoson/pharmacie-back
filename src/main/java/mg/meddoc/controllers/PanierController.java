@@ -25,8 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Panier;
+import mg.meddoc.models.Prix;
+import mg.meddoc.models.Produit;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.PanierService;
+import mg.meddoc.services.PrixService;
+import mg.meddoc.services.ProduitService;
 
 @RestController
 @RequestMapping(value = "/panier")
@@ -39,6 +43,10 @@ public class PanierController {
 
 	@Autowired
 	PanierService servicePanier;
+	@Autowired
+	ProduitService serviceProduit;
+	@Autowired
+	PrixService servicePrix;
 
 	// GetAll_Panier
 	@GetMapping(value = "/all")
@@ -71,15 +79,29 @@ public class PanierController {
 	}
 
 	// Save_Panier
+	@SuppressWarnings("null")
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> savePanier(@RequestBody Panier panier) {
+		Panier cartToSave = null;
+		Double prixByPharmacie = null;
+		
 		try {
 			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			System.out.println(user.getIdUtilisateur());
-			panier.setIdUtilisateur((Long) user.getIdUtilisateur());
-			panier.setDate_ajout(new Timestamp(System.currentTimeMillis()));
-			panier = servicePanier.save(panier);
-			log.info(om.writeValueAsString(panier));
+//			System.out.println(user.getIdUtilisateur());
+//			panier.setIdUtilisateur((Long) user.getIdUtilisateur());
+//			panier.setDate_ajout(new Timestamp(System.currentTimeMillis()));
+//			panier = servicePanier.save(panier);
+//			log.info(om.writeValueAsString(panier));
+			
+			// Get prix by pharmacie
+			prixByPharmacie = servicePrix.getPrixByIdPharmacie(panier.getIdPharmacie()).getPrix();
+			
+			cartToSave.setIdUtilisateur(user.getIdUtilisateur());
+			cartToSave.setIdPaiement(null);
+			cartToSave.setDate_ajout(new Timestamp(System.currentTimeMillis()));
+			cartToSave.setUnite(Double.toString(prixByPharmacie));
+			cartToSave.setQuantite((double) 1);
+//			cartToSave.setUnite();
 
 			return new ResponseEntity<>(panier, HttpStatus.OK);
 		} catch (Exception e) {
@@ -113,6 +135,7 @@ public class PanierController {
 	@GetMapping(value = "/not-paid")
 	public @ResponseBody ResponseEntity<?> getNotPaidProducts() {
 		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println(user.getNom());
 		List<Panier> panier = servicePanier.getPanierNotPaid(user.getIdUtilisateur());
 
 		return new ResponseEntity<>(panier, HttpStatus.OK);

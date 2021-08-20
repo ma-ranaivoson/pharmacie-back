@@ -1,6 +1,7 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -61,10 +63,12 @@ public class Produit implements Serializable{
 	@JoinColumn(name="id_marque",insertable = false, updatable = false)
 	private Marque marque;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
-	@JsonBackReference(value="pharmacie-produit")
-	private Pharmacie pharmacie;
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name = "rel_pharmacie_produit", 
+	joinColumns = @JoinColumn(name = "id_produit"), 
+	inverseJoinColumns = @JoinColumn(name = "id_pharmacie"))
+//	@JsonBackReference(value="pharmacie-produit")
+	private List<Pharmacie> pharmacie;
 	
 //	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="produit-categorie")
@@ -183,11 +187,11 @@ public class Produit implements Serializable{
 		this.marque = marque;
 	}
 
-	public Pharmacie getPharmacie() {
+	public List<Pharmacie> getPharmacie() {
 		return pharmacie;
 	}
 
-	public void setPharmacie(Pharmacie pharmacie) {
+	public void setPharmacie(List<Pharmacie> pharmacie) {
 		this.pharmacie = pharmacie;
 	}
 
