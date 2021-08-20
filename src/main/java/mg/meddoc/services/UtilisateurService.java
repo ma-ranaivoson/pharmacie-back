@@ -12,4 +12,5 @@ public interface UtilisateurService extends CRUDService<Utilisateur>, UserDetail
 	Utilisateur findByPhone(String phone);
 	Utilisateur findByIdentifiant(String value);
 	Utilisateur getById(Long id);
+	Utilisateur getByPhone(String phone);
 }

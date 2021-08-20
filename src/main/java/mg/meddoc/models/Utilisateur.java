@@ -54,7 +54,7 @@ public class Utilisateur implements Serializable, UserDetails{
 	private java.lang.String password;
 	@Column(name = "email")
 	private java.lang.String email;
-	@Column(name = "phone")
+	@Column(name = "phone", unique = true)
 	private java.lang.String phone;
 	@Column(name = "statut")
 	private int statut;

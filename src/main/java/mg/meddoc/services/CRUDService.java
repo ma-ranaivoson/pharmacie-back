@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+
 public interface CRUDService<E> {
 
 	E save(E entity);

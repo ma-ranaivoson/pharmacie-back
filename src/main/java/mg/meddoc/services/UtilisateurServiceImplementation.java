@@ -62,7 +62,6 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 
 	@Override
 	public Page<Utilisateur> getAllPageable(int page, int max, String col, String direction) {
-		// TODO Auto-generated method stub
 		PageRequest pageRequest = PageRequest.of(page, max, Direction.ASC, col);
 		if(direction.trim().compareToIgnoreCase("desc") == 0 || direction.trim().compareToIgnoreCase("descending") == 0)
 			pageRequest = PageRequest.of(page, max, Direction.DESC, col);
@@ -154,5 +153,10 @@ public class UtilisateurServiceImplementation implements UtilisateurService {
 	@Override
 	public Utilisateur getById(Long id) {
 		return repository.findByIdUtilisateur(id);
+	}
+
+	@Override
+	public Utilisateur getByPhone(String phone) {
+		return repository.findByPhone(phone);
 	}
 }

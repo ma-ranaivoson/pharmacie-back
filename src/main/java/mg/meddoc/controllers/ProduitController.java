@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,8 +73,8 @@ public class ProduitController {
 		try {
 			produit = serviceProduit.getById(id);
 			System.out.println(om.writeValueAsString(produit));
-			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id,idPharmacie);
-			ProduitData data = new ProduitData(produit,prix);
+			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id, idPharmacie);
+			ProduitData data = new ProduitData(produit, prix);
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,36 +120,36 @@ public class ProduitController {
 	public @ResponseBody ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProduitData produit)
 			throws JsonProcessingException {
 		Produit productToUpdate = serviceProduit.getById(id);
-		
+
 		productToUpdate.setCategorie(produit.getCategorie());
 		productToUpdate.setDescription(produit.getDescription());
 		productToUpdate.setDesignation(produit.getDesignation());
 		productToUpdate.setImage(produit.getImage());
 		productToUpdate.setFormat(produit.getFormat());
 		productToUpdate.setIdPharmacie(produit.getIdPharmacie());
-		
+
 		// Updating marque
 		Marque newMarque;
 		Long newMarqueId = produit.getIdMarque();
 		if (newMarqueId == null) {
 			newMarque = serviceMarque.save(produit.getMarque());
 			productToUpdate.setIdMarque(newMarque.getIdMarque());
-		}		
-		
+		}
+
 		// Updating price
 		Prix prix = servicePrix.getProductPrice(id);
-		Prix newPrix = (Prix) produit.getPrix().iterator().next();		
-		if(prix.getPrix() != newPrix.getPrix()) {
+		Prix newPrix = (Prix) produit.getPrix().iterator().next();
+		if (prix.getPrix() != newPrix.getPrix()) {
 			newPrix.setIdPharmacie(produit.getIdPharmacie());
 			newPrix.setIdProduit(id);
 			newPrix.setPrix(newPrix.getPrix());
 			prix = servicePrix.save(newPrix);
 		}
-		
+
 		Produit saved = serviceProduit.save(productToUpdate);
-		
+
 		produit = new ProduitData(saved, prix);
-		
+
 		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 
@@ -203,24 +204,63 @@ public class ProduitController {
 		}
 	}
 
-	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
-	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
-			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
-//		Produit produit = null;
-		try {
-			if (direction == null || direction.compareTo("----") == 0)
-				direction = null;
-			if (columnSort == null || columnSort.compareTo("----") == 0)
-				columnSort = null;
-			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
-					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
-			log.info(om.writeValueAsString(produits));
-			return new ResponseEntity<>(produits, HttpStatus.OK);
-			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
-		}
+//	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
+//	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
+//			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
+////		Produit produit = null;
+//		try {
+//			if (direction == null || direction.compareTo("----") == 0)
+//				direction = null;
+//			if (columnSort == null || columnSort.compareTo("----") == 0)
+//				columnSort = null;
+//			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
+//					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
+//			log.info(om.writeValueAsString(produits));
+//			return new ResponseEntity<>(produits, HttpStatus.OK);
+//			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
+//		}
+//	}
+
+	@SuppressWarnings("unused")
+	@GetMapping(value = "/search")
+	public @ResponseBody Page<Produit> searchWithQuery(
+			@RequestParam(name = "designation", required = false) String designation,
+			@RequestParam(name = "categorie", required = false) String categorie,
+			@RequestParam(name = "sousCategorie", required = false) String sc,
+			@RequestParam(name = "marque", required = false) String nomination,
+			@RequestParam(name = "page", required = false, defaultValue = "1") String page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") String size,
+			@RequestParam(name = "sort", required = false, defaultValue = "designation") String sort,
+			@RequestParam(name = "direction", required = false, defaultValue = "asc") String direction) {
+		
+		// Get all product by marque
+		if (nomination != null)
+			return serviceProduit.getAllProductByMarque(nomination, Integer.parseInt(page), Integer.parseInt(size),
+					direction, sort);
+
+		// Get all product
+		if (designation == null && categorie == null && sc == null && nomination == null)
+			return serviceProduit.getAllProductPage(Integer.parseInt(page), Integer.parseInt(size), direction, sort);
+
+		// Get all product by sous categorie
+		if (designation == null && sc != null)
+			return serviceProduit.getAllProductBySousCategorie(Long.parseLong(sc), Integer.parseInt(page),
+					Integer.parseInt(size), direction, sort);
+
+		// Get all product by categorie
+		if (designation == null && categorie != null && sc == null && nomination == null)
+			return serviceProduit.getAllProductByCategorie(Long.parseLong(categorie), Integer.parseInt(page),
+					Integer.parseInt(size), direction, sort);
+
+		// Get all product by designation
+		if (designation != null && categorie == null && sc == null && nomination == null)
+			return serviceProduit.findByDesignationContainingIgnoreCase(designation, Integer.parseInt(page),
+					Integer.parseInt(size), sort, direction);
+
+		return serviceProduit.getAllPageable(Integer.parseInt(page), Integer.parseInt(size), sort, direction);
 	}
 
 }
