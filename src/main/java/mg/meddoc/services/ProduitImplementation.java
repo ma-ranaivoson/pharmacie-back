@@ -121,4 +121,9 @@ public class ProduitImplementation implements ProduitService {
 		else
 			return repository.findByCategorieIdCategorie(idCategorie, PageRequest.of((page -1), size, Direction.DESC, sort));
 	}
+
+	@Override
+	public Produit getProductById(Long id) {
+		return repository.findByIdProduit(id);
+	}
 }

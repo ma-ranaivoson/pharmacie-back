@@ -2,6 +2,7 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ public class ProduitData implements Serializable{
 	private java.lang.String description;
 	private java.lang.String format;
 	private Marque marque;
-	private Pharmacie pharmacie;
+	private List<Pharmacie> pharmacie;
 	private Set<SousCategorie> categorie;
 	private Set<Prix> prix;
 	private Long idMarque;
@@ -118,11 +119,11 @@ public class ProduitData implements Serializable{
 		this.marque = marque;
 	}
 
-	public Pharmacie getPharmacie() {
+	public List<Pharmacie> getPharmacie() {
 		return pharmacie;
 	}
 
-	public void setPharmacie(Pharmacie pharmacie) {
+	public void setPharmacie(List<Pharmacie> pharmacie) {
 		this.pharmacie = pharmacie;
 	}
 

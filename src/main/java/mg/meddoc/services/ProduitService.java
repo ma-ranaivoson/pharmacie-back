@@ -5,6 +5,7 @@ import mg.meddoc.models.*;
 
 public interface ProduitService extends CRUDService<Produit>{
 	Produit rechercheProduit(String designation);	
+	Produit getProductById(Long id);
 	Page<Produit> findByDesignationContainingIgnoreCase(String designation, int page, int size, String sort, String direction);	
 	Page<Produit> getAllProductPage( int page, int size,String direction, String sort);	
 	Page<Produit> getAllProductByMarque(String nomination, int page, int size,String direction, String sort);

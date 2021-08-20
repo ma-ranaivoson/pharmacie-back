@@ -73,4 +73,9 @@ public class PrixImplementation implements PrixService{
 		return repository.findPrixByIdProduitAndIdPharmacie(idProduit, idPharmacie);
 	}
 
+	@Override
+	public Prix getPrixByIdPharmacie(Long idPharmacie) {
+		return repository.findByIdPharmacie(idPharmacie);
+	}
+
 }
