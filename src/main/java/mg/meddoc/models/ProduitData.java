@@ -15,7 +15,7 @@ public class ProduitData implements Serializable{
 	private java.lang.String description;
 	private java.lang.String format;
 	private Marque marque;
-	private List<Pharmacie> pharmacie;
+	private Set<Pharmacie> pharmacie;
 	private Set<SousCategorie> categorie;
 	private Set<Prix> prix;
 	private Long idMarque;
@@ -119,11 +119,11 @@ public class ProduitData implements Serializable{
 		this.marque = marque;
 	}
 
-	public List<Pharmacie> getPharmacie() {
+	public Set<Pharmacie> getPharmacie() {
 		return pharmacie;
 	}
 
-	public void setPharmacie(List<Pharmacie> pharmacie) {
+	public void setPharmacie(Set<Pharmacie> pharmacie) {
 		this.pharmacie = pharmacie;
 	}
 
@@ -195,6 +195,7 @@ public class ProduitData implements Serializable{
 		this.setPharmacie(produit.getPharmacie());
 		this.setIdMarque(produit.getIdMarque());
 		this.setIdPharmacie(produit.getIdPharmacie());
+		this.setImage(produit.getImage());
 		Set<Prix> setPrix = new HashSet<Prix>();
 		setPrix.add(prix);
 		this.setPrix(setPrix);
