@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Marque;
+import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Prix;
 import mg.meddoc.models.Produit;
 import mg.meddoc.models.ProduitData;
@@ -91,20 +92,30 @@ public class ProduitController {
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
+			Long pharmacieId = produit.getPharmacie().iterator().next().getIdPharmacie();
+			// Set pharmacie 
+			if(produit.getPharmacie() != null) {
+				produit.setIdPharmacie(pharmacieId);
+			}	
+			// Set marque
 			if (produit.getMarque() != null) {
 				if (produit.getMarque().getIdMarque() == null) {
 					Marque marque = serviceMarque.save(produit.getMarque());
 					produit.setIdMarque(marque.getIdMarque());
 				}
 			}
+
 			Produit saved = serviceProduit.save(produit.toProduit());
 			Prix prix = null;
+		
+			// Set prix
 			if (produit.getPrix() != null || produit.getPrix().size() > 0) {
 				prix = produit.getPrix().iterator().next();
 				prix.setIdPharmacie(saved.getIdPharmacie());
 				prix.setIdProduit(saved.getIdProduit());
-				servicePrix.save(prix);
+				servicePrix.save(prix); // Save prix
 			}
+			
 			produit = new ProduitData(saved, prix);
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
@@ -223,8 +234,6 @@ public class ProduitController {
 //			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
 //		}
 //	}
-	
-	@SuppressWarnings("unused")
 	@GetMapping(value = "/search")
 	public @ResponseBody Page<Produit> searchWithQuery(
 			@RequestParam(name = "designation", required = false) String designation,
@@ -235,7 +244,7 @@ public class ProduitController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") String size,
 			@RequestParam(name = "sort", required = false, defaultValue = "designation") String sort,
 			@RequestParam(name = "direction", required = false, defaultValue = "asc") String direction) {
-		
+
 		// Get all product by marque
 		if (nomination != null)
 			return serviceProduit.getAllProductByMarque(nomination, Integer.parseInt(page), Integer.parseInt(size),

@@ -1,7 +1,6 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,16 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "produit")
@@ -63,12 +58,12 @@ public class Produit implements Serializable{
 	@JoinColumn(name="id_marque",insertable = false, updatable = false)
 	private Marque marque;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.REFRESH, orphanRemoval = true)
 	@JoinTable(name = "rel_pharmacie_produit", 
 	joinColumns = @JoinColumn(name = "id_produit"), 
 	inverseJoinColumns = @JoinColumn(name = "id_pharmacie"))
 //	@JsonBackReference(value="pharmacie-produit")
-	private List<Pharmacie> pharmacie;
+	private Set<Pharmacie> pharmacie;
 	
 //	@OneToMany(mappedBy = "produit", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="produit-categorie")
@@ -187,11 +182,11 @@ public class Produit implements Serializable{
 		this.marque = marque;
 	}
 
-	public List<Pharmacie> getPharmacie() {
+	public Set<Pharmacie> getPharmacie() {
 		return pharmacie;
 	}
 
-	public void setPharmacie(List<Pharmacie> pharmacie) {
+	public void setPharmacie(Set<Pharmacie> pharmacie) {
 		this.pharmacie = pharmacie;
 	}
 

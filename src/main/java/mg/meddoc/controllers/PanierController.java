@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Panier;
-import mg.meddoc.models.Prix;
-import mg.meddoc.models.Produit;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.PanierService;
 import mg.meddoc.services.PrixService;
@@ -79,29 +77,45 @@ public class PanierController {
 	}
 
 	// Save_Panier
-	@SuppressWarnings("null")
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> savePanier(@RequestBody Panier panier) {
-		Panier cartToSave = null;
+		Panier cartToSave = new Panier();
 		Double prixByPharmacie = null;
-		
+
 		try {
 			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//			System.out.println(user.getIdUtilisateur());
-//			panier.setIdUtilisateur((Long) user.getIdUtilisateur());
-//			panier.setDate_ajout(new Timestamp(System.currentTimeMillis()));
-//			panier = servicePanier.save(panier);
-//			log.info(om.writeValueAsString(panier));
-			
-			// Get prix by pharmacie
-			prixByPharmacie = servicePrix.getPrixByIdPharmacie(panier.getIdPharmacie()).getPrix();
-			
+
+			// Set idUtilisateur
 			cartToSave.setIdUtilisateur(user.getIdUtilisateur());
+
+			// Set idProduit
+			cartToSave.setIdProduit(panier.getIdProduit());
+
+			// Set pharmacie
+			cartToSave.setIdPharmacie(panier.getIdPharmacie());
+
+			// Set utilisateur
+			cartToSave.setIdUtilisateur(user.getIdUtilisateur());
+
+			// Get prix by pharmacie
+			prixByPharmacie = servicePrix
+					.getPrixByIdProduitAndIdPharmacie(panier.getIdProduit(), panier.getIdPharmacie()).getPrix();
+
+			// Set total montant
+			Double totalMontant = panier.getQuantite() * prixByPharmacie;
+			cartToSave.setMontant(totalMontant);
+
+			// Set id paiement & date d'ajout
 			cartToSave.setIdPaiement(null);
 			cartToSave.setDate_ajout(new Timestamp(System.currentTimeMillis()));
-			cartToSave.setUnite(Double.toString(prixByPharmacie));
-			cartToSave.setQuantite((double) 1);
-//			cartToSave.setUnite();
+
+			// Set unité to null
+			cartToSave.setUnite(null);
+
+			// Set statut
+			cartToSave.setStatut(0);
+
+			panier = servicePanier.save(cartToSave);
 
 			return new ResponseEntity<>(panier, HttpStatus.OK);
 		} catch (Exception e) {
@@ -140,7 +154,7 @@ public class PanierController {
 
 		return new ResponseEntity<>(panier, HttpStatus.OK);
 	}
-	
+
 	// Add count product
 	@GetMapping(value = "/produit/{idProduit}/pharmacie/{idPharmacie}/add")
 	public @ResponseBody ResponseEntity<?> addProductQuantity(@PathVariable Long idProduit,
