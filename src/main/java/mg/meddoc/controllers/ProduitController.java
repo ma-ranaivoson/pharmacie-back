@@ -68,7 +68,7 @@ public class ProduitController {
 	}
 
 	// GetById_Produit
-	@GetMapping(value = "/{id}/{idPharmacie}")
+	@GetMapping(value = "/get/{id}/{idPharmacie}")
 	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id, @PathVariable Long idPharmacie) {
 		Produit produit = null;
 		try {
@@ -234,7 +234,6 @@ public class ProduitController {
 //			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
 //		}
 //	}
-
 	@GetMapping(value = "/search")
 	public @ResponseBody Page<Produit> searchWithQuery(
 			@RequestParam(name = "designation", required = false) String designation,
