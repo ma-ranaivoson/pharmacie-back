@@ -36,8 +36,8 @@ public class Specialite implements Serializable{
 			)
 	@Column(name = "id_specialite")
 	private Long idSpecialite;
-	@Column(name = "id_pharmacie")
-	private Long idPharmacie;
+//	@Column(name = "id_pharmacie")
+//	private Long idPharmacie;
 	
 	@Column(name = "libelle")
 	private java.lang.String libelle;
@@ -45,10 +45,10 @@ public class Specialite implements Serializable{
 	private java.lang.String information;
 	
 	//Relation
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pharmacie", insertable=false, updatable=false)
-	@JsonBackReference(value="pharmacie-specialite")
-	private Pharmacie pharmacie;
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="id_pharmacie", insertable=false, updatable=false)
+//	@JsonBackReference(value="pharmacie-specialite")
+//	private Pharmacie pharmacie;
 	
 	
 	public Specialite() {
@@ -119,29 +119,29 @@ public class Specialite implements Serializable{
 	/**
 	 * @return the pharmacie
 	 */
-	public Pharmacie getPharmacie() {
-		return pharmacie;
-	}
-
-	/**
-	 * @param pharmacie the pharmacie to set
-	 */
-	public void setPharmacie(Pharmacie pharmacie) {
-		this.pharmacie = pharmacie;
-	}
-
-	/**
-	 * @return the idPharmacie
-	 */
-	public Long getIdPharmacie() {
-		return idPharmacie;
-	}
-
-	/**
-	 * @param idPharmacie the idPharmacie to set
-	 */
-	public void setIdPharmacie(Long idPharmacie) {
-		this.idPharmacie = idPharmacie;
-	}
+//	public Pharmacie getPharmacie() {
+//		return pharmacie;
+//	}
+//
+//	/**
+//	 * @param pharmacie the pharmacie to set
+//	 */
+//	public void setPharmacie(Pharmacie pharmacie) {
+//		this.pharmacie = pharmacie;
+//	}
+//
+//	/**
+//	 * @return the idPharmacie
+//	 */
+//	public Long getIdPharmacie() {
+//		return idPharmacie;
+//	}
+//
+//	/**
+//	 * @param idPharmacie the idPharmacie to set
+//	 */
+//	public void setIdPharmacie(Long idPharmacie) {
+//		this.idPharmacie = idPharmacie;
+//	}
 	
 }

@@ -32,8 +32,6 @@ public class Pharmacie implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pharmacie-sequence")
 	@SequenceGenerator(name = "pharmacie-sequence", sequenceName = "seq_pharmacie", allocationSize = 1, initialValue = 2)
 	@Column(name = "id_pharmacie")
-	@JoinTable(name = "rel_pharmacie_utilisateur", joinColumns = @JoinColumn(name = "id_utilisateur"), inverseJoinColumns = @JoinColumn(name = "id_pharmacie"))
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Long idPharmacie;
 
 	@Column(name = "raison_social")
@@ -48,8 +46,10 @@ public class Pharmacie implements Serializable {
 	private Double longitude;
 	@Column(name = "latitude")
 	private Double latitude;
-	@Column(name = "nif_stat")
-	private String nifStat;
+	@Column(name = "nif")
+	private String nif;
+	@Column(name = "stat")
+	private String stat;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "rel_service_pharmacie", joinColumns = @JoinColumn(name = "id_pharmacie"), inverseJoinColumns = @JoinColumn(name = "id_service"))
@@ -62,7 +62,7 @@ public class Pharmacie implements Serializable {
 ////	@JsonManagedReference(value="pharmacie-produit")
 //	private Set<Produit> produit;
 
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER)
 	@JsonManagedReference(value = "pharmacie-contact")
 	private Set<Contact> contact;
 //	
@@ -81,7 +81,10 @@ public class Pharmacie implements Serializable {
 //	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //	@JsonManagedReference(value="pharmacie-prix")
 //	private Set<Prix> prix;
-
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "rel_pharmacie_utilisateur", joinColumns = @JoinColumn(name = "id_utilisateur"), inverseJoinColumns = @JoinColumn(name = "id_pharmacie"))
+	private Set<Utilisateur> utilisateurs;
+	
 	public Pharmacie() {
 
 	}
@@ -115,7 +118,11 @@ public class Pharmacie implements Serializable {
 		this.idPharmacie = idPharmacie;
 	}
 
-	public java.lang.String getRaisonSocial() {
+	// Must not be null
+	public java.lang.String getRaisonSocial() throws Exception {
+		if(this.raisonSocial ==  null || this.raisonSocial.equals(""))
+			throw new Exception("Raison sociale vide");
+		
 		return raisonSocial;
 	}
 
@@ -123,7 +130,10 @@ public class Pharmacie implements Serializable {
 		this.raisonSocial = raisonSocial;
 	}
 
-	public java.lang.String getPresentation() {
+	public java.lang.String getPresentation() throws Exception {
+		if(this.presentation ==  null || this.presentation.equals(""))
+			throw new Exception("Presentation sociale vide");
+		
 		return presentation;
 	}
 
@@ -131,7 +141,10 @@ public class Pharmacie implements Serializable {
 		this.presentation = presentation;
 	}
 
-	public java.lang.String getAdresse() {
+	public java.lang.String getAdresse() throws Exception {
+		if(this.presentation ==  null || this.presentation.equals(""))
+			throw new Exception("Adresse vide");
+		
 		return adresse;
 	}
 
@@ -209,11 +222,29 @@ public class Pharmacie implements Serializable {
 		this.galerie = galerie;
 	}
 
-	public String getNifStat() {
-		return nifStat;
+	public Set<Utilisateur> getUtilisateurs() {
+		return utilisateurs;
 	}
 
-	public void setNifStat(String nifStat) {
-		this.nifStat = nifStat;
+	public void setUtilisateurs(Set<Utilisateur> utilisateurs) {
+		this.utilisateurs = utilisateurs;
+	}
+
+	public String getNif() {
+		return nif;
+	}
+
+	public void setNif(String nif) {
+		this.nif = nif;
+	}
+
+	public String getStat() throws Exception {
+		if(this.stat ==  null || this.stat.equals(""))
+			throw new Exception("Stat vide");	
+		return stat;
+	}
+
+	public void setStat(String stat) {
+		this.stat = stat;
 	}
 }

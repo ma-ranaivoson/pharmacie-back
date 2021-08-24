@@ -279,7 +279,7 @@ public class UtilisateurController {
 	}
 	
 	// Modify profile 
-	@SuppressWarnings("unlikely-arg-type")
+	@SuppressWarnings("unused")
 	@PutMapping(value = "/modify/{id}")
 	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,@RequestBody HashMap<String,Object> data) {	
 		List<String> error = new ArrayList<String>();
@@ -288,9 +288,7 @@ public class UtilisateurController {
 			// Get the client user
 			Utilisateur user = om.readValue(om.writeValueAsString(data.get("user")), new TypeReference<Utilisateur>() {});
 			String newPassword = data.get("newPassword")!=null?data.get("newPassword").toString():null;
-			
-			System.out.println(encoder.matches(user.getPassword(), userToUpdate.getPassword()));
-			
+				
 			if(userToUpdate == null)
 				throw new NotFoundException("Utilisateur introuvable");
 			
