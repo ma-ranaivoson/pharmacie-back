@@ -223,7 +223,7 @@ public class ProduitController {
 //			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
 //		}
 //	}
-
+	
 	@SuppressWarnings("unused")
 	@GetMapping(value = "/search")
 	public @ResponseBody Page<Produit> searchWithQuery(
