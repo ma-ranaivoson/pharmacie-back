@@ -82,6 +82,11 @@ public class PharmacieImplementation implements PharmacieService {
 	public List<Pharmacie> findByUtilisateursIdUtilisateur(Long id) {
 		return repository.findByUtilisateursIdUtilisateur(id);
 	}
+
+	@Override
+	public Pharmacie getByRaisonSocial(String raisonSocial) {
+		return repository.findByRaisonSocial(raisonSocial);
+	}
 	
 	//@Override
 	//public void stateDeleteById(Serializable id, Serializable idStatut) {

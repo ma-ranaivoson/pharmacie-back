@@ -79,26 +79,46 @@ public class PharmacieController {
 	}
 
 	// GetById_Pharmacie
-	@GetMapping(value = "/{id}")
-	public @ResponseBody ResponseEntity<?> getPharmacieById(@PathVariable Long id) {
+//	@GetMapping(value = "/{id}")
+//	public @ResponseBody ResponseEntity<?> getPharmacieById(@PathVariable Long id) {
+//		Pharmacie pharmacie = null;
+//
+//		try {
+//
+//			pharmacie = servicePharmacie.getById(id);
+//			log.info(om.writeValueAsString(pharmacie));
+//			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
+//
+//		} catch (Exception e) {
+//			HashMap<String, Object> error = new HashMap<String, Object>();
+//			error.put("success", false);
+//			error.put("errors", e.getMessage());
+//			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+//		}
+//	}
+
+	// Get Pharmacie by raison sociale
+	@GetMapping(value = "/{raisonSocial}")
+	public @ResponseBody ResponseEntity<?> getPharmacieByRaisonSocial(
+			@PathVariable(name = "raisonSocial") String raisonSocial) {
 		Pharmacie pharmacie = null;
 
 		try {
-
-			pharmacie = servicePharmacie.getById(id);
-			log.info(om.writeValueAsString(pharmacie));
+			pharmacie = servicePharmacie.getByRaisonSocial(raisonSocial);
+			
 			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
-
 		} catch (Exception e) {
+			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
+			
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	// Register
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/register")
 	public @ResponseBody ResponseEntity<?> registerPharmacie(@RequestBody HashMap<String, Object> data) {
 		List<String> error = new ArrayList<String>();
@@ -144,7 +164,7 @@ public class PharmacieController {
 
 			newUser.setStatut(0);
 			newUser.setTypeUtilisateur(new TypeUtilisateur(2));
-			
+
 			// Save pharmacie
 			Pharmacie newPharmacie = new Pharmacie();
 			newPharmacie.setAdresse(pharmacie.getAdresse());
@@ -153,10 +173,10 @@ public class PharmacieController {
 			newPharmacie.setPresentation(pharmacie.getPresentation());
 			newPharmacie.setRaisonSocial(pharmacie.getRaisonSocial());
 			newPharmacie.setSpecialite(pharmacie.getSpecialite());
-					
+
 			Pharmacie savedPharmacie = null;
 			Set<Utilisateur> pharmacieUtilisateur = new HashSet<Utilisateur>();
-			
+
 			if (error.isEmpty()) {
 				user = serviceUtilisateur.save(newUser);
 				System.out.println(om.writeValueAsString(user));
@@ -166,7 +186,7 @@ public class PharmacieController {
 			} else {
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
-			
+
 			// Save contact
 			List<Contact> contacts = new ArrayList<Contact>();
 			for (Contact cont : pharmacie.getContact()) {
@@ -261,7 +281,7 @@ public class PharmacieController {
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/my-store")
 	public @ResponseBody ResponseEntity<?> getStore() {
 		try {

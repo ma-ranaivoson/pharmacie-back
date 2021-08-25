@@ -22,5 +22,5 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	
 	List<Pharmacie> findByUtilisateursIdUtilisateur(Long id);
 	//Liste Pharma eto Tana
-	
+	Pharmacie findByRaisonSocial(String raisonSocial );	
 }

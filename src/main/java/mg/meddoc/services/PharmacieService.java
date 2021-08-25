@@ -19,4 +19,6 @@ public interface PharmacieService extends CRUDService<Pharmacie>{
 	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, int page, int size, String sort, String direction);
 	
 	List<Pharmacie> findByUtilisateursIdUtilisateur(Long id);
+
+	Pharmacie getByRaisonSocial(String raisonSocial);
 }
