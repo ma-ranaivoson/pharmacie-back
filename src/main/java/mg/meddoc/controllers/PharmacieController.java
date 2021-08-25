@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,6 +159,7 @@ public class PharmacieController {
 			
 			if (error.isEmpty()) {
 				user = serviceUtilisateur.save(newUser);
+				System.out.println(om.writeValueAsString(user));
 				pharmacieUtilisateur.add(user);
 				newPharmacie.setUtilisateurs(pharmacieUtilisateur);
 				savedPharmacie = servicePharmacie.save(newPharmacie);
@@ -258,6 +260,19 @@ public class PharmacieController {
 			e.printStackTrace();
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping(value = "/my-store")
+	public @ResponseBody ResponseEntity<?> getStore() {
+		try {
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			List<Pharmacie> pharma = servicePharmacie.findByUtilisateursIdUtilisateur(user.getIdUtilisateur());
+			return new ResponseEntity<>(pharma, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 }

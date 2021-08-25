@@ -1,5 +1,7 @@
 package mg.meddoc.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +20,7 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	
 	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, Pageable page);
 	
+	List<Pharmacie> findByUtilisateursIdUtilisateur(Long id);
 	//Liste Pharma eto Tana
 	
 }

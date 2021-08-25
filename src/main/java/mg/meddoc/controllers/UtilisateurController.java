@@ -179,25 +179,25 @@ public class UtilisateurController {
 	@PostMapping("/confirm/{id}")
 	public ResponseEntity<?> confirmAccount(@Valid @RequestBody HashMap<String, String> user, @PathVariable Long id) {
 		HashMap<String, String> error = new HashMap<String, String>();
-		
+
 		try {
 			Utilisateur userConfirm = userService.getById(id);
 			System.out.println(userConfirm);
-			
+
 			if (userConfirm == null)
 				throw new UsernameNotFoundException("User not found");
 
-			if (userConfirm.getValidationCode().equals(user.get("code"))
-					) {
+			if (userConfirm.getValidationCode().equals(user.get("code"))) {
 				userConfirm.setStatut(1);
 				Utilisateur userConnected = userService.save(userConfirm);
 
 				Authentication authentication = authenticationManager
 						.authenticate(new UsernamePasswordAuthenticationToken(user.get("email"), user.get("password")));
-				
+
 				String token = jwtProvider.generateJwtToken(authentication);
-				
-				return ResponseEntity.ok(new JwtResponse(token, userConnected.getEmail(), null));
+
+				return ResponseEntity.ok(new JwtResponse(token, userConnected.getEmail(),
+						userConnected.getTypeUtilisateur().getIdTypeUtilisateur().toString()));
 			} else {
 				throw new IllegalAccessError("Code de validation erreur");
 			}
@@ -214,12 +214,13 @@ public class UtilisateurController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user) throws JsonProcessingException {
-		HashMap<String, Object> response = new HashMap<String, Object>();		
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody HashMap<String, String> user)
+			throws JsonProcessingException {
+		HashMap<String, Object> response = new HashMap<String, Object>();
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		Utilisateur loginUser;
-		
-		if(Util.isNumber(user.get("email"))) {
+
+		if (Util.isNumber(user.get("email"))) {
 			System.out.println("Find by phone");
 			loginUser = userService.getByPhone(user.get("email"));
 			System.out.println(om.writeValueAsString(loginUser));
@@ -227,7 +228,7 @@ public class UtilisateurController {
 			loginUser = userService.findByEmail(user.get("email"));
 		}
 
-		try {		
+		try {
 			if (loginUser == null || !encoder.matches(user.get("password"), loginUser.getPassword()))
 				throw new BadCredentialsException("Bad credentials");
 
@@ -239,7 +240,8 @@ public class UtilisateurController {
 			String jwt = jwtProvider.generateJwtToken(authentication);
 			Utilisateur userConnected = (Utilisateur) authentication.getPrincipal();
 
-			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getUsername(), null));
+			return ResponseEntity.ok(new JwtResponse(jwt, userConnected.getUsername(),
+					userConnected.getTypeUtilisateur().getIdTypeUtilisateur().toString()));
 		} catch (LockedException e) {
 			response.put("message", "locked");
 			response.put("id", loginUser.getIdUtilisateur());
@@ -277,51 +279,54 @@ public class UtilisateurController {
 		}
 
 	}
-	
-	// Modify profile 
+
+	// Modify profile
 	@SuppressWarnings("unused")
 	@PutMapping(value = "/modify/{id}")
-	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,@RequestBody HashMap<String,Object> data) {	
+	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,
+			@RequestBody HashMap<String, Object> data) {
 		List<String> error = new ArrayList<String>();
 		try {
 			Utilisateur userToUpdate = userService.getById(id);
 			// Get the client user
-			Utilisateur user = om.readValue(om.writeValueAsString(data.get("user")), new TypeReference<Utilisateur>() {});
-			String newPassword = data.get("newPassword")!=null?data.get("newPassword").toString():null;
-				
-			if(userToUpdate == null)
+			Utilisateur user = om.readValue(om.writeValueAsString(data.get("user")), new TypeReference<Utilisateur>() {
+			});
+			String newPassword = data.get("newPassword") != null ? data.get("newPassword").toString() : null;
+
+			if (userToUpdate == null)
 				throw new NotFoundException("Utilisateur introuvable");
-			
+
 			// Verify if it's the connected user
-			Utilisateur idConnectedUser = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(!idConnectedUser.getIdUtilisateur().equals(userToUpdate.getIdUtilisateur()))
+			Utilisateur idConnectedUser = (Utilisateur) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			if (!idConnectedUser.getIdUtilisateur().equals(userToUpdate.getIdUtilisateur()))
 				throw new IllegalAccessException();
-			
+
 			// Check email
-			if(!userToUpdate.getEmail().equals(user.getEmail()) && userService.existsByEmail(user.getEmail()))  {
+			if (!userToUpdate.getEmail().equals(user.getEmail()) && userService.existsByEmail(user.getEmail())) {
 				error.add("Adresse email existe déja");
 			} else {
 				userToUpdate.setEmail(user.getEmail());
 			}
 			// Check confirm password
-			if(!encoder.matches(user.getPassword(), userToUpdate.getPassword())) {
+			if (!encoder.matches(user.getPassword(), userToUpdate.getPassword())) {
 				error.add("Mot de passe ne correspond pas");
 			} else {
-				if(newPassword != null) {
+				if (newPassword != null) {
 					userToUpdate.setPassword(encoder.encode(newPassword));
-				}					
+				}
 			}
 
 			// Check email
-			if(!userToUpdate.getPhone().equals(user.getPhone()) && userService.existsByPhone(user.getPhone())) {
+			if (!userToUpdate.getPhone().equals(user.getPhone()) && userService.existsByPhone(user.getPhone())) {
 				error.add("Numéro tétéphone existant");
 			} else {
 				userToUpdate.setPhone(user.getPhone());
-			}			
+			}
 			userToUpdate.setNom(user.getNom());
 			userToUpdate.setPrenoms(user.getPrenoms());
 			// If no error update the user
-			if(error.isEmpty()) {
+			if (error.isEmpty()) {
 				user = userService.save(userToUpdate);
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			} else {
@@ -330,11 +335,11 @@ public class UtilisateurController {
 		} catch (NotFoundException e) {
 			error.add("Utilisateur introuvable");
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-		} catch(IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			error.add("Modification pas autorisée");
 			return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("err", HttpStatus.BAD_REQUEST);

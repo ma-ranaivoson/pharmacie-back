@@ -82,7 +82,7 @@ public class Pharmacie implements Serializable {
 //	@JsonManagedReference(value="pharmacie-prix")
 //	private Set<Prix> prix;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "rel_pharmacie_utilisateur", joinColumns = @JoinColumn(name = "id_utilisateur"), inverseJoinColumns = @JoinColumn(name = "id_pharmacie"))
+	@JoinTable(name = "rel_pharmacie_utilisateur", joinColumns = @JoinColumn(name = "id_pharmacie"), inverseJoinColumns = @JoinColumn(name = "id_utilisateur"))
 	private Set<Utilisateur> utilisateurs;
 	
 	public Pharmacie() {

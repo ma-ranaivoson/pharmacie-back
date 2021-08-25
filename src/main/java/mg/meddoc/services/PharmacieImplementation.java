@@ -77,6 +77,11 @@ public class PharmacieImplementation implements PharmacieService {
 		else
 			return repository.findByRaisonSocialContainingIgnoreCase(raisonSocial, PageRequest.of((page-1), size, Direction.DESC, sort));
 	}
+
+	@Override
+	public List<Pharmacie> findByUtilisateursIdUtilisateur(Long id) {
+		return repository.findByUtilisateursIdUtilisateur(id);
+	}
 	
 	//@Override
 	//public void stateDeleteById(Serializable id, Serializable idStatut) {
