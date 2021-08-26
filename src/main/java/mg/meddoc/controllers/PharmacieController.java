@@ -167,7 +167,7 @@ public class PharmacieController {
 
 			// Save pharmacie
 			Pharmacie newPharmacie = new Pharmacie();
-			newPharmacie.setAdresse(pharmacie.getAdresse());
+//			newPharmacie.setAdresse(pharmacie.getAdresse());
 			newPharmacie.setNif(pharmacie.getNif());
 			newPharmacie.setStat(pharmacie.getStat());
 			newPharmacie.setPresentation(pharmacie.getPresentation());

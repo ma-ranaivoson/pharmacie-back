@@ -55,11 +55,19 @@ public class Adresse implements Serializable {
 	@JsonBackReference(value="personne-adresse")
 	private Utilisateur personneAdresse;
 	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="id_user", insertable = false, updatable = false)
-//	@JsonBackReference(value="structure-adresse")
-//	private StructureSante structureAdresse;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_user", insertable = false, updatable = false)
+	@JsonBackReference(value="pharmacie-adresse")
+	private Pharmacie pharmacieAdresse;
 	
+	public Pharmacie getPharmacieAdresse() {
+		return pharmacieAdresse;
+	}
+
+	public void setPharmacieAdresse(Pharmacie pharmacieAdresse) {
+		this.pharmacieAdresse = pharmacieAdresse;
+	}
+
 	public Long getIdUser() {
 		return idUser;
 	}
