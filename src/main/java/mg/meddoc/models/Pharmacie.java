@@ -38,8 +38,8 @@ public class Pharmacie implements Serializable {
 	private java.lang.String raisonSocial;
 	@Column(name = "presentation")
 	private java.lang.String presentation;
-	@Column(name = "adresse")
-	private java.lang.String adresse;
+//	@Column(name = "adresse")
+//	private java.lang.String adresse;
 	@Column(name = "statut")
 	private Integer statut;
 	@Column(name = "longitude")
@@ -84,7 +84,11 @@ public class Pharmacie implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "rel_pharmacie_utilisateur", joinColumns = @JoinColumn(name = "id_pharmacie"), inverseJoinColumns = @JoinColumn(name = "id_utilisateur"))
 	private Set<Utilisateur> utilisateurs;
-	
+
+	@OneToMany(mappedBy = "pharmacieAdresse", fetch = FetchType.EAGER)
+	@JsonManagedReference(value = "pharmacie-adresse")
+	private Set<Adresse> adresse;
+
 	public Pharmacie() {
 
 	}
@@ -104,7 +108,7 @@ public class Pharmacie implements Serializable {
 		// this.idPharmacie = idPharmacie;
 		this.raisonSocial = raison_social;
 		this.presentation = presentation;
-		this.adresse = adresse;
+//		this.adresse = adresse;
 		this.statut = statut;
 		this.longitude = longitude;
 		this.latitude = latitude;
@@ -120,9 +124,9 @@ public class Pharmacie implements Serializable {
 
 	// Must not be null
 	public java.lang.String getRaisonSocial() throws Exception {
-		if(this.raisonSocial ==  null || this.raisonSocial.equals(""))
+		if (this.raisonSocial == null || this.raisonSocial.equals(""))
 			throw new Exception("Raison sociale vide");
-		
+
 		return raisonSocial;
 	}
 
@@ -131,9 +135,9 @@ public class Pharmacie implements Serializable {
 	}
 
 	public java.lang.String getPresentation() throws Exception {
-		if(this.presentation ==  null || this.presentation.equals(""))
+		if (this.presentation == null || this.presentation.equals(""))
 			throw new Exception("Presentation sociale vide");
-		
+
 		return presentation;
 	}
 
@@ -141,16 +145,16 @@ public class Pharmacie implements Serializable {
 		this.presentation = presentation;
 	}
 
-	public java.lang.String getAdresse() throws Exception {
-		if(this.presentation ==  null || this.presentation.equals(""))
-			throw new Exception("Adresse vide");
-		
-		return adresse;
-	}
+//	public java.lang.String getAdresse() throws Exception {
+//		if(this.presentation ==  null || this.presentation.equals(""))
+//			throw new Exception("Adresse vide");
+//		
+//		return adresse;
+//	}
 
-	public void setAdresse(java.lang.String adresse) {
-		this.adresse = adresse;
-	}
+//	public void setAdresse(java.lang.String adresse) {
+//		this.adresse = adresse;
+//	}
 
 	public Integer getStatut() {
 		return statut;
@@ -239,12 +243,20 @@ public class Pharmacie implements Serializable {
 	}
 
 	public String getStat() throws Exception {
-		if(this.stat ==  null || this.stat.equals(""))
-			throw new Exception("Stat vide");	
+		if (this.stat == null || this.stat.equals(""))
+			throw new Exception("Stat vide");
 		return stat;
 	}
 
 	public void setStat(String stat) {
 		this.stat = stat;
+	}
+
+	public void setAdresse(Set<Adresse> adresse) {
+		this.adresse = adresse;
+	}
+
+	public Set<Adresse> getAdresse() {
+		return adresse;
 	}
 }
