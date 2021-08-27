@@ -92,7 +92,8 @@ public class ProduitController {
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
-			Long pharmacieId = produit.getPharmacie().iterator().next().getIdPharmacie();
+			//Long pharmacieId = produit.getPharmacie().iterator().next().getIdPharmacie();
+			Long pharmacieId = produit.getIdPharmacie();
 			// Set pharmacie 
 			if(produit.getPharmacie() != null) {
 				produit.setIdPharmacie(pharmacieId);

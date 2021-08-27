@@ -70,4 +70,10 @@ public class GalerieImplementation implements GalerieService{
 		return repository.rechercheGalerie(nom_photo);
 	}
 
+	@Override
+	public List<String> search_album(Long idPharmacie) {
+		// TODO Auto-generated method stub
+		return repository.search_album(idPharmacie);
+	}
+
 }

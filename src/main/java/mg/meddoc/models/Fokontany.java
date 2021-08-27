@@ -63,5 +63,6 @@ public class Fokontany implements Serializable {
 	
 	public void setArrondissement(Arrondissement arrondissement) {
 		this.arrondissement = arrondissement;
-	}	
+	}
+	
 }
