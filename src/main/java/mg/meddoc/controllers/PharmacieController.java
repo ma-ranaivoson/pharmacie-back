@@ -1,5 +1,6 @@
 package mg.meddoc.controllers;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,12 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mg.meddoc.models.Adresse;
 import mg.meddoc.models.Contact;
 import mg.meddoc.models.Pharmacie;
-import mg.meddoc.models.Specialite;
 import mg.meddoc.models.TypeUtilisateur;
-import mg.meddoc.models.User;
 import mg.meddoc.models.Utilisateur;
+import mg.meddoc.services.AdresseSer;
 import mg.meddoc.services.ContactService;
 import mg.meddoc.services.PharmacieService;
 import mg.meddoc.services.SpecialiteService;
@@ -64,6 +65,9 @@ public class PharmacieController {
 	@Autowired
 	ContactService serviceContact;
 
+	@Autowired
+	AdresseSer serviceAdresse;
+
 	// GetAll_Pharmacie
 	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllPharmacie() {
@@ -79,23 +83,23 @@ public class PharmacieController {
 	}
 
 	// GetById_Pharmacie
-//	@GetMapping(value = "/{id}")
-//	public @ResponseBody ResponseEntity<?> getPharmacieById(@PathVariable Long id) {
-//		Pharmacie pharmacie = null;
-//
-//		try {
-//
-//			pharmacie = servicePharmacie.getById(id);
+	@GetMapping(value = "/p/{id}")
+	public @ResponseBody ResponseEntity<?> getPharmacieById(@PathVariable(name = "id") Long id) {
+		Pharmacie pharmacie = null;
+		System.out.println("get pharmacie by id");
+		try {
+
+			pharmacie = servicePharmacie.getPharmacieById(id);
 //			log.info(om.writeValueAsString(pharmacie));
-//			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
-//
-//		} catch (Exception e) {
-//			HashMap<String, Object> error = new HashMap<String, Object>();
-//			error.put("success", false);
-//			error.put("errors", e.getMessage());
-//			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-//		}
-//	}
+			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
+
+		} catch (Exception e) {
+			HashMap<String, Object> error = new HashMap<String, Object>();
+			error.put("success", false);
+			error.put("errors", e.getMessage());
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	// Get Pharmacie by raison sociale
 	@GetMapping(value = "/{raisonSocial}")
@@ -105,14 +109,14 @@ public class PharmacieController {
 
 		try {
 			pharmacie = servicePharmacie.getByRaisonSocial(raisonSocial);
-			
+
 			return new ResponseEntity<>(pharmacie, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
-			
+
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -195,6 +199,21 @@ public class PharmacieController {
 				contacts.add(cont);
 				serviceContact.save(cont);
 			}
+			// save adresse
+//			Set<Adresse> newAdr = new HashSet<Adresse>();
+			Adresse adresse = null;
+			for (Adresse adr : pharmacie.getAdresse()) {
+				adresse = new Adresse();
+				adresse.setDateDebut(new Timestamp(System.currentTimeMillis()));
+				adresse.setDistrict(adr.getDistrict());
+				adresse.setIdUser(savedPharmacie.getIdPharmacie());
+				adresse.setInformationAcces(adr.getInformationAcces());
+				adresse.setInformationAdresse(adr.getInformationAdresse());
+				adresse.setInformationUtile(adr.getInformationUtile());
+				adresse.setLatitude(adr.getLatitude());
+				adresse.setLongitude(adr.getLongitude());
+				serviceAdresse.save(adresse);
+			}
 			return new ResponseEntity<>(savedPharmacie, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -262,15 +281,10 @@ public class PharmacieController {
 	// GetByRaisonSociale_Pharmacie
 	@GetMapping(value = "/byRaisonSociale/{raisonSociale}")
 	public @ResponseBody ResponseEntity<?> getPharmacieByRaisonSociale(@PathVariable String raisonSociale) {
-		// Pharmacie pharmacie = null;
 		try {
-
-			// List <Pharmacie> pharmacies = (List<Pharmacie>)
-			// servicePharmacie.recherchePharmacie(raisonSociale);
-			// @SuppressWarnings("unchecked")
 			Page<Pharmacie> produitResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1,
 					10, "raisonSocial", "ASC");
-			System.out.println(om.writeValueAsString(produitResult));
+//			System.out.println(om.writeValueAsString(produitResult));
 			HashMap<String, Object> success = new HashMap<String, Object>();
 			success.put("success", true);
 			success.put("data", produitResult);
@@ -293,6 +307,16 @@ public class PharmacieController {
 			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	// Get Pharmacie by Raison Social & district
+	@GetMapping(value = "/{raisonSocial}/{district}")
+	public @ResponseBody ResponseEntity<?> getPharmacyByRaisonSocialAndDistrict(
+			@PathVariable(name = "raisonSocial") String raisonSocial,
+			@PathVariable(name = "district") String district) {
+		Pharmacie pharmacie = servicePharmacie.findByRaisonSocialAndAdresseDistrictNomDistrict(raisonSocial, district);
+
+		return new ResponseEntity<>(pharmacie, HttpStatus.OK);
 	}
 
 }

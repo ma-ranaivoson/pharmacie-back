@@ -23,4 +23,10 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	List<Pharmacie> findByUtilisateursIdUtilisateur(Long id);
 	//Liste Pharma eto Tana
 	Pharmacie findByRaisonSocial(String raisonSocial );	
+	
+	@Query(nativeQuery=true,value="SELECT nextval('seq_pharmacie')")
+	Long getNextSeq();
+	
+	// Search pharmacie by raison social and district
+	Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict);
 }

@@ -21,31 +21,26 @@ public class PharmacieImplementation implements PharmacieService {
 
 	@Override
 	public Pharmacie save(Pharmacie entity) {
-		// TODO Auto-generated method stub
 		return repository.save(entity);
 	}
 
 	@Override
 	public List<Pharmacie> saveAll(List<Pharmacie> entities) {
-		// TODO Auto-generated method stub
 		return repository.saveAll(entities);
 	}
 
 	@Override
 	public Pharmacie getById(Serializable id) {
-		// TODO Auto-generated method stub
 		return repository.findById((Long) id).get();
 	}
 
 	@Override
 	public List<Pharmacie> getAll() {
-		// TODO Auto-generated method stub
 		return repository.findAll();
 	}
 
 	@Override
 	public Page<Pharmacie> getAllPageable(int page, int max, String col, String direction) {
-		// TODO Auto-generated method stub
 		PageRequest pageRequest = PageRequest.of(page, max, Direction.ASC, col);
 		if(direction.trim().compareToIgnoreCase("desc") == 0 || direction.trim().compareToIgnoreCase("descending") == 0)
 			pageRequest = PageRequest.of(page, max, Direction.DESC, col);
@@ -54,14 +49,11 @@ public class PharmacieImplementation implements PharmacieService {
 
 	@Override
 	public void deleteById(Serializable id) {
-		// TODO Auto-generated method stub
 		repository.deleteById((Long)id);
 	}
 
 	@Override
 	public void stateDeleteById(Serializable id, Serializable idStatut) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -87,12 +79,20 @@ public class PharmacieImplementation implements PharmacieService {
 	public Pharmacie getByRaisonSocial(String raisonSocial) {
 		return repository.findByRaisonSocial(raisonSocial);
 	}
-	
-	//@Override
-	//public void stateDeleteById(Serializable id, Serializable idStatut) {
-		// TODO Auto-generated method stub
-	//repository.modifierStatutByStatut((Long)id, (Long)idStatut);
-	//}
-	
+
+	@Override
+	public Pharmacie getPharmacieById(Long id) {
+		return repository.findById(id).get();
+	}
+
+	@Override
+	public Long getNextSeq() {
+		return repository.getNextSeq();
+	}
+
+	@Override
+	public Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict) {
+		return repository.findByRaisonSocialAndAdresseDistrictNomDistrict(raisonSocial, nomDistrict);
+	}
 	
 }
