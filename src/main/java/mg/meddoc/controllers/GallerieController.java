@@ -1,6 +1,7 @@
 package mg.meddoc.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mg.meddoc.models.Categorie;
 import mg.meddoc.models.Galerie;
 import mg.meddoc.services.GalerieService;
 
@@ -50,6 +52,28 @@ public class GallerieController {
 				return new ResponseEntity<>("Erreur de réseaux",HttpStatus.BAD_REQUEST);
 			}
 		}
+		//
+		@GetMapping(value = "/all/select/{idPharmacie}")
+		public @ResponseBody ResponseEntity<?> getAllGallerySelect() {
+			List<Galerie> galerie = new ArrayList<Galerie>();
+			try {
+				galerie = serviceGalerie.getAll();
+				List<HashMap<String,Object>> retour = new ArrayList<HashMap<String, Object>>();
+				HashMap<String,Object> maps = null;
+				for(Galerie cat:galerie) {
+					maps = new HashMap<String, Object>();
+					maps.put("value", cat.getAlbum());
+					maps.put("label", cat.getAlbum());
+					retour.add(maps);
+				}
+				System.out.println(om.writeValueAsString(retour));
+				return new ResponseEntity<>(retour, HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
+			}
+		}
+		
 	//GetById_Galerie
 			@GetMapping(value = "/{id}")
 			public @ResponseBody ResponseEntity<?> getGalerieById(@PathVariable Long id) {
@@ -77,6 +101,8 @@ public class GallerieController {
 				return new ResponseEntity<>("Une erreur s'est produite "+e.getMessage(),HttpStatus.BAD_REQUEST);
 			}
 		}
+	
+		
 	//Delete_Galerie
 		@DeleteMapping(value = "/delete/{id}")
 		public @ResponseBody ResponseEntity<?> deleteGalerieById(@PathVariable Long id) {

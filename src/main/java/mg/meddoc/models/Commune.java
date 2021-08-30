@@ -64,4 +64,5 @@ public class Commune implements Serializable {
 	public void setDistrict(District district) {
 		this.district = district;
 	}
+	
 }

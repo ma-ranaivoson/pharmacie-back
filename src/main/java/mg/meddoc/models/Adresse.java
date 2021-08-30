@@ -60,6 +60,11 @@ public class Adresse implements Serializable {
 	@JsonBackReference(value="pharmacie-adresse")
 	private Pharmacie pharmacieAdresse;
 	
+	// public Adresse() {
+	// 	super();
+	// 	// TODO Auto-generated constructor stub
+	// }
+	
 	public Pharmacie getPharmacieAdresse() {
 		return pharmacieAdresse;
 	}
@@ -135,7 +140,7 @@ public class Adresse implements Serializable {
 //	public Fokontany getFokontany() {
 //		return fokontany;
 //	}
-//
+////
 //	public void setFokontany(Fokontany fokontany) {
 //		this.fokontany = fokontany;
 //	}
@@ -143,15 +148,15 @@ public class Adresse implements Serializable {
 	public District getDistrict() {
 		return district;
 	}
-
+//
 	public void setDistrict(District district) {
 		this.district = district;
 	}
-
+//
 	public Utilisateur getPersonneAdresse() {
 		return personneAdresse;
 	}
-
+//
 	public void setPersonneAdresse(Utilisateur personneAdresse) {
 		this.personneAdresse = personneAdresse;
 	}
@@ -159,13 +164,10 @@ public class Adresse implements Serializable {
 //	public StructureSante getStructureAdresse() {
 //		return structureAdresse;
 //	}
-//
+////
 //	public void setStructureAdresse(StructureSante structureAdresse) {
 //		this.structureAdresse = structureAdresse;
 //	}
 
-	public Adresse() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	
 }

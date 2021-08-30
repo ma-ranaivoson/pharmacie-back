@@ -28,9 +28,12 @@ public class District implements Serializable {
    	private long idDistrict;
    	@Column(name = "nom_district")
    	private java.lang.String nomDistrict;
+   	
+   	
    	@OneToOne(fetch=FetchType.EAGER)
   	@JoinColumn(name = "id_region")
   	private Region region;
+   	
   
    	protected void finalize() {
 	   // TODO: implement
@@ -63,4 +66,5 @@ public class District implements Serializable {
 	public void setRegion(Region region) {
 		this.region = region;
 	}
+   	
 }
