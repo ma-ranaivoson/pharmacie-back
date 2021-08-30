@@ -61,11 +61,14 @@ public class PanierController {
 	}
 
 	// GetById_Panier
-	@GetMapping(value = "/{id}")
-	public @ResponseBody ResponseEntity<?> getPanierById(@PathVariable Long id) {
-		Panier panier = null;
+	@GetMapping(value = "/get-cart")
+	public @ResponseBody ResponseEntity<?> getPanierById() {
+		List<Panier> panier = null;
+		
+		Utilisateur utilisateur = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 		try {
-			panier = servicePanier.getById(id);
+			panier = servicePanier.getUserCart(utilisateur.getIdUtilisateur());
 			log.info(om.writeValueAsString(panier));
 			return new ResponseEntity<>(panier, HttpStatus.OK);
 		} catch (Exception e) {

@@ -64,7 +64,8 @@ public class PrixImplementation implements PrixService{
 
 	@Override
 	public Prix getProductPrice(Long id) {
-		return repository.findByIdProduit(id);
+//		return repository.findByIdProduit(id);
+		return null;
 	}
 
 	@Override
@@ -76,6 +77,12 @@ public class PrixImplementation implements PrixService{
 	@Override
 	public Prix getPrixByIdPharmacie(Long idPharmacie) {
 		return repository.findByIdPharmacie(idPharmacie);
+	}
+
+	@Override
+	public List<Prix> findByIdProduit(Long prix) {
+		// TODO Auto-generated method stub
+		return repository.findByIdProduit(prix);
 	}
 
 }

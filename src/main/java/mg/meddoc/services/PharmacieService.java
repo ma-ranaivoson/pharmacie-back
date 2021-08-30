@@ -16,15 +16,10 @@ public interface PharmacieService extends CRUDService<Pharmacie>{
 	//Direction = asc ou desc
 	//
 	//SELECT * FROM pharmacie WHERE UPPER(raison_social) LIKE (?1) ORDER BY raison_social ASC LIMIT 10 OFFSET 0
-	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, int page, int size, String sort, String direction);
-	
+	Page<Pharmacie> findByRaisonSocialContainingIgnoreCase(String raisonSocial, int page, int size, String sort, String direction);	
 	List<Pharmacie> findByUtilisateursIdUtilisateur(Long id);
-
-	Pharmacie getByRaisonSocial(String raisonSocial);
-	
-	Pharmacie getPharmacieById(Long id);
-	
-	Long getNextSeq();
-	
+	Pharmacie getByRaisonSocial(String raisonSocial);	
+	Pharmacie getPharmacieById(Long id);	
+	Long getNextSeq();	
 	Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict);
 }

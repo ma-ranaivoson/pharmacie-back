@@ -285,11 +285,10 @@ public class PharmacieController {
 			Page<Pharmacie> produitResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1,
 					10, "raisonSocial", "ASC");
 //			System.out.println(om.writeValueAsString(produitResult));
-			HashMap<String, Object> success = new HashMap<String, Object>();
-			success.put("success", true);
-			success.put("data", produitResult);
+//			HashMap<String, Object> success = new HashMap<String, Object>();
+//			success.put("data", produitResult);
 
-			return new ResponseEntity<>(success, HttpStatus.OK);
+			return new ResponseEntity<>(produitResult, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Raison sociale introuvable", HttpStatus.BAD_REQUEST);

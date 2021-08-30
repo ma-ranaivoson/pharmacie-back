@@ -3,6 +3,7 @@ package mg.meddoc.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class ProduitController {
 	@Autowired
 	PrixService servicePrix;
 
+	
 	// GetAll_Produit
 	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllProduit() {
@@ -71,7 +73,7 @@ public class ProduitController {
 	@GetMapping(value = "/get/{id}/{idPharmacie}")
 	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id, @PathVariable Long idPharmacie) {
 		Produit produit = null;
-		try {
+		try {			
 			produit = serviceProduit.getById(id);
 			System.out.println(om.writeValueAsString(produit));
 			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id, idPharmacie);
@@ -83,6 +85,25 @@ public class ProduitController {
 			// HttpStatus.BAD_REQUEST);
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
+			error.put("errors", e.getMessage());
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> getById(@PathVariable Long id) {
+		Produit produit = null;
+		try {
+			// Get Pharmacie List			
+			produit = serviceProduit.getById(id);
+//			List<Pharmacie> ph = serviceProduit.findByPharmacieIdProduit(id);
+			
+//			produit.setPharmacie(ph);
+			
+			return new ResponseEntity<>(produit, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("errors", e.getMessage());
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
