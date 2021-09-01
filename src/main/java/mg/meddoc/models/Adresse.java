@@ -50,6 +50,7 @@ public class Adresse implements Serializable {
 	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.DETACH)
 	@JoinColumn(name = "id_emplacement")
 	private District district;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_user", insertable = false, updatable = false)
 	@JsonBackReference(value="personne-adresse")

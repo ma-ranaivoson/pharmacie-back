@@ -51,19 +51,19 @@ public class ContactController {
 			}
 		}
 	//GetById_Contact
-			@GetMapping(value = "/{id}")
-			public @ResponseBody ResponseEntity<?> getContactById(@PathVariable Long id) {
-				Contact contact = null;
-				try {
-					
-					contact = serviceContact.getById(id);
-					log.info(om.writeValueAsString(contact));
-					return new ResponseEntity<>(contact,HttpStatus.OK);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
-				}
+		@GetMapping(value = "/{id}")
+		public @ResponseBody ResponseEntity<?> getContactById(@PathVariable Long id) {
+			Contact contact = null;
+			try {
+				
+				contact = serviceContact.getById(id);
+				log.info(om.writeValueAsString(contact));
+				return new ResponseEntity<>(contact,HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
 			}
+		}
 	//Save_Contact
 		@PostMapping(value = "/save")
 		public @ResponseBody ResponseEntity<?> saveContact(@RequestBody Contact contact) {
@@ -93,4 +93,18 @@ public class ContactController {
 			}
 		}
 
+	@GetMapping(value = "/by-valeur/{id}/{idTypeContact}")
+	public @ResponseBody ResponseEntity<?> getByIdUser(@PathVariable Long id,@PathVariable Integer idTypeContact) {
+		List<Contact> contact = null;
+		try {
+			
+//			contact = serviceContact.findByIdEntite(id);
+			contact = serviceContact.findByIdEntiteAndTypeContactIdTypeContact(id,idTypeContact);
+			log.info(om.writeValueAsString(contact));
+			return new ResponseEntity<>(contact,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
+		}
+	}
 }
