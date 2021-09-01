@@ -3,7 +3,6 @@ package mg.meddoc.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Marque;
-import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Prix;
 import mg.meddoc.models.Produit;
 import mg.meddoc.models.ProduitData;
@@ -54,7 +52,6 @@ public class ProduitController {
 	@Autowired
 	PrixService servicePrix;
 
-	
 	// GetAll_Produit
 	@GetMapping(value = "/all")
 	public @ResponseBody ResponseEntity<?> getAllProduit() {
@@ -73,7 +70,7 @@ public class ProduitController {
 	@GetMapping(value = "/get/{id}/{idPharmacie}")
 	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id, @PathVariable Long idPharmacie) {
 		Produit produit = null;
-		try {			
+		try {
 			produit = serviceProduit.getById(id);
 			System.out.println(om.writeValueAsString(produit));
 			Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(id, idPharmacie);
@@ -89,17 +86,17 @@ public class ProduitController {
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/{id}")
 	public @ResponseBody ResponseEntity<?> getById(@PathVariable Long id) {
 		Produit produit = null;
 		try {
-			// Get Pharmacie List			
+			// Get Pharmacie List
 			produit = serviceProduit.getById(id);
 //			List<Pharmacie> ph = serviceProduit.findByPharmacieIdProduit(id);
-			
+
 //			produit.setPharmacie(ph);
-			
+
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -113,12 +110,12 @@ public class ProduitController {
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveProduit(@RequestBody ProduitData produit) {
 		try {
-			//Long pharmacieId = produit.getPharmacie().iterator().next().getIdPharmacie();
+			// Long pharmacieId = produit.getPharmacie().iterator().next().getIdPharmacie();
 			Long pharmacieId = produit.getIdPharmacie();
-			// Set pharmacie 
-			if(produit.getPharmacie() != null) {
+			// Set pharmacie
+			if (produit.getPharmacie() != null) {
 				produit.setIdPharmacie(pharmacieId);
-			}	
+			}
 			// Set marque
 			if (produit.getMarque() != null) {
 				if (produit.getMarque().getIdMarque() == null) {
@@ -129,7 +126,7 @@ public class ProduitController {
 
 			Produit saved = serviceProduit.save(produit.toProduit());
 			Prix prix = null;
-		
+
 			// Set prix
 			if (produit.getPrix() != null || produit.getPrix().size() > 0) {
 				prix = produit.getPrix().iterator().next();
@@ -137,7 +134,7 @@ public class ProduitController {
 				prix.setIdProduit(saved.getIdProduit());
 				servicePrix.save(prix); // Save prix
 			}
-			
+
 			produit = new ProduitData(saved, prix);
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {

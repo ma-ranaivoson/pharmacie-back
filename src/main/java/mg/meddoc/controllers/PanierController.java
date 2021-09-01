@@ -103,7 +103,9 @@ public class PanierController {
 			// Get prix by pharmacie
 			prixByPharmacie = servicePrix
 					.getPrixByIdProduitAndIdPharmacie(panier.getIdProduit(), panier.getIdPharmacie()).getPrix();
-
+			
+			cartToSave.setQuantite(panier.getQuantite());
+			
 			// Set total montant
 			Double totalMontant = panier.getQuantite() * prixByPharmacie;
 			cartToSave.setMontant(totalMontant);
