@@ -36,9 +36,11 @@ public class Paiement implements Serializable{
 	@Column(name = "id_paiement")
 	private long idPaiement;
 	@Column(name = "date_paiement")
-	private java.sql.Date date_paiement;
+	private java.sql.Date datePaiement;
 	@Column(name = "montant_total")
-	private Double montant_total;
+	private Double montantTotal;
+	
+	
 	
 //Relation
 //	@OneToOne(fetch=FetchType.EAGER)
@@ -54,11 +56,11 @@ public class Paiement implements Serializable{
 	 * @param date_paiement
 	 * @param montant_total
 	 */
-	public Paiement(long idPaiement, Date date_paiement, Double montant_total) {
+	public Paiement(long idPaiement, Date datePaiement, Double montantTotal) {
 		super();
 		this.idPaiement = idPaiement;
-		this.date_paiement = date_paiement;
-		this.montant_total = montant_total;
+		this.datePaiement = datePaiement;
+		this.montantTotal = montantTotal;
 	}
 
 	/**
@@ -79,28 +81,28 @@ public class Paiement implements Serializable{
 	 * @return the date_paiement
 	 */
 	public java.sql.Date getDate_paiement() {
-		return date_paiement;
+		return datePaiement;
 	}
 	
 	/**
 	 * @param date_paiement the date_paiement to set
 	 */
-	public void setDate_paiement(java.sql.Date date_paiement) {
-		this.date_paiement = date_paiement;
+	public void setDate_paiement(java.sql.Date datePaiement) {
+		this.datePaiement = datePaiement;
 	}
 	
 	/**
 	 * @return the montant_total
 	 */
 	public Double getMontant_total() {
-		return montant_total;
+		return montantTotal;
 	}
 	
 	/**
 	 * @param montant_total the montant_total to set
 	 */
-	public void setMontant_total(Double montant_total) {
-		this.montant_total = montant_total;
+	public void setMontant_total(Double montantTotal) {
+		this.montantTotal = montantTotal;
 	}
 
 	/**

@@ -396,11 +396,15 @@ public class UtilisateurController {
 	public @ResponseBody ResponseEntity<?> getUserPhones() {
 		Map<String, String> phones = new HashMap<String, String>();
 		
-//		try {
-//			
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
+		try {
+			// Get User Connected
+			Utilisateur utilisateur = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return null;
 	}
 
@@ -441,6 +445,11 @@ public class UtilisateurController {
 
 			return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping(value = "/hello")
+	public @ResponseBody ResponseEntity<?> hello() {
+		return new ResponseEntity<>("Hello", HttpStatus.OK);
 	}
 
 }
