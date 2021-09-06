@@ -3,6 +3,7 @@ package mg.meddoc.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
@@ -38,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.message.JwtResponse;
 import mg.meddoc.models.Favoris;
+import mg.meddoc.models.FavorisPK;
 import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.security.JwtProvider;
@@ -295,6 +297,19 @@ public class UtilisateurController {
 		}
 
 	}
+	
+	@DeleteMapping(value = "/favoris/delete/{idProduit}")
+	public @ResponseBody ResponseEntity<?> deleteFavoris(@PathVariable Long idProduit) {
+		try {
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			favorisService.deleteById(new FavorisPK(idProduit, user.getIdUtilisateur()));
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
+		}
+
+	}
 
 	// Get All user
 	@GetMapping(value = "/all")
@@ -312,7 +327,6 @@ public class UtilisateurController {
 	}
 
 	// Modify profile
-	@SuppressWarnings("unused")
 	@PutMapping(value = "/modify/{id}")
 	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,
 			@RequestBody HashMap<String, Object> data) {
@@ -375,6 +389,19 @@ public class UtilisateurController {
 			e.printStackTrace();
 			return new ResponseEntity<>("err", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	// Get phone of connected user
+	@GetMapping(value="/phone")
+	public @ResponseBody ResponseEntity<?> getUserPhones() {
+		Map<String, String> phones = new HashMap<String, String>();
+		
+//		try {
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+		return null;
 	}
 
 	// Get user by id

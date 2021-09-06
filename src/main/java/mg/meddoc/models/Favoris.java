@@ -28,7 +28,7 @@ public class Favoris implements Serializable{
 	@Column(name = "users_id")
 	private Long usersId;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name="produit_id", insertable = false, updatable = false)
 	Produit produit;
 	
