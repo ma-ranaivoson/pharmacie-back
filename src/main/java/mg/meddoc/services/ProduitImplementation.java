@@ -2,6 +2,7 @@ package mg.meddoc.services;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Produit;
 import mg.meddoc.repositories.ProduitRepository;
 
@@ -125,5 +127,15 @@ public class ProduitImplementation implements ProduitService {
 	@Override
 	public Produit getProductById(Long id) {
 		return repository.findByIdProduit(id);
+	}
+
+	@Override
+	public List<Pharmacie> findByPharmacieIdPharmacie(Long id) {
+		return repository.findByPharmacieIdPharmacie(id);
+	}
+
+	@Override
+	public List<Pharmacie> findByPharmacieIdProduit(Long id) {
+		return repository.findByPharmacieIdProduit(id);
 	}
 }

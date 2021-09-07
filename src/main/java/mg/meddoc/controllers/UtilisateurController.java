@@ -3,6 +3,7 @@ package mg.meddoc.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
@@ -37,10 +38,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.message.JwtResponse;
+import mg.meddoc.models.Favoris;
+import mg.meddoc.models.FavorisPK;
 import mg.meddoc.models.TypeUtilisateur;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.security.JwtProvider;
 import mg.meddoc.services.AmazonSesService;
+import mg.meddoc.services.FavorisService;
 import mg.meddoc.services.UtilisateurService;
 import mg.meddoc.utils.Util;
 
@@ -64,6 +68,9 @@ public class UtilisateurController {
 
 	@Autowired
 	AmazonSesService emailservice;
+	
+	@Autowired
+	FavorisService favorisService;
 
 	HashMap<String, Object> res = new HashMap<String, Object>();
 
@@ -264,6 +271,45 @@ public class UtilisateurController {
 		}
 
 	}
+	
+	@GetMapping(value = "/favoris")
+	public @ResponseBody ResponseEntity<?> getFavoris() {
+		try {
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			List<Favoris> favoris = favorisService.findByUsersId(user.getIdUtilisateur());
+			return new ResponseEntity<>(favoris, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
+		}
+
+	}
+	
+	@GetMapping(value = "/favoris/save/{idProduit}")
+	public @ResponseBody ResponseEntity<?> saveFavoris(@PathVariable Long idProduit) {
+		try {
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			Favoris saved = favorisService.save(new Favoris(idProduit, user.getIdUtilisateur()));
+			return new ResponseEntity<>(saved, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
+		}
+
+	}
+	
+	@DeleteMapping(value = "/favoris/delete/{idProduit}")
+	public @ResponseBody ResponseEntity<?> deleteFavoris(@PathVariable Long idProduit) {
+		try {
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			favorisService.deleteById(new FavorisPK(idProduit, user.getIdUtilisateur()));
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Pas d'utilisateur", HttpStatus.BAD_REQUEST);
+		}
+
+	}
 
 	// Get All user
 	@GetMapping(value = "/all")
@@ -281,7 +327,6 @@ public class UtilisateurController {
 	}
 
 	// Modify profile
-	@SuppressWarnings("unused")
 	@PutMapping(value = "/modify/{id}")
 	public @ResponseBody ResponseEntity<?> updateUser(@PathVariable Long id,
 			@RequestBody HashMap<String, Object> data) {
@@ -345,6 +390,23 @@ public class UtilisateurController {
 			return new ResponseEntity<>("err", HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	// Get phone of connected user
+	@GetMapping(value="/phone")
+	public @ResponseBody ResponseEntity<?> getUserPhones() {
+		Map<String, String> phones = new HashMap<String, String>();
+		
+		try {
+			// Get User Connected
+			Utilisateur utilisateur = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
 
 	// Get user by id
 	// TODO : Make an exception handler if there is no user or failed to cast the id
@@ -383,6 +445,11 @@ public class UtilisateurController {
 
 			return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping(value = "/hello")
+	public @ResponseBody ResponseEntity<?> hello() {
+		return new ResponseEntity<>("Hello", HttpStatus.OK);
 	}
 
 }

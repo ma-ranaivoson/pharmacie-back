@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Panier;
+import mg.meddoc.models.PanierPK;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.PanierService;
 import mg.meddoc.services.PrixService;
@@ -61,11 +62,14 @@ public class PanierController {
 	}
 
 	// GetById_Panier
-	@GetMapping(value = "/{id}")
-	public @ResponseBody ResponseEntity<?> getPanierById(@PathVariable Long id) {
-		Panier panier = null;
+	@GetMapping(value = "/get-cart")
+	public @ResponseBody ResponseEntity<?> getPanierById() {
+		List<Panier> panier = null;
+
+		Utilisateur utilisateur = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		try {
-			panier = servicePanier.getById(id);
+			panier = servicePanier.getUserCart(utilisateur.getIdUtilisateur());
 			log.info(om.writeValueAsString(panier));
 			return new ResponseEntity<>(panier, HttpStatus.OK);
 		} catch (Exception e) {
@@ -101,6 +105,8 @@ public class PanierController {
 			prixByPharmacie = servicePrix
 					.getPrixByIdProduitAndIdPharmacie(panier.getIdProduit(), panier.getIdPharmacie()).getPrix();
 
+			cartToSave.setQuantite(panier.getQuantite());
+
 			// Set total montant
 			Double totalMontant = panier.getQuantite() * prixByPharmacie;
 			cartToSave.setMontant(totalMontant);
@@ -128,21 +134,17 @@ public class PanierController {
 	}
 
 	// Delete_Panier
-	@DeleteMapping(value = "/delete/{id}")
-	public @ResponseBody ResponseEntity<?> deletePanierById(@PathVariable Long id) {
+	@DeleteMapping(value = "/delete/{idPharmacie}/{idProduit}")
+	public @ResponseBody ResponseEntity<?> deletePanierById(@PathVariable(name = "idPharmacie") Long idPharmacie,
+			@PathVariable(name = "idProduit") Long idProduit) {
 		try {
-			servicePanier.deleteById(id);
-			HashMap<String, Object> success = new HashMap<String, Object>();
-			success.put("success", true);
-			success.put("data", "Panier id: " + id + " supprimée avec success");
-
-			return new ResponseEntity<>(success, HttpStatus.OK);
+			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			servicePanier.deleteById(new PanierPK(idPharmacie, idProduit, user.getIdUtilisateur()));
+			
+			return new ResponseEntity<>(null, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			HashMap<String, Object> error = new HashMap<String, Object>();
-			error.put("errors", "Panier id " + id + " not found");
-
-			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
 		}
 	}
 

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mg.meddoc.models.Prix;
+import mg.meddoc.models.Produit;
+import mg.meddoc.models.ProduitData;
 import mg.meddoc.services.PrixService;
 
 @RestController
@@ -124,6 +126,21 @@ public class PrixController {
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
 		}
-		
+	@GetMapping(value = "/get/{id}")
+	public @ResponseBody ResponseEntity<?> getProduitById(@PathVariable Long id) {
+		List<Prix> prix = new ArrayList<Prix>();
+		try {			
+			prix = servicePrix.findByIdProduit(id);
+			return new ResponseEntity<>(prix, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",
+			// HttpStatus.BAD_REQUEST);
+			HashMap<String, Object> error = new HashMap<String, Object>();
+			error.put("success", false);
+			error.put("errors", e.getMessage());
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		}
+	}
 		
 }

@@ -36,9 +36,9 @@ public class Prix implements Serializable{
 	private java.lang.String unite;
 
 //	Relation
-	@ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.DETACH)
+	@OneToOne(fetch=FetchType.EAGER,cascade=CascadeType.DETACH)
 	@JoinColumn(name="id_pharmacie",insertable = false, updatable = false)
-	@JsonBackReference(value="pharmacie-prix")
+//	@JsonBackReference(value="pharmacie-prix")
 	private Pharmacie pharmacie;
 	
 	@OneToOne(fetch=FetchType.LAZY,cascade=CascadeType.DETACH)

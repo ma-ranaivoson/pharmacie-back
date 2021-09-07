@@ -9,42 +9,42 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import mg.meddoc.models.Prix;
-import mg.meddoc.models.PrixPK;
-import mg.meddoc.repositories.PrixRepository;
+import mg.meddoc.models.Favoris;
+import mg.meddoc.models.FavorisPK;
+import mg.meddoc.repositories.FavorisRepository;
 
 @Service
-public class PrixImplementation implements PrixService{
+public class FavorisImplementation implements FavorisService{
 	
 	@Autowired
-	private PrixRepository repository;
+	private FavorisRepository repository;
 	
 	@Override
-	public Prix save(Prix entity) {
+	public Favoris save(Favoris entity) {
 		// TODO Auto-generated method stub
 		return repository.save(entity);
 	}
 
 	@Override
-	public List<Prix> saveAll(List<Prix> entities) {
+	public List<Favoris> saveAll(List<Favoris> entities) {
 		// TODO Auto-generated method stub
 		return repository.saveAll(entities);
 	}
 
 	@Override
-	public Prix getById(Serializable id) {
+	public Favoris getById(Serializable id) {
 		// TODO Auto-generated method stub
-		return repository.findById((PrixPK) id).get();
+		return repository.findById((FavorisPK) id).get();
 	}
 
 	@Override
-	public List<Prix> getAll() {
+	public List<Favoris> getAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
 	}
 
 	@Override
-	public Page<Prix> getAllPageable(int page, int max, String col, String direction) {
+	public Page<Favoris> getAllPageable(int page, int max, String col, String direction) {
 		// TODO Auto-generated method stub
 		PageRequest pageRequest = PageRequest.of(page, max, Direction.ASC, col);
 		if(direction.trim().compareToIgnoreCase("desc") == 0 || direction.trim().compareToIgnoreCase("descending") == 0)
@@ -55,34 +55,25 @@ public class PrixImplementation implements PrixService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		repository.deleteById((PrixPK)id);
+		repository.deleteById((FavorisPK)id);
 	}
 
 	@Override
-	public void stateDeleteById(Serializable id, Serializable idStatut) {	
-	}
-
-	@Override
-	public Prix getProductPrice(Long id) {
-//		return repository.findByIdProduit(id);
-		return null;
-	}
-
-	@Override
-	public Prix getPrixByIdProduitAndIdPharmacie(Long idProduit, long idPharmacie) {
+	public void stateDeleteById(Serializable id, Serializable idStatut) {
 		// TODO Auto-generated method stub
-		return repository.findPrixByIdProduitAndIdPharmacie(idProduit, idPharmacie);
+		
 	}
 
 	@Override
-	public Prix getPrixByIdPharmacie(Long idPharmacie) {
-		return repository.findByIdPharmacie(idPharmacie);
-	}
-
-	@Override
-	public List<Prix> findByIdProduit(Long prix) {
+	public Favoris rechercheFavoris(String valeur) {
 		// TODO Auto-generated method stub
-		return repository.findByIdProduit(prix);
+		return repository.rechercheFavoris(valeur);
+	}
+
+	@Override
+	public List<Favoris> findByUsersId(Long id) {
+		// TODO Auto-generated method stub
+		return repository.findByUsersId(id);
 	}
 
 }
