@@ -69,5 +69,23 @@ public class ContactImplementation implements ContactService{
 		// TODO Auto-generated method stub
 		return repository.rechercheContact(valeur);
 	}
+	
+		@Override
+	public List<Contact> findByIdEntiteAndTypeContactIdTypeContact(Long id, Integer idType) {
+		// TODO Auto-generated method stub
+		return repository.findByIdEntiteAndTypeContactIdTypeContact(id, idType);
+	}
 
+	@Override
+	public List<Contact> findByIdEntite(Long id) {
+		// TODO Auto-generated method stub
+		return repository.findByIdEntite(id);
+	}
+
+	@Override
+	public List<Contact> findByPharmacieIdPharmacieAndTypeContactIdTypeContact(Long id, Integer idTypeContact) {
+		// TODO Auto-generated method stub
+		return repository.findByPharmacieIdPharmacieAndTypeContactIdTypeContact(id,idTypeContact);
+	}
+	
 }

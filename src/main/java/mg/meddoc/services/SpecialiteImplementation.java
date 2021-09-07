@@ -69,4 +69,10 @@ public class SpecialiteImplementation implements SpecialiteService{
 		return repository.rechercheSpecialite(libelle);
 	}
 
+	@Override
+	public List<Specialite> findSpecialiteIdPharmacie(Long id) {
+		// TODO Auto-generated method stub
+		return repository.findSpecialiteIdPharmacie(id);
+	}
+
 }

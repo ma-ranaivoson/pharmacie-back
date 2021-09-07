@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mg.meddoc.models.Contact;
 import mg.meddoc.models.Pharmacie;
 import mg.meddoc.models.Specialite;
 import mg.meddoc.services.PharmacieService;
@@ -125,6 +126,20 @@ public class SpecialiteController {
 				error.put("errors", "Specialite id " + id + " not found");
 				
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			}
+		}
+		
+		@GetMapping(value = "/by-valeurSpecialite/{id}")
+		public @ResponseBody ResponseEntity<?> getBySpecialite(@PathVariable Long id) {
+			List<Specialite> specialite = null;
+			try {
+				
+				specialite = serviceSpecialite.findSpecialiteIdPharmacie(id);
+				log.info(om.writeValueAsString(specialite));
+				return new ResponseEntity<>(specialite,HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
 			}
 		}
 	

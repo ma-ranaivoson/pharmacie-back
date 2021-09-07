@@ -126,7 +126,6 @@ public class PharmacieController {
 	@PostMapping(value = "/register")
 	public @ResponseBody ResponseEntity<?> registerPharmacie(@RequestBody HashMap<String, Object> data) {
 		List<String> error = new ArrayList<String>();
-
 		// Save user and pharmacie
 		try {
 			Utilisateur user = om.readValue(om.writeValueAsString(data.get("user")), new TypeReference<Utilisateur>() {
@@ -134,7 +133,6 @@ public class PharmacieController {
 			Pharmacie pharmacie = om.readValue(om.writeValueAsString(data.get("pharmacie")),
 					new TypeReference<Pharmacie>() {
 					});
-
 			// Save user
 			Utilisateur newUser = new Utilisateur();
 

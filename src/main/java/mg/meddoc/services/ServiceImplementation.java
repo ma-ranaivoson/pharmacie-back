@@ -62,13 +62,11 @@ public class ServiceImplementation implements ServiceService{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public mg.meddoc.models.Service recherchePharmacie(String libelle) {
 		// TODO Auto-generated method stub
 		return repository.recherchePharmacie(libelle);
 	}
 	
-	
-
 }

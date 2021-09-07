@@ -39,6 +39,8 @@ public class Staff implements Serializable{
 	private Long idStaff;
 	@Column(name = "nom_staf")
 	private java.lang.String nom;
+	@Column(name = "poste")
+	private java.lang.String poste;
 	@Column(name="id_pharmacie")
 	private Long idPharmacie;
 	
@@ -74,6 +76,19 @@ public class Staff implements Serializable{
 	 */
 	public void setIdStaff(Long idStaff) {
 		this.idStaff = idStaff;
+	}
+	/**
+	 * @return the poste
+	 */
+	public java.lang.String getPoste() {
+		return poste;
+	}
+
+	/**
+	 * @param poste the poste to set
+	 */
+	public void setPoste(java.lang.String poste) {
+		this.poste = poste;
 	}
 
 	/**
