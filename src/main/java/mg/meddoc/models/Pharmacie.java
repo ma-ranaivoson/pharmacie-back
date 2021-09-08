@@ -66,7 +66,7 @@ public class Pharmacie implements Serializable {
 	@JsonManagedReference(value = "pharmacie-contact")
 	private Set<Contact> contact;
 //	
-	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonManagedReference(value = "pharmacie-staff")
 	private Set<Staff> staff;
 

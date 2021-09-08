@@ -2,6 +2,7 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,13 +46,17 @@ public class Staff implements Serializable{
 	private Long idPharmacie;
 	
 // Relation....
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name="id_pharmacie", insertable=false, updatable=false)
 	@JsonBackReference(value="pharmacie-staff")
 	private Pharmacie pharmacie;
 
 	public Staff() {
 		
+	}
+	
+	public Staff(Long id) {
+		this.setIdStaff(id);
 	}
 
 	/**

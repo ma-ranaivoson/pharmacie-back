@@ -42,7 +42,7 @@ public class StaffController {
 			List<Staff> staff = new ArrayList<Staff>();
 			try {
 				staff = serviceStaff.getAll();
-				System.out.println(om.writeValueAsString(staff));
+				log.info(om.writeValueAsString(staff));
 				return new ResponseEntity<>(staff, HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -101,7 +101,7 @@ public class StaffController {
 				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 			}
 		}
-
+		
 		//Delete_Staff	
 		@DeleteMapping(value = "/delete/{id}")
 		public @ResponseBody ResponseEntity<?> deleteStaffById(@PathVariable Long id) {
@@ -109,6 +109,7 @@ public class StaffController {
 			try {		
 				
 				serviceStaff.deleteById(id);
+//				serviceStaff.deleteStaff(new Staff(id));
 				
 				HashMap<String, Object> success = new HashMap<String, Object>();
 				success.put("success", true);

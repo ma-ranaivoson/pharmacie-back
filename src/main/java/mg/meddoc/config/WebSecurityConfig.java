@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/pharmacie/delete/{id}");
 		web.ignoring().antMatchers("/pharmacie/byRaisonSociale/{raisonSociale}");
 		web.ignoring().antMatchers("/user/signin");
+		web.ignoring().antMatchers("/staff/all");
 	}
 	
 	@Override

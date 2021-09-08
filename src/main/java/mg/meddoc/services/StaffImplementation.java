@@ -54,6 +54,7 @@ public class StaffImplementation implements StaffService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
+		System.out.println(id);
 		repository.deleteById((Long)id);
 	}
 
@@ -67,6 +68,18 @@ public class StaffImplementation implements StaffService{
 	public Staff rechercheStaff(String nom_staf) {
 		// TODO Auto-generated method stub
 		return repository.rechercheStaff(nom_staf);
+	}
+
+	@Override
+	public void deleteStaff(Staff staff) {
+		// TODO Auto-generated method stub
+		repository.delete(staff);
+	}
+
+	@Override
+	public Staff findByIdStaff(Long id) {
+		// TODO Auto-generated method stub
+		return repository.findByIdStaff(id);
 	}
 
 }
