@@ -2,7 +2,6 @@ package mg.meddoc.models;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "rel_paiement_utilisateur")
+@IdClass(UserModePaiementPK.class)
 public class UserModePaiement implements Serializable {
 
 	/**
@@ -31,10 +31,12 @@ public class UserModePaiement implements Serializable {
 	@Column(name = "valeur")
 	private String valeur;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="id_utilisateur",insertable = false, updatable = false)
 	Utilisateur utilisateur;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="id_mode_paiement",insertable = false, updatable = false)
 	ModePaiement modePaiement;
 	
 	public UserModePaiement() {
@@ -70,6 +72,22 @@ public class UserModePaiement implements Serializable {
 
 	public void setValeur(String valeur) {
 		this.valeur = valeur;
+	}
+
+	public Utilisateur getUtilisateur() {
+		return utilisateur;
+	}
+
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
+	}
+
+	public ModePaiement getModePaiement() {
+		return modePaiement;
+	}
+
+	public void setModePaiement(ModePaiement modePaiement) {
+		this.modePaiement = modePaiement;
 	}
 
 }
