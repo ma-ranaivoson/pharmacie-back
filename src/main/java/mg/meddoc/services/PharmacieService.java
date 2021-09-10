@@ -22,4 +22,5 @@ public interface PharmacieService extends CRUDService<Pharmacie>{
 	Pharmacie getPharmacieById(Long id);	
 	Long getNextSeq();	
 	Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict);
+	List<Pharmacie> findByDoClickAndCollect();
 }

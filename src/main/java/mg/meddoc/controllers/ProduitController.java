@@ -206,7 +206,13 @@ public class ProduitController {
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
+	// Get produit by pharmacie
+	@GetMapping(value = "/pharmacie/{idPharmacie}")
+	public @ResponseBody ResponseEntity<?> getProduitByIdPharmacie(@PathVariable Long idPharmacie) {
+		return new ResponseEntity<>(serviceProduit.getByIdPharmacie(idPharmacie), HttpStatus.OK);
+	}
+	
 	// GetByDesignation/Produit
 	@GetMapping(value = "/byDesignation/{designation}")
 	public @ResponseBody ResponseEntity<?> getProduitByDesignation(@PathVariable String designation) {
@@ -234,25 +240,6 @@ public class ProduitController {
 		}
 	}
 
-//	@GetMapping(value = "/search/{designation}/{page}/{size}/{direction}/{columnSort}")
-//	public @ResponseBody ResponseEntity<?> search(@PathVariable String designation, @PathVariable String page,
-//			@PathVariable String size, @PathVariable String direction, @PathVariable String columnSort) {
-////		Produit produit = null;
-//		try {
-//			if (direction == null || direction.compareTo("----") == 0)
-//				direction = null;
-//			if (columnSort == null || columnSort.compareTo("----") == 0)
-//				columnSort = null;
-//			Page<Produit> produits = serviceProduit.findByDesignationContainingIgnoreCase(designation,
-//					Integer.parseInt(page), Integer.parseInt(size), columnSort, direction);
-//			log.info(om.writeValueAsString(produits));
-//			return new ResponseEntity<>(produits, HttpStatus.OK);
-//			// return new ResponseEntity<>("Pharmacie trouvée avec succès",HttpStatus.OK);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<>("Designation introuvable", HttpStatus.BAD_REQUEST);
-//		}
-//	}
 	@GetMapping(value = "/search")
 	public @ResponseBody Page<Produit> searchWithQuery(
 			@RequestParam(name = "designation", required = false) String designation,

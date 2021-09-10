@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mg.meddoc.models.Panier;
 import mg.meddoc.models.PanierPK;
+import mg.meddoc.models.Prix;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.PanierService;
 import mg.meddoc.services.PrixService;
@@ -158,15 +159,16 @@ public class PanierController {
 	}
 
 	// Add count product
-	@GetMapping(value = "/produit/{idProduit}/pharmacie/{idPharmacie}/add")
+	@GetMapping(value = "/produit/{idProduit}/pharmacie/{idPharmacie}/add") 	
 	public @ResponseBody ResponseEntity<?> addProductQuantity(@PathVariable Long idProduit,
 			@PathVariable Long idPharmacie) {
 		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+		Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(idProduit, idPharmacie);
+		
 		Panier userCartProduct = servicePanier.getCartByIdProduct(idProduit, idPharmacie, user.getIdUtilisateur());
 
 		userCartProduct.setQuantite(userCartProduct.getQuantite() + 1);
-		userCartProduct.setMontant(userCartProduct.getQuantite() * Double.parseDouble(userCartProduct.getUnite()));
+		userCartProduct.setMontant(userCartProduct.getQuantite() * prix.getPrix());
 		servicePanier.save(userCartProduct);
 
 		return new ResponseEntity<>(userCartProduct, HttpStatus.OK);
@@ -179,17 +181,19 @@ public class PanierController {
 		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Panier userCartProduct = servicePanier.getCartByIdProduct(idProduit, idPharmacie, user.getIdUtilisateur());
 		Double quantity = userCartProduct.getQuantite();
+		Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(idProduit, idPharmacie);
 
 		if (quantity <= 1) {
 			userCartProduct.setQuantite((double) 1);
-			userCartProduct.setMontant(userCartProduct.getQuantite() * Double.parseDouble(userCartProduct.getUnite()));
+			userCartProduct.setMontant(userCartProduct.getQuantite() * prix.getPrix());
 			servicePanier.save(userCartProduct);
 		} else {
 			userCartProduct.setQuantite(userCartProduct.getQuantite() - 1);
-			userCartProduct.setMontant(userCartProduct.getQuantite() * Double.parseDouble(userCartProduct.getUnite()));
+			userCartProduct.setMontant(userCartProduct.getQuantite() * prix.getPrix());
 			servicePanier.save(userCartProduct);
 		}
 
 		return new ResponseEntity<>(userCartProduct, HttpStatus.OK);
 	}
+	
 }

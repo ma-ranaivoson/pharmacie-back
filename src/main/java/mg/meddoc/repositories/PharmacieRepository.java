@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import mg.meddoc.models.Pharmacie;
-import mg.meddoc.models.Specialite;
 
 public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	//izay requête rehetra tina atao
@@ -30,4 +29,6 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Long> {
 	
 	// Search pharmacie by raison social and district
 	Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict);
+	
+	List<Pharmacie> findByDoClickandCollectTrue();
 }

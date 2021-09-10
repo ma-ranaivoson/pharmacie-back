@@ -16,4 +16,5 @@ public interface ProduitService extends CRUDService<Produit>{
 	Page<Produit> getAllProductBySousCategorie(Long idSousCategorie, int page, int size, String direction, String sort);
 	List<Pharmacie> findByPharmacieIdPharmacie(Long id);
 	List<Pharmacie> findByPharmacieIdProduit(Long id);
+	List<Produit> getByIdPharmacie(Long id);
 }

@@ -138,4 +138,9 @@ public class ProduitImplementation implements ProduitService {
 	public List<Pharmacie> findByPharmacieIdProduit(Long id) {
 		return repository.findByPharmacieIdProduit(id);
 	}
+
+	@Override
+	public List<Produit> getByIdPharmacie(Long id) {
+		return repository.findByIdPharmacie(id);
+	}
 }

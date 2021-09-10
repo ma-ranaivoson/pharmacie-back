@@ -50,6 +50,8 @@ public class Pharmacie implements Serializable {
 	private String nif;
 	@Column(name = "stat")
 	private String stat;
+	@Column(name= "do_click_and_collect")
+	private boolean doClickandCollect;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "rel_service_pharmacie", joinColumns = @JoinColumn(name = "id_pharmacie"), inverseJoinColumns = @JoinColumn(name = "id_service"))
@@ -258,5 +260,13 @@ public class Pharmacie implements Serializable {
 
 	public Set<Adresse> getAdresse() {
 		return adresse;
+	}
+
+	public boolean isDoClickAndCollect() {
+		return doClickandCollect;
+	}
+
+	public void setDoClickAndCollect(boolean doClickandCollect) {
+		this.doClickandCollect = doClickandCollect;
 	}
 }

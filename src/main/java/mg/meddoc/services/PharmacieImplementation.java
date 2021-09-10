@@ -94,5 +94,10 @@ public class PharmacieImplementation implements PharmacieService {
 	public Pharmacie findByRaisonSocialAndAdresseDistrictNomDistrict(String raisonSocial, String nomDistrict) {
 		return repository.findByRaisonSocialAndAdresseDistrictNomDistrict(raisonSocial, nomDistrict);
 	}
+
+	@Override
+	public List<Pharmacie> findByDoClickAndCollect() {
+		return repository.findByDoClickandCollectTrue();
+	}
 	
 }

@@ -24,4 +24,5 @@ public interface ProduitRepository extends JpaRepository<Produit, Long>{
 	List<Pharmacie> findByPharmacieIdPharmacie(Long id);
 	@Query(nativeQuery=true,value="SELECT pharma.* FROM produit prod join pharmacie pharma on prod.id_pharmacie=pharma.id_pharmacie WHERE prod.id_produit=?1")
 	List<Pharmacie> findByPharmacieIdProduit(Long id);
+	List<Produit> findByIdPharmacie(Long id);
 }

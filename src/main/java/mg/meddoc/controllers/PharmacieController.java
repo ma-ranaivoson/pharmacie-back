@@ -169,7 +169,7 @@ public class PharmacieController {
 
 			// Save pharmacie
 			Pharmacie newPharmacie = new Pharmacie();
-//			newPharmacie.setAdresse(pharmacie.getAdresse());
+			newPharmacie.setDoClickAndCollect(pharmacie.isDoClickAndCollect());
 			newPharmacie.setNif(pharmacie.getNif());
 			newPharmacie.setStat(pharmacie.getStat());
 			newPharmacie.setPresentation(pharmacie.getPresentation());
@@ -197,8 +197,7 @@ public class PharmacieController {
 				contacts.add(cont);
 				serviceContact.save(cont);
 			}
-			// save adresse
-//			Set<Adresse> newAdr = new HashSet<Adresse>();
+			// save adresse	
 			Adresse adresse = null;
 			for (Adresse adr : pharmacie.getAdresse()) {
 				adresse = new Adresse();
@@ -282,10 +281,6 @@ public class PharmacieController {
 		try {
 			Page<Pharmacie> produitResult = servicePharmacie.findByRaisonSocialContainingIgnoreCase(raisonSociale, 1,
 					10, "raisonSocial", "ASC");
-//			System.out.println(om.writeValueAsString(produitResult));
-//			HashMap<String, Object> success = new HashMap<String, Object>();
-//			success.put("data", produitResult);
-
 			return new ResponseEntity<>(produitResult, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -314,6 +309,13 @@ public class PharmacieController {
 		Pharmacie pharmacie = servicePharmacie.findByRaisonSocialAndAdresseDistrictNomDistrict(raisonSocial, district);
 
 		return new ResponseEntity<>(pharmacie, HttpStatus.OK);
+	}
+	
+	// Get click and collect pharmacie
+	@GetMapping(value = "/click-and-collect")
+	public @ResponseBody ResponseEntity<List<Pharmacie>> getPharmaciesDoClickAndCollect(){
+		List<Pharmacie> pharmacie = servicePharmacie.findByDoClickAndCollect();
+		return new ResponseEntity<List<Pharmacie>>(pharmacie, HttpStatus.OK);
 	}
 
 }
