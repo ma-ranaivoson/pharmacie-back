@@ -9,41 +9,41 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import mg.meddoc.models.Staff;
-import mg.meddoc.repositories.StaffRepository;
+import mg.meddoc.models.MouvementStock;
+import mg.meddoc.repositories.MouvementStockRepository;
 
 @Service
-public class StaffImplementation implements StaffService{
-	
+public class MouvementStockImplementation implements MouvementStockService{
+
 	@Autowired
-	private StaffRepository repository;
+	private MouvementStockRepository repository;
 	
 	@Override
-	public Staff save(Staff entity) {
+	public MouvementStock save(MouvementStock entity) {
 		// TODO Auto-generated method stub
 		return repository.save(entity);
 	}
 
 	@Override
-	public List<Staff> saveAll(List<Staff> entities) {
+	public List<MouvementStock> saveAll(List<MouvementStock> entities) {
 		// TODO Auto-generated method stub
 		return repository.saveAll(entities);
 	}
 
 	@Override
-	public Staff getById(Serializable id) {
+	public MouvementStock getById(Serializable id) {
 		// TODO Auto-generated method stub
 		return repository.findById((Long) id).get();
 	}
 
 	@Override
-	public List<Staff> getAll() {
+	public List<MouvementStock> getAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
 	}
 
 	@Override
-	public Page<Staff> getAllPageable(int page, int max, String col, String direction) {
+	public Page<MouvementStock> getAllPageable(int page, int max, String col, String direction) {
 		// TODO Auto-generated method stub
 		PageRequest pageRequest = PageRequest.of(page, max, Direction.ASC, col);
 		if(direction.trim().compareToIgnoreCase("desc") == 0 || direction.trim().compareToIgnoreCase("descending") == 0)
@@ -54,7 +54,6 @@ public class StaffImplementation implements StaffService{
 	@Override
 	public void deleteById(Serializable id) {
 		// TODO Auto-generated method stub
-		System.out.println(id);
 		repository.deleteById((Long)id);
 	}
 
@@ -62,24 +61,6 @@ public class StaffImplementation implements StaffService{
 	public void stateDeleteById(Serializable id, Serializable idStatut) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public Staff rechercheStaff(String nom_staf) {
-		// TODO Auto-generated method stub
-		return repository.rechercheStaff(nom_staf);
-	}
-
-	@Override
-	public void deleteStaff(Staff staff) {
-		// TODO Auto-generated method stub
-		repository.delete(staff);
-	}
-
-	@Override
-	public Staff findByIdStaff(Long id) {
-		// TODO Auto-generated method stub
-		return repository.findByIdStaff(id);
 	}
 
 }
