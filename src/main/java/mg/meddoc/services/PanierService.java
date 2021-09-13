@@ -9,4 +9,5 @@ public interface PanierService extends CRUDService<Panier>{
 	List<Panier> getPanierNotPaid(Long id);
 	List<Panier> getUserCart(Long id);
 	Panier getCartByIdProduct(Long idProduct,Long idPharmacie, Long idUser);
+	List<Panier> getPaidProduct(Long id);
 }

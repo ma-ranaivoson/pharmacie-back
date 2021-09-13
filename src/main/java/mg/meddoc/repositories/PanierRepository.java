@@ -14,4 +14,5 @@ public interface PanierRepository extends JpaRepository<Panier, PanierPK>{
 	List<Panier> findByIdUtilisateurAndIdPaiementIsNull(Long id);	
 	List<Panier> findByIdUtilisateur(Long id);
 	Panier findByIdProduitAndIdPharmacieAndIdUtilisateur(Long idProduct, Long idPharmacie ,Long idUser);
+	List<Panier> findByIdUtilisateurAndIdPaiementIsNotNull(Long id);
 }

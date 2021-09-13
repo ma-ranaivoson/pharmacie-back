@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -36,6 +38,7 @@ public class Paiement implements Serializable{
 	@Column(name = "id_paiement")
 	private long idPaiement;
 	@Column(name = "date_paiement")
+	@CreationTimestamp
 	private java.sql.Date datePaiement;
 	@Column(name = "montant_total")
 	private Double montantTotal;
@@ -49,6 +52,10 @@ public class Paiement implements Serializable{
 	
 	public Paiement() {
 		
+	}
+	
+	public Paiement( Double montantTotal) {
+		this.montantTotal = montantTotal;
 	}
 
 	/**

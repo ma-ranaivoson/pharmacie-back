@@ -196,4 +196,12 @@ public class PanierController {
 		return new ResponseEntity<>(userCartProduct, HttpStatus.OK);
 	}
 	
+	// Get paid cart 
+	@GetMapping(value = "/paid")
+	public @ResponseBody ResponseEntity<?> getPaid() {
+		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Panier> cart = servicePanier.getPaidProduct(user.getIdUtilisateur());
+		return new ResponseEntity<>(cart, HttpStatus.OK);
+	}
 }
