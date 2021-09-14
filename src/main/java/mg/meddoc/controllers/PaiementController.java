@@ -22,11 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import aj.org.objectweb.asm.TypeReference;
 import mg.meddoc.models.Paiement;
 import mg.meddoc.models.Panier;
+import mg.meddoc.models.UserModePaiement;
 import mg.meddoc.models.Utilisateur;
 import mg.meddoc.services.PaiementService;
 import mg.meddoc.services.PanierService;
+import mg.meddoc.services.UserModePaiementService;
 
 @RestController
 @RequestMapping(value = "/paiement")
@@ -39,9 +43,12 @@ public class PaiementController {
 
 	@Autowired
 	PaiementService servicePaiement;
-	
+
 	@Autowired
 	PanierService servicePanier;
+
+	@Autowired
+	UserModePaiementService serviceUserModePaiement;
 
 	// GetAll_Paiement
 	@GetMapping(value = "/all")
@@ -120,20 +127,43 @@ public class PaiementController {
 
 	// Pay a cart
 	@PostMapping(value = "/pay")
-	public @ResponseBody ResponseEntity<?> payCart(@RequestBody List<Panier> cart) {
+	public @ResponseBody ResponseEntity<?> payCart(@RequestBody HashMap<String, Object> data) {
 		Utilisateur connectedUser = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Boolean isFirst = true;
+		Long idModePaiement = null;
+		System.out.println("Paiement");
 		
 		try {
-			for(Panier p : cart) {
-				Paiement savedPaiement = servicePaiement.save(new Paiement(p.getMontant()));
-				p.setIdUtilisateur(connectedUser.getIdUtilisateur());
-				p.setIdPaiement(savedPaiement.getIdPaiement());
-				servicePanier.save(p);
+			List<Panier> cart = om.readValue(om.writeValueAsString(data.get("list")),
+					new com.fasterxml.jackson.core.type.TypeReference<List<Panier>>() {
+					});
+			UserModePaiement userPaiement = om.readValue(om.writeValueAsString(data.get("userPaiement")),
+					new com.fasterxml.jackson.core.type.TypeReference<UserModePaiement>() {
+					});
+
+			// Pay each cart
+			for (Panier p : cart) {
+				if(isFirst) {
+					Paiement savedPaiement = servicePaiement
+							.save(new Paiement(p.getMontant(), userPaiement.getIdModePaiement(), userPaiement.getValeur()));
+					p.setIdUtilisateur(connectedUser.getIdUtilisateur());
+					p.setIdPaiement(savedPaiement.getIdPaiement());
+					servicePanier.save(p);
+					isFirst = false;
+					idModePaiement = savedPaiement.getIdPaiement();
+				} else {
+					Paiement savedPaiement = servicePaiement
+							.save(new Paiement(p.getMontant(), userPaiement.getIdModePaiement(), userPaiement.getValeur()));
+					p.setIdUtilisateur(connectedUser.getIdUtilisateur());
+					p.setIdPaiement(savedPaiement.getIdPaiement());
+					p.setIdPaiement(idModePaiement);
+					servicePanier.save(p);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return new ResponseEntity<>("Paid", HttpStatus.OK);
 	}
 

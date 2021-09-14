@@ -74,6 +74,7 @@ public class PanierController {
 			log.info(om.writeValueAsString(panier));
 			return new ResponseEntity<>(panier, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
@@ -141,7 +142,7 @@ public class PanierController {
 		try {
 			Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			servicePanier.deleteById(new PanierPK(idPharmacie, idProduit, user.getIdUtilisateur()));
-			
+
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,12 +160,12 @@ public class PanierController {
 	}
 
 	// Add count product
-	@GetMapping(value = "/produit/{idProduit}/pharmacie/{idPharmacie}/add") 	
+	@GetMapping(value = "/produit/{idProduit}/pharmacie/{idPharmacie}/add")
 	public @ResponseBody ResponseEntity<?> addProductQuantity(@PathVariable Long idProduit,
 			@PathVariable Long idPharmacie) {
 		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Prix prix = servicePrix.getPrixByIdProduitAndIdPharmacie(idProduit, idPharmacie);
-		
+
 		Panier userCartProduct = servicePanier.getCartByIdProduct(idProduit, idPharmacie, user.getIdUtilisateur());
 
 		userCartProduct.setQuantite(userCartProduct.getQuantite() + 1);
@@ -195,12 +196,12 @@ public class PanierController {
 
 		return new ResponseEntity<>(userCartProduct, HttpStatus.OK);
 	}
-	
-	// Get paid cart 
+
+	// Get paid cart
 	@GetMapping(value = "/paid")
 	public @ResponseBody ResponseEntity<?> getPaid() {
 		Utilisateur user = (Utilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
+
 		List<Panier> cart = servicePanier.getPaidProduct(user.getIdUtilisateur());
 		return new ResponseEntity<>(cart, HttpStatus.OK);
 	}

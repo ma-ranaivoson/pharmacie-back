@@ -1,36 +1,27 @@
 package mg.meddoc.models;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.sql.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "mouvement_stock")
 @IdClass(MouvementStockPK.class)
-public class MouvementStock implements Serializable{
+public class MouvementStock implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2249606482442105503L;
-	
+
 //	Attributs
 	@Id
 	@Column(name = "id_pharmacie")
@@ -39,27 +30,26 @@ public class MouvementStock implements Serializable{
 	@Column(name = "id_produit")
 	private Long idProduit;
 	@Id
-	@Column(name = "date")
+	@Column(name = "date") 
 	private java.sql.Date date_stock;
 	@Column(name = "quantite")
 	private int quantite;
 	@Column(name = "mouvement")
 	private String mouvement;
-	
-	//Relation
-		@OneToOne(fetch=FetchType.EAGER)
-		@JoinColumn(name="id_produit",insertable=false, updatable=false)
-		private Produit produit;
-		
-		@OneToOne(fetch=FetchType.EAGER)
-		@JoinColumn(name="id_pharmacie",insertable=false, updatable=false)
-		private Pharmacie pharmacie;
-	
-	
+
+	// Relation
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_produit", insertable = false, updatable = false)
+	private Produit produit;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_pharmacie", insertable = false, updatable = false)
+	private Pharmacie pharmacie;
+
 	public MouvementStock() {
-		
+
 	}
-	
+
 	/**
 	 * @param idPharmacie
 	 * @param idProduit
@@ -143,12 +133,12 @@ public class MouvementStock implements Serializable{
 	public void setMouvement(String mouvement) {
 		this.mouvement = mouvement;
 	}
-	
+
 	/**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 }
