@@ -26,24 +26,24 @@ import mg.meddoc.services.CategorieService;
 
 @RestController
 @RequestMapping(value = "/categorie")
-@CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = { "*" })
 @Component
 public class CategorieController {
-	
-	ObjectMapper om=new ObjectMapper();
+
+	ObjectMapper om = new ObjectMapper();
 	public static final Logger log = LoggerFactory.getLogger(CategorieController.class);
-	
+
 	@Autowired
 	CategorieService serviceCategorie;
-	
+
 	@GetMapping(value = "/all/select")
 	public @ResponseBody ResponseEntity<?> getAllCategorieSelect() {
 		List<Categorie> categorie = new ArrayList<Categorie>();
 		try {
 			categorie = serviceCategorie.getAll();
-			List<HashMap<String,Object>> retour = new ArrayList<HashMap<String, Object>>();
-			HashMap<String,Object> maps = null;
-			for(Categorie cat:categorie) {
+			List<HashMap<String, Object>> retour = new ArrayList<HashMap<String, Object>>();
+			HashMap<String, Object> maps = null;
+			for (Categorie cat : categorie) {
 				maps = new HashMap<String, Object>();
 				maps.put("value", cat.getIdCategorie());
 				maps.put("label", cat.getLibelle());
@@ -56,71 +56,75 @@ public class CategorieController {
 			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	//GetAll_Categorie
-		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllCategorie() {
-			List<Categorie> categorie = new ArrayList<Categorie>();
-			try {
-				
-				categorie = serviceCategorie.getAll();
-				log.info(om.writeValueAsString(categorie));
-				return new ResponseEntity<>(categorie,HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur",HttpStatus.BAD_REQUEST);
-			}
+
+	// GetAll_Categorie
+	@GetMapping(value = "/all")
+	public @ResponseBody ResponseEntity<?> getAllCategorie() {
+		List<Categorie> categorie = new ArrayList<Categorie>();
+		try {
+
+			categorie = serviceCategorie.getAll();
+			log.info(om.writeValueAsString(categorie));
+			return new ResponseEntity<>(categorie, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur", HttpStatus.BAD_REQUEST);
 		}
-	//GetById_Categorie
-			@GetMapping(value = "/{id}")
-			public @ResponseBody ResponseEntity<?> getCategorieById(@PathVariable Long id) {
-				Categorie categorie = null;
-				try {
-					
-					categorie = serviceCategorie.getById(id);
-					log.info(om.writeValueAsString(categorie));
-					return new ResponseEntity<>(categorie,HttpStatus.OK);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
-				}
-			}
-	//Save_Categorie
-		@PostMapping(value = "/save")
-		public @ResponseBody ResponseEntity<?> saveCategorie(@RequestBody Categorie categorie) {
-			try {
-				serviceCategorie.save(categorie);
-				log.info(om.writeValueAsString(categorie));
-				return new ResponseEntity<>("Categorie inscrite avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-			}
+	}
+
+	// GetById_Categorie
+	@GetMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> getCategorieById(@PathVariable Long id) {
+		Categorie categorie = null;
+		try {
+
+			categorie = serviceCategorie.getById(id);
+			log.info(om.writeValueAsString(categorie));
+			return new ResponseEntity<>(categorie, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD", HttpStatus.BAD_REQUEST);
 		}
-	//Delete_Categorie	
-		@DeleteMapping(value = "/delete/{id}")
-		public @ResponseBody ResponseEntity<?> deleteCategorieById(@PathVariable Long id) {
-			try {
-				serviceCategorie.deleteById(id);
-				return new ResponseEntity<>("Categorie supprimée avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-			}
+	}
+
+	// Save_Categorie
+	@PostMapping(value = "/save")
+	public @ResponseBody ResponseEntity<?> saveCategorie(@RequestBody Categorie categorie) {
+		try {
+			serviceCategorie.save(categorie);
+			log.info(om.writeValueAsString(categorie));
+			return new ResponseEntity<>("Categorie inscrite avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
 		}
-	//GetByLibelle_Categorie
-				@GetMapping(value = "/byLibelle/{libelle}")
-				public @ResponseBody ResponseEntity<?> getCategorieByLibelle(@PathVariable String libelle) {
-					Categorie categorie = null;
-					try {
-						
-						categorie = serviceCategorie.rechercheCategorie(libelle);
-						log.info(om.writeValueAsString(categorie));
-						return new ResponseEntity<>(categorie,HttpStatus.OK);
-					} catch (Exception e) {
-						e.printStackTrace();
-						return new ResponseEntity<>("Nom Categorie introuvable",HttpStatus.BAD_REQUEST);
-					}
-				}
-	
+	}
+
+	// Delete_Categorie
+	@DeleteMapping(value = "/delete/{id}")
+	public @ResponseBody ResponseEntity<?> deleteCategorieById(@PathVariable Long id) {
+		try {
+			serviceCategorie.deleteById(id);
+			return new ResponseEntity<>("Categorie supprimée avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	// GetByLibelle_Categorie
+	@GetMapping(value = "/byLibelle/{libelle}")
+	public @ResponseBody ResponseEntity<?> getCategorieByLibelle(@PathVariable String libelle) {
+		Categorie categorie = null;
+		try {
+
+			categorie = serviceCategorie.rechercheCategorie(libelle);
+			log.info(om.writeValueAsString(categorie));
+			return new ResponseEntity<>(categorie, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Nom Categorie introuvable", HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }

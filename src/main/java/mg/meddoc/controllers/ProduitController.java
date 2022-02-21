@@ -78,8 +78,7 @@ public class ProduitController {
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			// return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",
-			// HttpStatus.BAD_REQUEST);
+
 			HashMap<String, Object> error = new HashMap<String, Object>();
 			error.put("success", false);
 			error.put("errors", e.getMessage());
@@ -93,9 +92,6 @@ public class ProduitController {
 		try {
 			// Get Pharmacie List
 			produit = serviceProduit.getById(id);
-//			List<Pharmacie> ph = serviceProduit.findByPharmacieIdProduit(id);
-
-//			produit.setPharmacie(ph);
 
 			return new ResponseEntity<>(produit, HttpStatus.OK);
 		} catch (Exception e) {
@@ -206,13 +202,13 @@ public class ProduitController {
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	// Get produit by pharmacie
 	@GetMapping(value = "/pharmacie/{idPharmacie}")
 	public @ResponseBody ResponseEntity<?> getProduitByIdPharmacie(@PathVariable Long idPharmacie) {
 		return new ResponseEntity<>(serviceProduit.getByIdPharmacie(idPharmacie), HttpStatus.OK);
 	}
-	
+
 	// GetByDesignation/Produit
 	@GetMapping(value = "/byDesignation/{designation}")
 	public @ResponseBody ResponseEntity<?> getProduitByDesignation(@PathVariable String designation) {

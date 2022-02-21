@@ -35,45 +35,45 @@ public class GardeController {
 
 	@Autowired
 	GardeService serviceGarde;
-	
-	//GetAll_Garde
-		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllGarde() {
-			List<Garde> garde = new ArrayList<Garde>();
-			try {	
-				garde = serviceGarde.getAll();
-				System.out.println(om.writeValueAsString(garde));
-				return new ResponseEntity<>(garde, HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
-			}
+
+	// GetAll_Garde
+	@GetMapping(value = "/all")
+	public @ResponseBody ResponseEntity<?> getAllGarde() {
+		List<Garde> garde = new ArrayList<Garde>();
+		try {
+			garde = serviceGarde.getAll();
+			System.out.println(om.writeValueAsString(garde));
+			return new ResponseEntity<>(garde, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
 		}
-		
-		//GetById_Garde
-		@GetMapping(value = "/{id}")
-		public @ResponseBody ResponseEntity<?> getGardeById(@PathVariable Long id) {
-			Garde garde = null;
-			
-			try {
-				
-				garde = serviceGarde.getById(id);
-				log.info(om.writeValueAsString(garde));
-				return new ResponseEntity<>(garde, HttpStatus.OK);
-				
-			} catch (Exception e) {
-				HashMap<String, Object> error = new HashMap<String, Object>();
-				error.put("success", false);
-				error.put("errors", e.getMessage());
-				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-			}
+	}
+
+	// GetById_Garde
+	@GetMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> getGardeById(@PathVariable Long id) {
+		Garde garde = null;
+
+		try {
+
+			garde = serviceGarde.getById(id);
+			log.info(om.writeValueAsString(garde));
+			return new ResponseEntity<>(garde, HttpStatus.OK);
+
+		} catch (Exception e) {
+			HashMap<String, Object> error = new HashMap<String, Object>();
+			error.put("success", false);
+			error.put("errors", e.getMessage());
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
-		
-		//Save_Garde
-		@PostMapping(value = "/save")
-		public @ResponseBody ResponseEntity<?> saveGarde(@RequestBody Garde garde) {
-			
-			try {
+	}
+
+	// Save_Garde
+	@PostMapping(value = "/save")
+	public @ResponseBody ResponseEntity<?> saveGarde(@RequestBody Garde garde) {
+
+		try {
 //				if(pharmacie.getRaisonSocial()==null)
 //					throw new Exception("Raison sociale ne peut pas être vide");
 //				if(pharmacie.getRaisonSocial()=="")
@@ -82,47 +82,47 @@ public class GardeController {
 //					throw new Exception("Latitude incorrect");
 //				if(pharmacie.getLongitude()!= null&&(pharmacie.getLongitude()>100 || pharmacie.getLongitude()<0))
 //					throw new Exception("Longitude incorrect");
-				
-				serviceGarde.save(garde);
-				log.info(om.writeValueAsString(garde));
-				
-				HashMap<String, Object> success = new HashMap<String, Object>();
-				success.put("success", true);
-				success.put("data", garde);
-				
-				return new ResponseEntity<>(success, HttpStatus.OK);			
-			} catch (Exception e) {
-				e.printStackTrace();
-				HashMap<String, Object> error = new HashMap<String, Object>();
-				error.put("success", false);
-				error.put("errors", e.getMessage());
-				
-				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-			}
-		}
 
-		//Delete_Garde	
-		@DeleteMapping(value = "/delete/{id}")
-		public @ResponseBody ResponseEntity<?> deleteGardeById(@PathVariable Long id) {
-			
-			try {		
-				
-				serviceGarde.deleteById(id);
-				
-				HashMap<String, Object> success = new HashMap<String, Object>();
-				success.put("success", true);
-				success.put("data", "Garde id: " + id + " supprimée avec success");
-				
-				return new ResponseEntity<>(success, HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				HashMap<String, Object> error = new HashMap<String, Object>();
-				error.put("success", false);
-				error.put("errors", "Garde id " + id + " not found");
-				
-				return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-			}
+			serviceGarde.save(garde);
+			log.info(om.writeValueAsString(garde));
+
+			HashMap<String, Object> success = new HashMap<String, Object>();
+			success.put("success", true);
+			success.put("data", garde);
+
+			return new ResponseEntity<>(success, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			HashMap<String, Object> error = new HashMap<String, Object>();
+			error.put("success", false);
+			error.put("errors", e.getMessage());
+
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
-		
+	}
+
+	// Delete_Garde
+	@DeleteMapping(value = "/delete/{id}")
+	public @ResponseBody ResponseEntity<?> deleteGardeById(@PathVariable Long id) {
+
+		try {
+
+			serviceGarde.deleteById(id);
+
+			HashMap<String, Object> success = new HashMap<String, Object>();
+			success.put("success", true);
+			success.put("data", "Garde id: " + id + " supprimée avec success");
+
+			return new ResponseEntity<>(success, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			HashMap<String, Object> error = new HashMap<String, Object>();
+			error.put("success", false);
+			error.put("errors", "Garde id " + id + " not found");
+
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }

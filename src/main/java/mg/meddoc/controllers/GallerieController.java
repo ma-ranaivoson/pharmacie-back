@@ -52,7 +52,7 @@ public class GallerieController {
 				return new ResponseEntity<>("Erreur de réseaux",HttpStatus.BAD_REQUEST);
 			}
 		}
-		//
+
 		@GetMapping(value = "/all/select/{idPharmacie}")
 		public @ResponseBody ResponseEntity<?> getAllGallerySelect() {
 			List<Galerie> galerie = new ArrayList<Galerie>();

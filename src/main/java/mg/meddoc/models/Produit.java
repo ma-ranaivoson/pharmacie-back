@@ -87,14 +87,7 @@ public class Produit implements Serializable{
 	public Produit() {
 		
 	}
-
-	/**
-	 * @param idProduit
-	 * @param designation
-	 * @param image
-	 * @param description
-	 * @param format
-	 */
+	
 	public Produit(Long idProduit, String designation, String image, String description, String format) {
 		super();
 		this.idProduit = idProduit;

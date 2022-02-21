@@ -54,7 +54,7 @@ public class ClickAndCollectController {
 
 	@PostMapping(value = "/save")
 	public @ResponseBody ResponseEntity<?> saveClickAndCollect(@RequestBody Map<String, Object> data) {
-		try {
+		try { 
 			Utilisateur userConnected = (Utilisateur) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
 

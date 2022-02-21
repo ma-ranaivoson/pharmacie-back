@@ -26,85 +26,88 @@ import mg.meddoc.services.ContactService;
 
 @RestController
 @RequestMapping(value = "/contact")
-@CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = { "*" })
 @Component
 public class ContactController {
-	
-	ObjectMapper om=new ObjectMapper();
+
+	ObjectMapper om = new ObjectMapper();
 	public static final Logger log = LoggerFactory.getLogger(ContactController.class);
-	
+
 	@Autowired
 	ContactService serviceContact;
-	
-	//GetAll_Contact
-		@GetMapping(value = "/all")
-		public @ResponseBody ResponseEntity<?> getAllContact() {
-			List<Contact> contact = new ArrayList<Contact>();
-			try {
-				
-				contact = serviceContact.getAll();
-				log.info(om.writeValueAsString(contact));
-				return new ResponseEntity<>(contact,HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur de réseaux",HttpStatus.BAD_REQUEST);
-			}
-		}
-	//GetById_Contact
-		@GetMapping(value = "/{id}")
-		public @ResponseBody ResponseEntity<?> getContactById(@PathVariable Long id) {
-			Contact contact = null;
-			try {
-				
-				contact = serviceContact.getById(id);
-				log.info(om.writeValueAsString(contact));
-				return new ResponseEntity<>(contact,HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
-			}
-		}
-	//Save_Contact
-		@PostMapping(value = "/save")
-		public @ResponseBody ResponseEntity<?> saveContact(@RequestBody Contact contact) {
-			try {
-//				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
-				serviceContact.save(contact);
-				log.info(om.writeValueAsString(contact));
-				return new ResponseEntity<>("Contact inscrite avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				System.out.println("Erreur : "+e.getMessage());
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-			}
-		}
-	//Delete_Contact	
-		@DeleteMapping(value = "/delete/{id}")
-		public @ResponseBody ResponseEntity<?> deleteContactById(@PathVariable Long id) {
-			try {
-//				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
-				serviceContact.deleteById(id);
-//				servicePharmacie.save(pharmacie);
-//				log.info(om.writeValueAsString(pharmacie));
-				return new ResponseEntity<>("Contact supprimée avec succès",HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<>("Une erreur s'est produite",HttpStatus.BAD_REQUEST);
-			}
-		}
 
-	@GetMapping(value = "/by-valeur/{id}/{idTypeContact}")
-	public @ResponseBody ResponseEntity<?> getByIdUser(@PathVariable Long id,@PathVariable Integer idTypeContact) {
-		List<Contact> contact = null;
+	// GetAll_Contact
+	@GetMapping(value = "/all")
+	public @ResponseBody ResponseEntity<?> getAllContact() {
+		List<Contact> contact = new ArrayList<Contact>();
 		try {
-			
-//			contact = serviceContact.findByIdEntite(id);
-			contact = serviceContact.findByIdEntiteAndTypeContactIdTypeContact(id,idTypeContact);
+
+			contact = serviceContact.getAll();
 			log.info(om.writeValueAsString(contact));
-			return new ResponseEntity<>(contact,HttpStatus.OK);
+			return new ResponseEntity<>(contact, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Erreur de réseaux", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	// GetById_Contact
+	@GetMapping(value = "/{id}")
+	public @ResponseBody ResponseEntity<?> getContactById(@PathVariable Long id) {
+		Contact contact = null;
+		try {
+
+			contact = serviceContact.getById(id);
+			log.info(om.writeValueAsString(contact));
+			return new ResponseEntity<>(contact, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	// Save_Contact
+	@PostMapping(value = "/save")
+	public @ResponseBody ResponseEntity<?> saveContact(@RequestBody Contact contact) {
+		try {
+//				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
+			serviceContact.save(contact);
+			log.info(om.writeValueAsString(contact));
+			return new ResponseEntity<>("Contact inscrite avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println("Erreur : " + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	// Delete_Contact
+	@DeleteMapping(value = "/delete/{id}")
+	public @ResponseBody ResponseEntity<?> deleteContactById(@PathVariable Long id) {
+		try {
+//				Pharmacie pharma = servicePharmacie.getById(pharmacie.get)
+			serviceContact.deleteById(id);
+//				servicePharmacie.save(pharmacie);
+//				log.info(om.writeValueAsString(pharmacie));
+			return new ResponseEntity<>("Contact supprimée avec succès", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Une erreur s'est produite", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(value = "/by-valeur/{id}/{idTypeContact}")
+	public @ResponseBody ResponseEntity<?> getByIdUser(@PathVariable Long id, @PathVariable Integer idTypeContact) {
+		List<Contact> contact = null;
+		try {
+
+//			contact = serviceContact.findByIdEntite(id);
+			contact = serviceContact.findByIdEntiteAndTypeContactIdTypeContact(id, idTypeContact);
+			log.info(om.writeValueAsString(contact));
+			return new ResponseEntity<>(contact, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Erreur ou n'est pas dans la BDD", HttpStatus.BAD_REQUEST);
 		}
 	}
 }
